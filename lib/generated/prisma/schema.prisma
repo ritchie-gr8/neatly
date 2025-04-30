@@ -1,0 +1,191 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model RoleMaster {
+  id              Int      @id @default(autoincrement()) @map("role_id")
+  roleDescription String?  @map("role_description")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  users     User[]
+  userRoles UserRole[]
+
+  @@map("RoleMaster")
+}
+
+model User {
+  id           Int      @id @default(autoincrement()) @map("user_id")
+  username     String   @unique
+  passwordHash String   @map("password_hash")
+  firstName    String?  @map("first_name")
+  lastName     String?  @map("last_name")
+  email        String?  @unique
+  phone        String?
+  roleId       Int?     @map("role_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  role      RoleMaster? @relation(fields: [roleId], references: [id])
+  userRoles UserRole[]
+
+  @@map("User")
+}
+
+model UserRole {
+  id        Int      @id @default(autoincrement()) @map("user_role_id")
+  userId    Int      @map("user_id")
+  roleId    Int      @map("role_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  user User       @relation(fields: [userId], references: [id])
+  role RoleMaster @relation(fields: [roleId], references: [id])
+
+  @@map("UserRole")
+}
+
+model BedType {
+  id             Int      @id @default(autoincrement()) @map("bed_type_id")
+  bedDescription String?  @map("bed_description")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  roomTypes RoomType[]
+
+  @@map("BedType")
+}
+
+model AmnietyMaster {
+  id          Int      @id @default(autoincrement()) @map("amniety_id")
+  amnietyName String?  @map("amniety_name")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  roomTypes   RoomType[]
+  roomAmniety RoomAmniety[]
+
+  @@map("AmnietyMaster")
+}
+
+model RoomStatus {
+  id         Int      @id @default(autoincrement()) @map("room_status_id")
+  statusName String?  @map("status_name")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  rooms Room[]
+
+  @@map("RoomStatus")
+}
+
+model RoomType {
+  id             Int      @id @default(autoincrement()) @map("room_type_id")
+  bedTypeId      Int?     @map("bed_type_id")
+  name           String?
+  description    String?  @db.Text
+  capacity       Int?
+  roomSize       Int?     @map("room_size")
+  pricePerNight  Decimal? @map("price_per_night") @db.Decimal(10, 2)
+  promotionPrice Decimal? @map("promotion_price") @db.Decimal(10, 2)
+  isPromotion    Boolean? @default(false) @map("is_promotion")
+  amnietyId      Int?     @map("amniety_id")
+  imageUrl       String?  @map("image_url")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  bedType     BedType?       @relation(fields: [bedTypeId], references: [id])
+  amniety     AmnietyMaster? @relation(fields: [amnietyId], references: [id])
+  rooms       Room[]
+  roomImages  RoomImage[]
+  roomAmniety RoomAmniety[]
+
+  @@map("RoomTypes")
+}
+
+model Room {
+  id           Int      @id @default(autoincrement()) @map("room_id")
+  roomNumber   String?  @map("room_number")
+  roomTypeId   Int?     @map("room_type_id")
+  roomStatusId Int?     @map("room_status_id")
+  notes        String?  @db.Text
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  roomType   RoomType?   @relation(fields: [roomTypeId], references: [id])
+  roomStatus RoomStatus? @relation(fields: [roomStatusId], references: [id])
+
+  @@map("Rooms")
+}
+
+model RoomAmniety {
+  id        Int      @id @default(autoincrement())
+  roomId    Int?     @map("room_id")
+  amnietyId Int?     @map("amniety_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  roomType RoomType?      @relation(fields: [roomId], references: [id])
+  amniety  AmnietyMaster? @relation(fields: [amnietyId], references: [id])
+
+  @@map("RoomAmniety")
+}
+
+model Guest {
+  id          Int       @id @default(autoincrement()) @map("guest_id")
+  firstName   String?   @map("first_name")
+  lastName    String?   @map("last_name")
+  email       String?
+  phone       String?
+  country     String?
+  dateOfBirth DateTime? @map("date_of_birth") @db.Date
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  @@map("Guests")
+}
+
+model HotelMaster {
+  id               Int      @id @default(autoincrement()) @map("hotel_id")
+  hotelName        String?  @map("hotel_name")
+  hotelDescription String?  @map("hotel_description") @db.Text
+  hotelLogo        String?  @map("hotel_logo")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("HotelMaster")
+}
+
+model RoomImage {
+  id           Int      @id @default(autoincrement()) @map("image_id")
+  roomTypeId   Int?     @map("room_type_id")
+  imageUrl     String?  @map("image_url")
+  imageOrder   Int?     @map("image_order")
+  imageDefault Boolean? @default(false) @map("image_default")
+
+  // Relations
+  roomType RoomType? @relation(fields: [roomTypeId], references: [id])
+
+  @@map("RoomImages")
+}
