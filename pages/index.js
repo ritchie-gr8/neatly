@@ -7,7 +7,7 @@ import {
 } from "@clerk/nextjs";
 import { Noto_Serif } from "next/font/google";
 import axios from "axios";
-import { Button } from "components/ui/button";
+import { Button } from "@/components/ui/button";
 
 const notoSerif = Noto_Serif({
   subsets: ["latin"],
