@@ -14,50 +14,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model RoleMaster {
-  id              Int      @id @default(autoincrement()) @map("role_id")
-  roleDescription String?  @map("role_description")
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at")
-
-  // Relations
-  users     User[]
-  userRoles UserRole[]
-
-  @@map("RoleMaster")
+enum Role {
+  USER
+  ADMIN
 }
 
 model User {
-  id           Int      @id @default(autoincrement()) @map("user_id")
-  username     String   @unique
-  passwordHash String   @map("password_hash")
-  firstName    String?  @map("first_name")
-  lastName     String?  @map("last_name")
-  email        String?  @unique
-  phone        String?
-  roleId       Int?     @map("role_id")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
-
-  // Relations
-  role      RoleMaster? @relation(fields: [roleId], references: [id])
-  userRoles UserRole[]
+  id             Int       @id @default(autoincrement()) @map("user_id")
+  firstName      String    @map("first_name")
+  lastName       String    @map("last_name")
+  username       String    @unique @map("username")
+  email          String?   @unique
+  passwordHash   String    @map("password_hash")
+  phone          String?
+  profilePicture String?   @map("profile_picture")
+  country        String
+  dateOfBirth    DateTime? @map("date_of_birth")
+  role           Role      @default(USER)
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at")
 
   @@map("User")
-}
-
-model UserRole {
-  id        Int      @id @default(autoincrement()) @map("user_role_id")
-  userId    Int      @map("user_id")
-  roleId    Int      @map("role_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-
-  // Relations
-  user User       @relation(fields: [userId], references: [id])
-  role RoleMaster @relation(fields: [roleId], references: [id])
-
-  @@map("UserRole")
 }
 
 model BedType {

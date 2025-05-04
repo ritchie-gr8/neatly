@@ -81,6 +81,8 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --font-inter: 'Inter', sans-serif;
+  --font-open-sans: 'Open Sans', sans-serif;
 }
 
 @theme inline {
@@ -177,4 +179,20 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.btn-primary {
+  @apply rounded-sm text-util-white bg-orange-600 hover:bg-orange-500 cursor-pointer font-[family-name:var(--font-open-sans)]
+}
+
+.font-inter {
+  @apply font-[family-name:var(--font-inter)]
+}
+
+.font-open-sans {
+  @apply font-[family-name:var(--font-open-sans)]
+}
+
+.font-noto-serif {
+  @apply font-[family-name:var(--font-noto-serif)]
 }

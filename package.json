@@ -6,20 +6,31 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "studio": "prisma studio"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.18.1",
+    "@hookform/resolvers": "^5.0.1",
     "@prisma/client": "^6.7.0",
+    "@radix-ui/react-label": "^2.1.4",
+    "@radix-ui/react-popover": "^1.1.11",
+    "@radix-ui/react-separator": "^1.1.4",
     "@radix-ui/react-slot": "^1.2.0",
     "axios": "^1.9.0",
+    "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cookie": "^1.0.2",
+    "date-fns": "^3.6.0",
+    "jose": "^6.0.10",
     "lucide-react": "^0.503.0",
     "next": "15.3.1",
     "react": "^19.0.0",
+    "react-day-picker": "^8.10.1",
     "react-dom": "^19.0.0",
-    "tailwind-merge": "^3.2.0"
+    "react-hook-form": "^7.56.2",
+    "tailwind-merge": "^3.2.0",
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
