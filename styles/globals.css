@@ -188,7 +188,7 @@ h3 {
 }
 
 .btn-primary {
-  @apply rounded-sm text-util-white bg-orange-600 hover:bg-orange-500 cursor-pointer font-[family-name:var(--font-open-sans)]
+  @apply rounded-sm text-util-white bg-orange-600 hover:bg-orange-500 transition-colors duration-300 ease-in-out cursor-pointer font-[family-name:var(--font-open-sans)]
 }
 
 .btn-outline {
