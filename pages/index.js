@@ -37,7 +37,7 @@ export default function Home() {
         </div>
 
         {/* Second Box */}
-        <div className="w-full h-full py-18 px-60">
+        <div className="w-full h-full py-30 px-60">
           <h1 className="text-green-800 text-7xl font-light pb-12">
             Neatly Hotel
           </h1>
@@ -59,8 +59,12 @@ export default function Home() {
               and also rentals are provided to explore the area.
             </p>
           </div>
-          <div className="w-full mx-auto mt-10">
-            <ImageSlider images={images} />
+          <div className="">
+          <ImageSlider 
+            images={images} 
+            itemFlex="30%" 
+            aspect="3/4" 
+          />
           </div>
         </div>
       </div>

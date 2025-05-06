@@ -46,11 +46,11 @@ const Navbar = () => {
           {user ? (
             <div className="flex items-center gap-6 text-gray-900">
               <Link href="/profile" className="flex items-center gap-2 hover:text-gray-600 transition-colors duration-300 ease-in-out">
-                {user.image ? (
+                {user.profileImage ? (
                   <img
-                    src={user.image}
+                    src={user.profileImage}
                     alt="User Avatar"
-                    className="inline-block rounded-full h-8 w-8 object-cover"
+                    className="inline-flex items-center justify-center rounded-full h-8 w-8 object-cover"
                   />
                 ) : (
                   <span className="inline-flex items-center justify-center rounded-full h-8 w-8 bg-gray-900 text-white text-lg font-medium">
