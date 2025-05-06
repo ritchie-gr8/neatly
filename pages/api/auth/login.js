@@ -2,6 +2,8 @@ import { db } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { serialize } from "cookie";
 import * as jose from "jose";
+import { HTTP_STATUS } from "@/constants/http-status";
+import { errorResponse, successResponse } from "@/lib/response-utils";
 
 const JWT_SECRET_RAW = process.env.JWT_SECRET;
 if (!JWT_SECRET_RAW) {
@@ -12,24 +14,36 @@ const JWT_SECRET = new TextEncoder().encode(JWT_SECRET_RAW);
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return errorResponse({
+      res,
+      message: "Method not allowed",
+      status: HTTP_STATUS.METHOD_NOT_ALLOWED,
+    });
   }
 
   try {
-    const { email, password } = req.body;
+    const { identifier, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ error: "Email and password are required" });
+    if (!identifier || !password) {
+      return errorResponse({
+        res,
+        message: "Identifier and password are required",
+        status: HTTP_STATUS.BAD_REQUEST,
+      });
     }
 
-    const user = await db.user.findUnique({
+    const user = await db.user.findFirst({
       where: {
-        email,
+        OR: [{ email: identifier }, { username: identifier }],
       },
     });
 
     if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
-      return res.status(401).json({ error: "Invalid credentials" });
+      return errorResponse({
+        res,
+        message: "Invalid credentials",
+        status: HTTP_STATUS.UNAUTHORIZED,
+      });
     }
 
     const token = await new jose.SignJWT({
@@ -52,8 +66,9 @@ export default async function handler(req, res) {
 
     res.setHeader("Set-Cookie", cookie);
 
-    return res.status(200).json({
-      user: {
+    return successResponse({
+      res,
+      data: {
         id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
@@ -63,7 +78,10 @@ export default async function handler(req, res) {
       },
     });
   } catch (error) {
-    console.error("Login error:", error);
-    return res.status(500).json({ error: "An error occurred during login" });
+    console.error("Login error:", error.message);
+    return errorResponse({
+      res,
+      message: "An error occurred during login",
+    });
   }
 }

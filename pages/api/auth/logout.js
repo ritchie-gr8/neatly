@@ -1,8 +1,14 @@
 import { serialize } from "cookie";
+import { successResponse, errorResponse } from "@/lib/response-utils";
+import { HTTP_STATUS } from "@/constants/http-status";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return errorResponse({
+      res,
+      message: "Method not allowed",
+      status: HTTP_STATUS.METHOD_NOT_ALLOWED,
+    });
   }
 
   const cookie = serialize("auth_token", "", {
@@ -15,5 +21,10 @@ export default async function handler(req, res) {
 
   res.setHeader("Set-Cookie", cookie);
 
-  return res.status(200).json({ success: true });
+  return successResponse({
+    res,
+    data: {
+      success: true,
+    },
+  });
 }

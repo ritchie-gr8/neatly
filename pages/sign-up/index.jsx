@@ -11,14 +11,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
 import DefaultLayout from "@/layouts/default.layout";
-import { authApi } from "@/lib/axios";
+import api, { authApi } from "@/lib/axios";
 import { useForm } from "react-hook-form";
+import ImageUploader from "@/components/global/image-uploader";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const signUpSchema = z
   .object({
@@ -36,10 +35,25 @@ const signUpSchema = z
       .string()
       .min(10, "Phone number must be at least 10 characters long"),
     dateOfBirth: z
-      .date()
-      .min(new Date(1900, 0, 1), "Date of birth must be at least 1900"),
+      .string()
+      .transform((date) => new Date(date))
+      .refine(
+        (date) => {
+          const today = new Date();
+          const twentyYearsAgo = new Date(
+            today.getFullYear() - 20,
+            today.getMonth(),
+            today.getDate()
+          );
+          return date <= twentyYearsAgo;
+        },
+        {
+          message: "You must be at least 20 years old",
+        }
+      ),
     country: z.string().min(2, "Country must be at least 2 characters long"),
     profilePicture: z.string().optional(),
+    profilePicturePublicId: z.string().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -47,6 +61,10 @@ const signUpSchema = z
   });
 
 const SignUpPage = () => {
+  const [previewImage, setPreviewImage] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const router = useRouter();
+
   const form = useForm({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -60,243 +78,258 @@ const SignUpPage = () => {
       dateOfBirth: "",
       country: "",
       profilePicture: "",
+      profilePicturePublicId: "",
     },
   });
 
+  const handleImageChange = ({ url, file }) => {
+    setPreviewImage(url);
+    setImageFile(file);
+  };
+
   const onSubmit = async (data) => {
+    let public_id = null;
+
+    if (imageFile) {
+      try {
+        const formData = new FormData();
+        formData.append("image", imageFile);
+
+        const response = await api.post("/images/upload", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        const result = response.data;
+        data.profilePicture = result.url;
+        data.profilePicturePublicId = result.public_id;
+        public_id = result.public_id;
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        return;
+      }
+    }
+
     try {
-      const { user } = await authApi.signup(data);
+      const { data: user } = await authApi.signup(data);
 
       if (user) {
-        console.log('User created successfully', user);
+        toast.success("Register successfully");
+        router.push("/sign-in");
       }
-
     } catch (error) {
-      console.error(error);
+      toast.error(error?.message || "An error occurred during signup");
+      if (public_id) {
+        try {
+          await api.post("/images/delete", {
+            public_id: public_id,
+          });
+        } catch (deleteError) {
+          console.error("Error deleting image:", deleteError);
+        }
+      }
     }
   };
 
   return (
     <DefaultLayout title="Sign Up | Neatly">
-    <div className="bg-[url('/images/auth/signup-bg.jpg')] bg-cover bg-center h-screen flex items-center justify-center">
-      <div className="h-fit bg-util-bg w-full max-w-5xl mx-auto p-20">
-        <h2 className="text-h2 text-green-800 font-medium">
-          Register
-        </h2>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="font-inter text-gray-900 w-full flex flex-col gap-10"
-          >
-            <h5 className="text-gray-600 text-h5">Basic Information</h5>
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>First name</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="Enter your first name"
-                        className="placeholder:text-gray-600"
-                      />
-                    </FormControl>
-                    <FormMessage className='text-xs' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Last name</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="Enter your last name"
-                        className="placeholder:text-gray-600"
-                      />
-                    </FormControl>
-                    <FormMessage className='text-xs' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Username</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="Enter your username"
-                        className="placeholder:text-gray-600"
-                      />
-                    </FormControl>
-                    <FormMessage className='text-xs' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="Enter your email"
-                        className="placeholder:text-gray-600"
-                      />
-                    </FormControl>
-                    <FormMessage className='text-xs' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="password"
-                        placeholder="Enter your password"
-                        className="placeholder:text-gray-600"
-                      />
-                    </FormControl>
-                    <FormMessage className='text-xs' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="password"
-                        placeholder="Confirm your password"
-                        className="placeholder:text-gray-600"
-                      />
-                    </FormControl>
-                    <FormMessage className='text-xs' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="Enter your phone number"
-                        className="placeholder:text-gray-600"
-                      />
-                    </FormControl>
-                    <FormMessage className='text-xs' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="dateOfBirth"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Date of Birth</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            className={cn(
-                              "w-full pl-3 text-left font-normal bg-transparent cursor-pointer hover:text-inherit hover:bg-transparent",
-                              !field.value && "text-gray-600"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Select your date of birth</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date(1900, 0, 1)
-                          }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="country"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Country</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="Enter your country"
-                        className="placeholder:text-gray-600"
-                      />
-                    </FormControl>
-                    <FormMessage className='text-xs' />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <Separator />
-            <FormField
-              control={form.control}
-              name="profilePicture"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="!text-gray-600 text-h5 mb-10">Profile Picture</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="Enter your profile picture"
-                    />
-                  </FormControl>
-                  <FormMessage className='text-xs' />
-                </FormItem>
-              )}
-            />
-            <Button
-              type="submit"
-              className="mt-5 btn-primary max-w-[446px] w-full max-h-12"
+      <div className="bg-[url('/images/auth/signup-bg.jpg')] bg-cover bg-center h-full flex items-center justify-center">
+        <div className="h-full sm:h-fit bg-util-bg w-full max-w-5xl mx-auto px-4 py-10 sm:p-20 sm:mx-40 sm:my-16">
+          <h2 className="text-h2 text-green-800 mb-10 sm:mb-16 font-medium">
+            Register
+          </h2>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="font-inter text-gray-900 w-full flex flex-col gap-10 h-fit"
             >
-              Register
-            </Button>
-          </form>
-        </Form>
+              <h5 className="text-gray-600 text-h5">Basic Information</h5>
+              <div className="flex flex-col sm:grid sm:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>First name</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="Enter your first name"
+                          className="placeholder:text-gray-600"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Last name</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="Enter your last name"
+                          className="placeholder:text-gray-600"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Username</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="Enter your username"
+                          className="placeholder:text-gray-600"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="Enter your email"
+                          className="placeholder:text-gray-600"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="password"
+                          placeholder="Enter your password"
+                          className="placeholder:text-gray-600"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Confirm Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="password"
+                          placeholder="Confirm your password"
+                          className="placeholder:text-gray-600"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="Enter your phone number"
+                          className="placeholder:text-gray-600"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="dateOfBirth"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Date of Birth</FormLabel>
+
+                      <FormControl>
+                        <Input type="date" {...field} />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="country"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Country</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="Enter your country"
+                          className="placeholder:text-gray-600"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <Separator />
+              <FormField
+                control={form.control}
+                name="profilePicture"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="!text-gray-600 text-h5 mb-10">
+                      Profile Picture
+                    </FormLabel>
+                    <FormControl>
+                      <ImageUploader
+                        imageUrl={previewImage}
+                        onChange={handleImageChange}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs" />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="submit"
+                className="mt-5 btn-primary max-w-[446px] w-full max-h-12"
+              >
+                Register
+              </Button>
+            </form>
+          </Form>
+        </div>
       </div>
-    </div>
     </DefaultLayout>
   );
 };

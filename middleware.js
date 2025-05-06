@@ -10,6 +10,8 @@ const publicRoutes = [
   "/sign-up",
   "/api/auth/login",
   "/api/auth/signup",
+  "/api/images/upload",
+  "/api/images/delete",
 ];
 
 const isPublicPath = (path) => {

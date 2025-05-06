@@ -1,19 +1,29 @@
 import { db } from "@/lib/prisma";
 import * as jose from "jose";
+import { HTTP_STATUS } from "@/constants/http-status";
+import { errorResponse, successResponse } from "@/lib/response-utils";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const secretKey = new TextEncoder().encode(JWT_SECRET);
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return errorResponse({
+      res,
+      message: "Method not allowed",
+      status: HTTP_STATUS.METHOD_NOT_ALLOWED,
+    });
   }
 
   try {
     const token = req.cookies.auth_token;
 
     if (!token) {
-      return res.status(401).json({ error: "Unauthorized" });
+      return errorResponse({
+        res,
+        message: "Unauthorized",
+        status: HTTP_STATUS.UNAUTHORIZED,
+      });
     }
 
     const { payload } = await jose.jwtVerify(token, secretKey, {
@@ -38,14 +48,24 @@ export default async function handler(req, res) {
     });
 
     if (!user) {
-      return res.status(401).json({ error: "Unauthorized - User not found" });
+      return errorResponse({
+        res,
+        message: "Unauthorized - User not found",
+        status: HTTP_STATUS.UNAUTHORIZED,
+      });
     }
 
-    return res.status(200).json({
-      user,
+    return successResponse({
+      res,
+      data: {
+        user,
+      },
     });
   } catch (error) {
     console.error("Me error:", error);
-    return res.status(500).json({ error: "An error occurred during me" });
+    return errorResponse({
+      res,
+      message: "An error occurred during me",
+    });
   }
 }

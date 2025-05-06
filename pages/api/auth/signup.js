@@ -1,18 +1,50 @@
-import { db } from '@/lib/prisma';
-import bcrypt from 'bcryptjs';
+import { db } from "@/lib/prisma";
+import { errorResponse, successResponse } from "@/lib/response-utils";
+import bcrypt from "bcryptjs";
+import { HTTP_STATUS } from "@/constants/http-status";
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== "POST") {
+    return errorResponse({
+      res,
+      message: "Method not allowed",
+      status: HTTP_STATUS.METHOD_NOT_ALLOWED,
+    });
   }
 
   try {
-    const { firstName, lastName, username, email, password, phone, dateOfBirth, country } = req.body;
+    const {
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
+      phone,
+      dateOfBirth,
+      country,
+      profilePicture,
+      profilePicturePublicId,
+    } = req.body;
 
-    // Hash the password
+    const existingUser = await db.user.findFirst({
+      where: {
+        OR: [
+          { email },
+          { username },
+        ],
+      },
+    });
+
+    if (existingUser) {
+      return errorResponse({
+        res,
+        message: "User with this email or username already exists",
+        status: HTTP_STATUS.CONFLICT,
+      });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create the user
     const user = await db.user.create({
       data: {
         firstName,
@@ -23,13 +55,15 @@ export default async function handler(req, res) {
         phone,
         dateOfBirth,
         country,
-        role: 'USER'
-      }
+        role: "USER",
+        profilePicture,
+        profilePicturePublicId,
+      },
     });
 
-    // Return the user without the password hash
-    return res.status(201).json({
-      user: {
+    return successResponse({
+      res,
+      data: {
         id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
@@ -38,11 +72,17 @@ export default async function handler(req, res) {
         phone: user.phone,
         dateOfBirth: user.dateOfBirth,
         country: user.country,
-        role: user.role
-      }
+        role: user.role,
+        profilePicture: user.profilePicture,
+        profilePicturePublicId: user.profilePicturePublicId,
+      },
+      status: HTTP_STATUS.CREATED,
     });
   } catch (error) {
-    console.error('Signup error:', error);
-    return res.status(500).json({ error: 'An error occurred during signup' });
+    console.error("Signup error:", error.message);
+    return errorResponse({
+      res,
+      message: "An error occurred during signup",
+    });
   }
 }

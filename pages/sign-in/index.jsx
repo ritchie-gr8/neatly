@@ -15,9 +15,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
+  identifier: z.string().min(2, "Username or email is required"),
   password: z.string().min(6, "Password must be at least 6 characters long"),
 });
 
@@ -27,43 +28,44 @@ const SignInPage = () => {
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
+      identifier: "",
       password: "",
     },
   });
 
   const onSubmit = async (data) => {
     try {
-      const { user } = await login(data.email, data.password);
+      const res = await login(data.identifier, data.password);
+      const user = res?.user;
 
       if (user) {
-        console.log("User logged in successfully", user);
+        toast.success("Login successful");
         router.push("/");
       }
     } catch (error) {
-      console.error(error);
+      toast.error(error?.message || "An error occurred during login");
     }
   };
 
   return (
     <DefaultLayout title="Sign In | Neatly">
-      <div className="h-screen grid grid-cols-2">
-        <div className="bg-[url('/images/auth/signin-bg.jpg')] bg-cover"></div>
-        <div className="h-full bg-util-bg w-full px-32 pt-40 text-gray-900">
-          <h2 className="text-h2 text-green-800 font-medium mb-16">Log In</h2>
+      <div className="h-screen flex flex-col sm:grid sm:grid-cols-2">
+        <div className="h-[25%] sm:h-full bg-[url('/images/auth/signin-bg-mb.png')] sm:bg-[url('/images/auth/signin-bg.jpg')] bg-cover bg-center"></div>
+        <div className="h-full bg-util-bg w-full px-4  sm:px-32 pt-10 sm:pt-40 text-gray-900">
+          <h2 className="text-h2 text-green-800 font-medium mb-10 sm:mb-16">Log In</h2>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="font-inter flex flex-col gap-10">
               <FormField
                 control={form.control}
-                name="email"
+                name="identifier"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Username or email</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder="Enter your email"
-                        className="placeholder:text-gray-600"
+                        placeholder="Enter your username or email"
+                        className="placeholder:text-gray-600 p-3 h-fit"
                       />
                     </FormControl>
                     <FormMessage className="text-xs" />
@@ -81,19 +83,19 @@ const SignInPage = () => {
                         {...field}
                         type="password"
                         placeholder="Enter your password"
-                        className="placeholder:text-gray-600"
+                        className="placeholder:text-gray-600 p-3 h-fit"
                       />
                     </FormControl>
                     <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="btn-primary">Log In</Button>
+              <Button type="submit" className="btn-primary py-4 h-fit text-base">Log In</Button>
             </form>
           </Form>
           <p className="text-gray-700 mt-4">
             Don't have an account yet?{" "}
-            <Link href="/sign-up" className="text-orange-500 font-open-sans">
+            <Link href="/sign-up" className="text-orange-500 font-open-sans font-semibold">
               Register
             </Link>
           </p>
