@@ -35,14 +35,15 @@ const SignInPage = () => {
 
   const onSubmit = async (data) => {
     try {
-      const { user } = await login(data.identifier, data.password);
+      const res = await login(data.identifier, data.password);
+      const user = res?.user;
 
       if (user) {
         toast.success("Login successful");
         router.push("/");
       }
     } catch (error) {
-      toast.error(error?.error || "An error occurred during login");
+      toast.error(error?.message || "An error occurred during login");
     }
   };
 

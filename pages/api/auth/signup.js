@@ -1,9 +1,15 @@
 import { db } from "@/lib/prisma";
+import { errorResponse, successResponse } from "@/lib/response-utils";
 import bcrypt from "bcryptjs";
+import { HTTP_STATUS } from "@/constants/http-status";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return errorResponse({
+      res,
+      message: "Method not allowed",
+      status: HTTP_STATUS.METHOD_NOT_ALLOWED,
+    });
   }
 
   try {
@@ -30,7 +36,11 @@ export default async function handler(req, res) {
     });
 
     if (existingUser) {
-      return res.status(409).json({ error: "User with this email or username already exists" });
+      return errorResponse({
+        res,
+        message: "User with this email or username already exists",
+        status: HTTP_STATUS.CONFLICT,
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -51,8 +61,9 @@ export default async function handler(req, res) {
       },
     });
 
-    return res.status(201).json({
-      user: {
+    return successResponse({
+      res,
+      data: {
         id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
@@ -65,9 +76,13 @@ export default async function handler(req, res) {
         profilePicture: user.profilePicture,
         profilePicturePublicId: user.profilePicturePublicId,
       },
+      status: HTTP_STATUS.CREATED,
     });
   } catch (error) {
     console.error("Signup error:", error.message);
-    return res.status(500).json({ error: "An error occurred during signup" });
+    return errorResponse({
+      res,
+      message: "An error occurred during signup",
+    });
   }
 }

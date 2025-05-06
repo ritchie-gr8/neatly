@@ -112,14 +112,14 @@ const SignUpPage = () => {
     }
 
     try {
-      const { user } = await authApi.signup(data);
+      const { data: user } = await authApi.signup(data);
 
       if (user) {
-        console.log("User created successfully", user);
+        toast.success("Register successfully");
         router.push("/sign-in");
       }
     } catch (error) {
-      toast.error(error?.error || "An error occurred during signup");
+      toast.error(error?.message || "An error occurred during signup");
       if (public_id) {
         try {
           await api.post("/images/delete", {

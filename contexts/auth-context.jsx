@@ -21,8 +21,8 @@ function AuthProvider({ children }) {
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const { user } = await authApi.getMe();
-        setUser(user);
+        const res = await authApi.getMe();
+        setUser(res?.user || null);
       } catch (err) {
         console.error("Failed to load user:", err);
         setUser(null);
@@ -37,7 +37,8 @@ function AuthProvider({ children }) {
   const login = async (identifier, password) => {
     setLoading(true);
     try {
-      const { user } = await authApi.login({ identifier, password });
+      const res = await authApi.login({ identifier, password });
+      const user = res;
       setUser(user);
       return { success: true, user };
     } catch (error) {
