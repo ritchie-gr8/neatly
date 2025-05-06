@@ -16,15 +16,18 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { email, password } = req.body;
+    const { identifier, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ error: "Email and password are required" });
+    if (!identifier || !password) {
+      return res.status(400).json({ error: "Identifier and password are required" });
     }
 
-    const user = await db.user.findUnique({
+    const user = await db.user.findFirst({
       where: {
-        email,
+        OR: [
+          { email: identifier },
+          { username: identifier },
+        ],
       },
     });
 
@@ -63,7 +66,7 @@ export default async function handler(req, res) {
       },
     });
   } catch (error) {
-    console.error("Login error:", error);
+    console.error("Login error:", error.message);
     return res.status(500).json({ error: "An error occurred during login" });
   }
 }

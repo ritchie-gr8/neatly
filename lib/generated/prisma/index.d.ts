@@ -1884,6 +1884,7 @@ export namespace Prisma {
     passwordHash: string | null
     phone: string | null
     profilePicture: string | null
+    profilePicturePublicId: string | null
     country: string | null
     dateOfBirth: Date | null
     role: $Enums.Role | null
@@ -1900,6 +1901,7 @@ export namespace Prisma {
     passwordHash: string | null
     phone: string | null
     profilePicture: string | null
+    profilePicturePublicId: string | null
     country: string | null
     dateOfBirth: Date | null
     role: $Enums.Role | null
@@ -1916,6 +1918,7 @@ export namespace Prisma {
     passwordHash: number
     phone: number
     profilePicture: number
+    profilePicturePublicId: number
     country: number
     dateOfBirth: number
     role: number
@@ -1942,6 +1945,7 @@ export namespace Prisma {
     passwordHash?: true
     phone?: true
     profilePicture?: true
+    profilePicturePublicId?: true
     country?: true
     dateOfBirth?: true
     role?: true
@@ -1958,6 +1962,7 @@ export namespace Prisma {
     passwordHash?: true
     phone?: true
     profilePicture?: true
+    profilePicturePublicId?: true
     country?: true
     dateOfBirth?: true
     role?: true
@@ -1974,6 +1979,7 @@ export namespace Prisma {
     passwordHash?: true
     phone?: true
     profilePicture?: true
+    profilePicturePublicId?: true
     country?: true
     dateOfBirth?: true
     role?: true
@@ -2077,6 +2083,7 @@ export namespace Prisma {
     passwordHash: string
     phone: string | null
     profilePicture: string | null
+    profilePicturePublicId: string | null
     country: string
     dateOfBirth: Date | null
     role: $Enums.Role
@@ -2112,6 +2119,7 @@ export namespace Prisma {
     passwordHash?: boolean
     phone?: boolean
     profilePicture?: boolean
+    profilePicturePublicId?: boolean
     country?: boolean
     dateOfBirth?: boolean
     role?: boolean
@@ -2128,6 +2136,7 @@ export namespace Prisma {
     passwordHash?: boolean
     phone?: boolean
     profilePicture?: boolean
+    profilePicturePublicId?: boolean
     country?: boolean
     dateOfBirth?: boolean
     role?: boolean
@@ -2144,6 +2153,7 @@ export namespace Prisma {
     passwordHash?: boolean
     phone?: boolean
     profilePicture?: boolean
+    profilePicturePublicId?: boolean
     country?: boolean
     dateOfBirth?: boolean
     role?: boolean
@@ -2160,6 +2170,7 @@ export namespace Prisma {
     passwordHash?: boolean
     phone?: boolean
     profilePicture?: boolean
+    profilePicturePublicId?: boolean
     country?: boolean
     dateOfBirth?: boolean
     role?: boolean
@@ -2167,7 +2178,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "username" | "email" | "passwordHash" | "phone" | "profilePicture" | "country" | "dateOfBirth" | "role" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "username" | "email" | "passwordHash" | "phone" | "profilePicture" | "profilePicturePublicId" | "country" | "dateOfBirth" | "role" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
@@ -2181,6 +2192,7 @@ export namespace Prisma {
       passwordHash: string
       phone: string | null
       profilePicture: string | null
+      profilePicturePublicId: string | null
       country: string
       dateOfBirth: Date | null
       role: $Enums.Role
@@ -2617,6 +2629,7 @@ export namespace Prisma {
     readonly passwordHash: FieldRef<"User", 'String'>
     readonly phone: FieldRef<"User", 'String'>
     readonly profilePicture: FieldRef<"User", 'String'>
+    readonly profilePicturePublicId: FieldRef<"User", 'String'>
     readonly country: FieldRef<"User", 'String'>
     readonly dateOfBirth: FieldRef<"User", 'DateTime'>
     readonly role: FieldRef<"User", 'Role'>
@@ -13224,6 +13237,7 @@ export namespace Prisma {
     passwordHash: 'passwordHash',
     phone: 'phone',
     profilePicture: 'profilePicture',
+    profilePicturePublicId: 'profilePicturePublicId',
     country: 'country',
     dateOfBirth: 'dateOfBirth',
     role: 'role',
@@ -13480,6 +13494,7 @@ export namespace Prisma {
     passwordHash?: StringFilter<"User"> | string
     phone?: StringNullableFilter<"User"> | string | null
     profilePicture?: StringNullableFilter<"User"> | string | null
+    profilePicturePublicId?: StringNullableFilter<"User"> | string | null
     country?: StringFilter<"User"> | string
     dateOfBirth?: DateTimeNullableFilter<"User"> | Date | string | null
     role?: EnumRoleFilter<"User"> | $Enums.Role
@@ -13496,6 +13511,7 @@ export namespace Prisma {
     passwordHash?: SortOrder
     phone?: SortOrderInput | SortOrder
     profilePicture?: SortOrderInput | SortOrder
+    profilePicturePublicId?: SortOrderInput | SortOrder
     country?: SortOrder
     dateOfBirth?: SortOrderInput | SortOrder
     role?: SortOrder
@@ -13515,6 +13531,7 @@ export namespace Prisma {
     passwordHash?: StringFilter<"User"> | string
     phone?: StringNullableFilter<"User"> | string | null
     profilePicture?: StringNullableFilter<"User"> | string | null
+    profilePicturePublicId?: StringNullableFilter<"User"> | string | null
     country?: StringFilter<"User"> | string
     dateOfBirth?: DateTimeNullableFilter<"User"> | Date | string | null
     role?: EnumRoleFilter<"User"> | $Enums.Role
@@ -13531,6 +13548,7 @@ export namespace Prisma {
     passwordHash?: SortOrder
     phone?: SortOrderInput | SortOrder
     profilePicture?: SortOrderInput | SortOrder
+    profilePicturePublicId?: SortOrderInput | SortOrder
     country?: SortOrder
     dateOfBirth?: SortOrderInput | SortOrder
     role?: SortOrder
@@ -13555,6 +13573,7 @@ export namespace Prisma {
     passwordHash?: StringWithAggregatesFilter<"User"> | string
     phone?: StringNullableWithAggregatesFilter<"User"> | string | null
     profilePicture?: StringNullableWithAggregatesFilter<"User"> | string | null
+    profilePicturePublicId?: StringNullableWithAggregatesFilter<"User"> | string | null
     country?: StringWithAggregatesFilter<"User"> | string
     dateOfBirth?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     role?: EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
@@ -14158,6 +14177,7 @@ export namespace Prisma {
     passwordHash: string
     phone?: string | null
     profilePicture?: string | null
+    profilePicturePublicId?: string | null
     country: string
     dateOfBirth?: Date | string | null
     role?: $Enums.Role
@@ -14174,6 +14194,7 @@ export namespace Prisma {
     passwordHash: string
     phone?: string | null
     profilePicture?: string | null
+    profilePicturePublicId?: string | null
     country: string
     dateOfBirth?: Date | string | null
     role?: $Enums.Role
@@ -14189,6 +14210,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePicturePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     country?: StringFieldUpdateOperationsInput | string
     dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
@@ -14205,6 +14227,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePicturePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     country?: StringFieldUpdateOperationsInput | string
     dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
@@ -14221,6 +14244,7 @@ export namespace Prisma {
     passwordHash: string
     phone?: string | null
     profilePicture?: string | null
+    profilePicturePublicId?: string | null
     country: string
     dateOfBirth?: Date | string | null
     role?: $Enums.Role
@@ -14236,6 +14260,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePicturePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     country?: StringFieldUpdateOperationsInput | string
     dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
@@ -14252,6 +14277,7 @@ export namespace Prisma {
     passwordHash?: StringFieldUpdateOperationsInput | string
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     profilePicture?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePicturePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     country?: StringFieldUpdateOperationsInput | string
     dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
@@ -14925,6 +14951,7 @@ export namespace Prisma {
     passwordHash?: SortOrder
     phone?: SortOrder
     profilePicture?: SortOrder
+    profilePicturePublicId?: SortOrder
     country?: SortOrder
     dateOfBirth?: SortOrder
     role?: SortOrder
@@ -14945,6 +14972,7 @@ export namespace Prisma {
     passwordHash?: SortOrder
     phone?: SortOrder
     profilePicture?: SortOrder
+    profilePicturePublicId?: SortOrder
     country?: SortOrder
     dateOfBirth?: SortOrder
     role?: SortOrder
@@ -14961,6 +14989,7 @@ export namespace Prisma {
     passwordHash?: SortOrder
     phone?: SortOrder
     profilePicture?: SortOrder
+    profilePicturePublicId?: SortOrder
     country?: SortOrder
     dateOfBirth?: SortOrder
     role?: SortOrder

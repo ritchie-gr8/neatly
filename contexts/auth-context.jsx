@@ -34,10 +34,10 @@ function AuthProvider({ children }) {
     loadUser();
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (identifier, password) => {
     setLoading(true);
     try {
-      const { user } = await authApi.login({ email, password });
+      const { user } = await authApi.login({ identifier, password });
       setUser(user);
       return { success: true, user };
     } catch (error) {
