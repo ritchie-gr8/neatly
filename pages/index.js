@@ -1,4 +1,6 @@
 import DefaultLayout from "@/layouts/default.layout";
+//components
+import ImageSlider from "@/components/global/image-slider";
 
 export const metadata = {
   title: "Neatly",
@@ -7,6 +9,14 @@ export const metadata = {
 };
 
 export default function Home() {
+  const images = [
+    '/images/landing-page/test1.jpg',
+    '/images/landing-page/test2.jpg',
+    '/images/landing-page/test3.jpg',
+    '/images/landing-page/test4.jpg',
+    '/images/landing-page/test5.jpg',
+  ]
+
   return (
     <DefaultLayout>
       <div className="bg-util-bg">
@@ -48,6 +58,9 @@ export default function Home() {
               Free WiFi and entertainment facilities are available at property
               and also rentals are provided to explore the area.
             </p>
+          </div>
+          <div className="w-full mx-auto mt-10">
+            <ImageSlider images={images} />
           </div>
         </div>
       </div>
