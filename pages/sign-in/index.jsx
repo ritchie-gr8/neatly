@@ -48,7 +48,7 @@ const SignInPage = () => {
   return (
     <DefaultLayout title="Sign In | Neatly">
       <div className="h-screen grid grid-cols-2">
-        <div className="bg-[url('/signin-bg.jpg')] bg-cover"></div>
+        <div className="bg-[url('/images/auth/signin-bg.jpg')] bg-cover"></div>
         <div className="h-full bg-util-bg w-full px-32 pt-40 text-gray-900">
           <h2 className="text-h2 text-green-800 font-medium mb-16">Log In</h2>
           <Form {...form}>

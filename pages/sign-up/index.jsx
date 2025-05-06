@@ -78,7 +78,7 @@ const SignUpPage = () => {
 
   return (
     <DefaultLayout title="Sign Up | Neatly">
-    <div className="bg-[url('/signup-bg.jpg')] bg-cover bg-center h-screen flex items-center justify-center">
+    <div className="bg-[url('/images/auth/signup-bg.jpg')] bg-cover bg-center h-screen flex items-center justify-center">
       <div className="h-fit bg-util-bg w-full max-w-5xl mx-auto p-20">
         <h2 className="text-h2 text-green-800 font-medium">
           Register

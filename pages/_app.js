@@ -21,7 +21,7 @@ const openSans = Open_Sans({
 export default function App({ Component, pageProps }) {
   return (
     <AuthProvider>
-      <main className={`${notoSerif.className} ${inter.variable} ${openSans.variable}`}>
+      <main className={`${notoSerif.variable} ${inter.className} ${openSans.variable}`}>
         <Component {...pageProps} />
       </main>
     </AuthProvider>

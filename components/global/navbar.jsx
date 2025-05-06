@@ -10,7 +10,7 @@ const Navbar = () => {
   return (
     <div className="w-full h-16 bg-util-bg">
       <div className="w-full h-full max-w-5xl mx-auto flex items-center justify-between">
-        <Link href="/" className="text-h4 text-green-800 font-medium relative">
+        <Link href="/" className="text-h4 text-green-800 font-medium relative font-noto-serif">
           <Sparkle className="size-4 absolute top-1 -left-5 text-orange-500 fill-orange-500" />
           NEATLY
         </Link>

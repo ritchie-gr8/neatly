@@ -181,6 +181,12 @@ body {
   }
 }
 
+h1,
+h2,
+h3 {
+  @apply font-[family-name:var(--font-noto-serif)]
+}
+
 .btn-primary {
   @apply rounded-sm text-util-white bg-orange-600 hover:bg-orange-500 cursor-pointer font-[family-name:var(--font-open-sans)]
 }
