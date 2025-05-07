@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import { Noto_Serif, Inter, Open_Sans } from "next/font/google";
 import AuthProvider from "@/contexts/auth-context";
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "@/components/ui/sonner";
 
 const notoSerif = Noto_Serif({
   subsets: ["latin"],
@@ -21,10 +21,13 @@ const openSans = Open_Sans({
 export default function App({ Component, pageProps }) {
   return (
     <AuthProvider>
-      <main className={`${notoSerif.variable} ${inter.className} ${openSans.variable}`}>
+      <main
+        className={`${notoSerif.variable} ${inter.className} ${openSans.variable}`}
+        suppressHydrationWarning
+      >
         <Component {...pageProps} />
       </main>
-      <Toaster position="top-center" />
+      <Toaster richColors />
     </AuthProvider>
   );
 }

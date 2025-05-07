@@ -18,6 +18,7 @@ import ImageUploader from "@/components/global/image-uploader";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { PATHS } from "@/constants/paths";
 
 const signUpSchema = z
   .object({
@@ -116,7 +117,7 @@ const SignUpPage = () => {
 
       if (user) {
         toast.success("Register successfully");
-        router.push("/sign-in");
+        router.push(PATHS.PUBLIC.SIGN_IN);
       }
     } catch (error) {
       toast.error(error?.message || "An error occurred during signup");

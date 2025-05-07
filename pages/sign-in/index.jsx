@@ -16,6 +16,8 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { ROLES } from "@/constants/roles";
+import { PATHS } from "@/constants/paths";
 
 const loginSchema = z.object({
   identifier: z.string().min(2, "Username or email is required"),
@@ -36,11 +38,20 @@ const SignInPage = () => {
   const onSubmit = async (data) => {
     try {
       const res = await login(data.identifier, data.password);
+
+      if (!res?.success) {
+        throw new Error(res?.error || "An error occurred during login");
+      }
+
       const user = res?.user;
 
       if (user) {
         toast.success("Login successful");
-        router.push("/");
+        if (user.role === ROLES.ADMIN) {
+          router.push(PATHS.ADMIN.CUSTOMER_BOOKING);
+        } else {
+          router.push(PATHS.PUBLIC.HOME);
+        }
       }
     } catch (error) {
       toast.error(error?.message || "An error occurred during login");
@@ -52,9 +63,14 @@ const SignInPage = () => {
       <div className="h-screen flex flex-col sm:grid sm:grid-cols-2">
         <div className="h-[25%] sm:h-full bg-[url('/images/auth/signin-bg-mb.png')] sm:bg-[url('/images/auth/signin-bg.jpg')] bg-cover bg-center"></div>
         <div className="h-full bg-util-bg w-full px-4  sm:px-32 pt-10 sm:pt-40 text-gray-900">
-          <h2 className="text-h2 text-green-800 font-medium mb-10 sm:mb-16">Log In</h2>
+          <h2 className="text-h2 text-green-800 font-medium mb-10 sm:mb-16">
+            Log In
+          </h2>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="font-inter flex flex-col gap-10">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="font-inter flex flex-col gap-10"
+            >
               <FormField
                 control={form.control}
                 name="identifier"
@@ -90,12 +106,20 @@ const SignInPage = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="btn-primary py-4 h-fit text-base">Log In</Button>
+              <Button
+                type="submit"
+                className="btn-primary py-4 h-fit text-base"
+              >
+                Log In
+              </Button>
             </form>
           </Form>
           <p className="text-gray-700 mt-4">
             Don't have an account yet?{" "}
-            <Link href="/sign-up" className="text-orange-500 font-open-sans font-semibold">
+            <Link
+              href="/sign-up"
+              className="text-orange-500 font-open-sans font-semibold"
+            >
               Register
             </Link>
           </p>

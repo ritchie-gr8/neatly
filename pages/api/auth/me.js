@@ -44,6 +44,7 @@ export default async function handler(req, res) {
         username: true,
         role: true,
         country: true,
+        profilePicture: true,
       },
     });
 
