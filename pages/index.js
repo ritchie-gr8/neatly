@@ -37,7 +37,7 @@ export default function Home() {
   return (
     <DefaultLayout>
       <div className="bg-util-bg">
-        {/* First Box */}
+        {/* First Box --- Hero Section */}
         <div className="aspect-[2/1] relative overflow-hidden">
           <img
             src="/images/landing-page/hotel-main.jpg"
@@ -53,7 +53,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Second Box */}
+        {/* Second Box --- Neatly Hotel */}
         <div className="w-full h-full py-30 ">
           <div className="px-60">
             <h1 className="text-green-800 text-7xl font-light pb-12">
@@ -84,7 +84,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Third Box */}
+        {/* Third Box --- Service & Facilities */}
         <div className="w-full bg-green-700 text-white">
           <div className="flex flex-col items-center justify-center py-30 gap-12">
             <h1 className="text-7xl pb-12">Service & Facilities</h1>
@@ -99,6 +99,13 @@ export default function Home() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* Fourth Box --- Rooms & Suits*/}
+        <div className="bg-util-bg">
+          <div className="py-30">
+            <h1 className="text-center text-green-800 text-7xl pb-12">Rooms & Suits</h1>
           </div>
         </div>
       </div>
