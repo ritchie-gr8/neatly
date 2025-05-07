@@ -22,7 +22,7 @@ function AuthProvider({ children }) {
     const loadUser = async () => {
       try {
         const res = await authApi.getMe();
-        setUser(res?.user || null);
+        setUser(res?.data?.user || null);
       } catch (err) {
         console.error("Failed to load user:", err);
         setUser(null);
