@@ -47,9 +47,9 @@ const Navbar = () => {
             <div className="flex items-center gap-6 text-gray-900">
               <Link href="/profile" className="flex items-center gap-2 hover:text-gray-600 transition-colors duration-300 ease-in-out">
                 {console.log(user)}
-                {user.profileImage ? (
+                {user.profilePicture ? (
                   <img
-                    src={user.profileImage}
+                    src={user.profilePicture}
                     alt="User Avatar"
                     className="inline-flex items-center justify-center rounded-full h-8 w-8 object-cover"
                   />
