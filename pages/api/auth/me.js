@@ -41,6 +41,8 @@ export default async function handler(req, res) {
         firstName: true,
         lastName: true,
         email: true,
+        phone: true,
+        dateOfBirth: true,
         username: true,
         role: true,
         country: true,
@@ -63,7 +65,7 @@ export default async function handler(req, res) {
       },
     });
   } catch (error) {
-    console.error("Me error:", error);
+    console.error("Me error:", error.message);
     return errorResponse({
       res,
       message: "An error occurred during me",
