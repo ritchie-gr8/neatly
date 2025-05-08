@@ -3,7 +3,7 @@
 import { Plus, X } from "lucide-react";
 import React from "react";
 
-const ImageUploader = ({ imageUrl, onChange }) => {
+const ImageUploader = ({ imageUrl, onChange, width = 167, height = 167 }) => {
   const [image, setImage] = React.useState(imageUrl);
 
   const handleRemoveImage = (e) => {
@@ -22,7 +22,7 @@ const ImageUploader = ({ imageUrl, onChange }) => {
   };
 
   return (
-    <div className="relative w-[167px] h-[167px]">
+    <div className="relative" style={{ width: `${width}px`, height: `${height}px` }}>
       <input
         type="file"
         id="image-uploader"
