@@ -1,5 +1,6 @@
+import { useState, useEffect} from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import DefaultLayout from "@/layouts/default.layout";
-//components
 import ImageSlider from "@/components/global/image-slider";
 //icons
 import { BiSpa } from "react-icons/bi";
@@ -8,6 +9,8 @@ import { PiBarbell } from "react-icons/pi";
 import { LuSofa } from "react-icons/lu";
 import { FaWifi } from "react-icons/fa";
 import { TbPhoneCall } from "react-icons/tb";
+import { FaArrowRight } from "react-icons/fa6";
+import { PiArrowCircleLeftThin, PiArrowCircleRightThin } from "react-icons/pi";
 
 export const metadata = {
   title: "Neatly",
@@ -16,6 +19,9 @@ export const metadata = {
 };
 
 export default function Home() {
+  const [testimonialIndex, setTestimonialIndex] = useState(0);
+  const [isForward, setIsForward] = useState(true);
+
   const images = [
     "/images/landing-page/test1.jpg",
     "/images/landing-page/test2.jpg",
@@ -34,8 +40,85 @@ export default function Home() {
     { icon: <TbPhoneCall size="48" />, label: "24 hours operation" },
   ];
 
+  const rooms = [
+    {
+      id: 1,
+      name: "Superior Garden View",
+      image: "/images/landing-page/test1.jpg",
+      colSpan: "md:col-span-3",
+      height: "h-132",
+      rowSpan: "",
+    },
+    {
+      id: 2,
+      name: "Superior Garden View",
+      image: "/images/landing-page/test1.jpg",
+      colSpan: "md:col-span-2",
+      height: "h-96",
+      rowSpan: "",
+    },
+    {
+      id: 3,
+      name: "Superior Garden View",
+      image: "/images/landing-page/test1.jpg",
+      colSpan: "md:col-span-1",
+      height: "h-96",
+      rowSpan: "",
+    },
+    {
+      id: 4,
+      name: "Superior Garden View",
+      image: "/images/landing-page/test1.jpg",
+      colSpan: "md:col-span-1",
+      height: "h-196",
+      rowSpan: "md:row-span-2",
+    },
+    {
+      id: 5,
+      name: "Superior Garden View",
+      image: "/images/landing-page/test1.jpg",
+      colSpan: "md:col-span-2",
+      height: "h-96",
+      rowSpan: "",
+    },
+    {
+      id: 6,
+      name: "Superior Garden View",
+      image: "/images/landing-page/test1.jpg",
+      colSpan: "md:col-span-2",
+      height: "h-96",
+      rowSpan: "",
+    },
+  ];
+
+  const testimonials = [
+    {
+      quote: `"The room was spotless and the bed was incredibly comfortable. The staff were friendly and helped us book a local tour. Great location, just 5 minutes from the beach!"`,
+      name: "John Donut",
+      img:"/images/landing-page/testimonial1.jpg"
+    },
+    {
+      quote: `"I stayed for three nights and had a wonderful experience. The breakfast buffet had a lot of options and the rooftop pool was a highlight. Would definitely come back!"`,
+      name: "Sarah Popcorn",
+      img:"/images/landing-page/testimonial2.jpg"
+    },
+    {
+      quote: `"Beautiful hotel with excellent service. Check-in was fast, and the concierge gave great recommendations for restaurants nearby. Highly recommend for couples!"`,
+      name: "Emily Davis",
+      img:"/images/landing-page/testimonial3.jpg"
+    }
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTestimonialIndex(prev => (prev === testimonials.length - 1 ? 0 : prev + 1));
+    }, 4000);
+  
+    return () => clearInterval(interval);
+  }, [testimonialIndex]);
+
   return (
-    <DefaultLayout>
+    <DefaultLayout showFooter>
       <div className="bg-util-bg">
         {/* First Box --- Hero Section */}
         <div className="aspect-[2/1] relative overflow-hidden">
@@ -105,7 +188,108 @@ export default function Home() {
         {/* Fourth Box --- Rooms & Suits*/}
         <div className="bg-util-bg">
           <div className="py-30">
-            <h1 className="text-center text-green-800 text-7xl pb-12">Rooms & Suits</h1>
+            <h1 className="text-center text-green-800 text-7xl pb-24">
+              Rooms & Suits
+            </h1>
+            <div className="px-60">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {rooms.map((room) => (
+                  <div
+                    key={room.id}
+                    className={`${room.colSpan} ${room.rowSpan} ${room.height} relative overflow-hidden cursor-pointer`}
+                  >
+                    <img
+                      src={room.image}
+                      alt={room.name}
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/30 hover:bg-black/10 transition duration-300" />
+                    <div className="flex flex-col absolute left-18 bottom-18 z-10 gap-6 text-white">
+                      <h1 className="text-5xl ">{room.name}</h1>
+                      <span className="flex text-xl items-center justify-start gap-2">
+                        Explore Room
+                        <FaArrowRight size="18" />
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Fifth Box --- Our Customer Says */}
+        <div className="flex flex-col px-60 py-30 bg-green-200">
+          <h1 className="text-center text-7xl text-green-800 pb-24">
+            Our Customer Says
+          </h1>
+          <div className="relative">
+            <div className="flex items-center justify-between">
+              <button 
+                onClick={() => {
+                  setIsForward(false);
+                  setTestimonialIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
+                }}
+              >
+                <PiArrowCircleLeftThin size="60" className="text-orange-500 hover:text-orange-300 transition duration-300 flex-shrink-0 cursor-pointer"/>
+              </button>
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={testimonialIndex}
+                  initial={{ opacity: 0, x: isForward ? 100 : -100 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: isForward ? -100 : 100 }}
+                  transition={{ duration: 0.5 }}
+                  className="text-green-700 max-w-4xl text-center"
+                >
+                  {testimonials[testimonialIndex].quote}
+                </motion.p>
+              </AnimatePresence>
+              <button 
+                onClick={() => {
+                  setIsForward(true);
+                  setTestimonialIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
+                }}
+              >
+                <PiArrowCircleRightThin size="60" className="text-orange-500 hover:text-orange-300 transition duration-300 flex-shrink-0 cursor-pointer"/>
+              </button>
+            </div>
+          </div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={testimonialIndex}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.5 }}
+              className="flex items-center justify-center pt-12 gap-4"
+            >
+              <motion.img
+                src={testimonials[testimonialIndex].img}
+                alt={`${testimonials[testimonialIndex].name} image`}
+                className="w-10 h-10 rounded-full"
+                transition={{ duration: 0.5 }}
+                loading="lazy"
+              />
+              <motion.p
+                className="text-gray-600"
+                transition={{ duration: 0.5 }}
+              >
+                {testimonials[testimonialIndex].name}
+              </motion.p>
+            </motion.div>
+          </AnimatePresence>
+          <div className="flex justify-center gap-3 mt-8">
+            {testimonials.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setTestimonialIndex(index)}
+                className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                  index === testimonialIndex ? "bg-gray-600" : "bg-gray-400"
+                }`}
+              />
+            ))}
           </div>
         </div>
       </div>

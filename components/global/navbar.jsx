@@ -7,9 +7,9 @@ import { Sparkle } from "lucide-react";
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navLink = [
-    { href: "/", label: "About Neatly" },
-    { href: "/", label: "Service & Facilities" },
-    { href: "/", label: "Rooms & Suits" },
+    { href: "#about", label: "About Neatly" },
+    { href: "#services", label: "Service & Facilities" },
+    { href: "#rooms", label: "Rooms & Suits" },
   ];
 
   return (
@@ -34,6 +34,13 @@ const Navbar = () => {
                 key={label}
                 href={href}
                 className="hover:text-gray-600 transition-colors duration-300 ease-in-out"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const targetSection = document.querySelector(href);
+                  if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
               >
                 {label}
               </Link>
@@ -65,6 +72,7 @@ const Navbar = () => {
               </Button>
             </div>
           ) : (
+            // Unregister
             <div className="flex items-center gap-4">
               <Link href="/sign-in" className="text-b1 text-gray-900 hover:text-gray-600 transition-colors duration-300 ease-in-out">
                 Log In
