@@ -121,7 +121,7 @@ export default function Home() {
     <DefaultLayout showFooter>
       <div className="bg-util-bg">
         {/* First Box --- Hero Section */}
-        <div className="aspect-[2/1] relative overflow-hidden">
+        <section className="aspect-[2/1] relative overflow-hidden">
           <img
             src="/images/landing-page/hotel-main.jpg"
             alt="hotel-main"
@@ -134,10 +134,10 @@ export default function Home() {
             </div>
             <div>Search Box</div>
           </div>
-        </div>
+        </section>
 
         {/* Second Box --- Neatly Hotel */}
-        <div className="w-full h-full py-30 ">
+        <section className="w-full h-full py-30" id="about">
           <div className="px-60">
             <h1 className="text-green-800 text-7xl font-light pb-12">
               Neatly Hotel
@@ -165,10 +165,10 @@ export default function Home() {
           <div>
             <ImageSlider images={images} itemFlex="30%" aspect="3/4" />
           </div>
-        </div>
+        </section>
 
         {/* Third Box --- Service & Facilities */}
-        <div className="w-full bg-green-700 text-white">
+        <section className="w-full bg-green-700 text-white" id="services">
           <div className="flex flex-col items-center justify-center py-30 gap-12">
             <h1 className="text-7xl pb-12">Service & Facilities</h1>
             <div className="flex gap-18 flex-wrap justify-center">
@@ -183,10 +183,10 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Fourth Box --- Rooms & Suits*/}
-        <div className="bg-util-bg">
+        <section className="bg-util-bg" id="rooms">
           <div className="py-30">
             <h1 className="text-center text-green-800 text-7xl pb-24">
               Rooms & Suits
@@ -217,10 +217,10 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Fifth Box --- Our Customer Says */}
-        <div className="flex flex-col px-60 py-30 bg-green-200">
+        <section className="flex flex-col px-60 py-30 bg-green-200">
           <h1 className="text-center text-7xl text-green-800 pb-24">
             Our Customer Says
           </h1>
@@ -291,7 +291,7 @@ export default function Home() {
               />
             ))}
           </div>
-        </div>
+        </section>
       </div>
     </DefaultLayout>
   );

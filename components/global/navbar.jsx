@@ -32,7 +32,7 @@ const Navbar = () => {
             {navLink.map(({ href, label }) => (
               <Link
                 key={label}
-                href={href}
+                href={`/#${href.replace('#', '')}`}
                 className="hover:text-gray-600 transition-colors duration-300 ease-in-out"
                 onClick={(e) => {
                   e.preventDefault();
