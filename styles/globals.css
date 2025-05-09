@@ -192,7 +192,7 @@ h3 {
 }
 
 .btn-outline {
-  @apply rounded-sm text-orange-500 bg-util-white  border border-orange-500 hover:bg-util-bg hover:border-orange-500 cursor-pointer font-[family-name:var(--font-open-sans)]
+  @apply rounded-sm text-orange-500 bg-util-white border border-orange-500 hover:bg-util-bg hover:border-orange-500 transition-colors duration-300 ease-in-out cursor-pointer font-[family-name:var(--font-open-sans)]
 }
 
 .font-inter {

@@ -16,7 +16,7 @@ const Navbar = () => {
     <div className="w-full h-16 bg-white border-b fixed z-99">
       <div className="w-full h-full px-60 mx-auto flex items-center justify-between">
         {/* Left bar */}
-        <div className="flex items-center gap-12">
+        <div className="flex items-center gap-12 pl-5">
           <Link
             href="/"
             className="text-h4 text-green-700 font-black relative font-noto-serif"
@@ -53,7 +53,6 @@ const Navbar = () => {
           {user ? (
             <div className="flex items-center gap-6 text-gray-900">
               <Link href="/profile" className="flex items-center gap-2 hover:text-gray-600 transition-colors duration-300 ease-in-out">
-                {console.log(user)}
                 {user.profilePicture ? (
                   <img
                     src={user.profilePicture}
