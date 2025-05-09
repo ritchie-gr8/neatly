@@ -2,11 +2,11 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-function Input({
+const Input = React.forwardRef(function Input({
   className,
   type,
   ...props
-}) {
+}, ref) {
   return (
     <input
       type={type}
@@ -19,6 +19,6 @@ function Input({
       )}
       {...props} />
   );
-}
+});
 
 export { Input }

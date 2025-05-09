@@ -1736,12 +1736,10 @@ export namespace Prisma {
    */
 
   export type AmnietyMasterCountOutputType = {
-    roomTypes: number
     roomAmniety: number
   }
 
   export type AmnietyMasterCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    roomTypes?: boolean | AmnietyMasterCountOutputTypeCountRoomTypesArgs
     roomAmniety?: boolean | AmnietyMasterCountOutputTypeCountRoomAmnietyArgs
   }
 
@@ -1754,13 +1752,6 @@ export namespace Prisma {
      * Select specific fields to fetch from the AmnietyMasterCountOutputType
      */
     select?: AmnietyMasterCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * AmnietyMasterCountOutputType without action
-   */
-  export type AmnietyMasterCountOutputTypeCountRoomTypesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RoomTypeWhereInput
   }
 
   /**
@@ -4282,7 +4273,6 @@ export namespace Prisma {
     amnietyName?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    roomTypes?: boolean | AmnietyMaster$roomTypesArgs<ExtArgs>
     roomAmniety?: boolean | AmnietyMaster$roomAmnietyArgs<ExtArgs>
     _count?: boolean | AmnietyMasterCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["amnietyMaster"]>
@@ -4310,7 +4300,6 @@ export namespace Prisma {
 
   export type AmnietyMasterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "amnietyName" | "createdAt" | "updatedAt", ExtArgs["result"]["amnietyMaster"]>
   export type AmnietyMasterInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    roomTypes?: boolean | AmnietyMaster$roomTypesArgs<ExtArgs>
     roomAmniety?: boolean | AmnietyMaster$roomAmnietyArgs<ExtArgs>
     _count?: boolean | AmnietyMasterCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -4320,7 +4309,6 @@ export namespace Prisma {
   export type $AmnietyMasterPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "AmnietyMaster"
     objects: {
-      roomTypes: Prisma.$RoomTypePayload<ExtArgs>[]
       roomAmniety: Prisma.$RoomAmnietyPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -4722,7 +4710,6 @@ export namespace Prisma {
    */
   export interface Prisma__AmnietyMasterClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    roomTypes<T extends AmnietyMaster$roomTypesArgs<ExtArgs> = {}>(args?: Subset<T, AmnietyMaster$roomTypesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoomTypePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     roomAmniety<T extends AmnietyMaster$roomAmnietyArgs<ExtArgs> = {}>(args?: Subset<T, AmnietyMaster$roomAmnietyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoomAmnietyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -5142,30 +5129,6 @@ export namespace Prisma {
      * Limit how many AmnietyMasters to delete.
      */
     limit?: number
-  }
-
-  /**
-   * AmnietyMaster.roomTypes
-   */
-  export type AmnietyMaster$roomTypesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RoomType
-     */
-    select?: RoomTypeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RoomType
-     */
-    omit?: RoomTypeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RoomTypeInclude<ExtArgs> | null
-    where?: RoomTypeWhereInput
-    orderBy?: RoomTypeOrderByWithRelationInput | RoomTypeOrderByWithRelationInput[]
-    cursor?: RoomTypeWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: RoomTypeScalarFieldEnum | RoomTypeScalarFieldEnum[]
   }
 
   /**
@@ -6321,7 +6284,6 @@ export namespace Prisma {
     roomSize: number | null
     pricePerNight: Decimal | null
     promotionPrice: Decimal | null
-    amnietyId: number | null
   }
 
   export type RoomTypeSumAggregateOutputType = {
@@ -6331,7 +6293,6 @@ export namespace Prisma {
     roomSize: number | null
     pricePerNight: Decimal | null
     promotionPrice: Decimal | null
-    amnietyId: number | null
   }
 
   export type RoomTypeMinAggregateOutputType = {
@@ -6344,7 +6305,6 @@ export namespace Prisma {
     pricePerNight: Decimal | null
     promotionPrice: Decimal | null
     isPromotion: boolean | null
-    amnietyId: number | null
     imageUrl: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -6360,7 +6320,6 @@ export namespace Prisma {
     pricePerNight: Decimal | null
     promotionPrice: Decimal | null
     isPromotion: boolean | null
-    amnietyId: number | null
     imageUrl: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -6376,7 +6335,6 @@ export namespace Prisma {
     pricePerNight: number
     promotionPrice: number
     isPromotion: number
-    amnietyId: number
     imageUrl: number
     createdAt: number
     updatedAt: number
@@ -6391,7 +6349,6 @@ export namespace Prisma {
     roomSize?: true
     pricePerNight?: true
     promotionPrice?: true
-    amnietyId?: true
   }
 
   export type RoomTypeSumAggregateInputType = {
@@ -6401,7 +6358,6 @@ export namespace Prisma {
     roomSize?: true
     pricePerNight?: true
     promotionPrice?: true
-    amnietyId?: true
   }
 
   export type RoomTypeMinAggregateInputType = {
@@ -6414,7 +6370,6 @@ export namespace Prisma {
     pricePerNight?: true
     promotionPrice?: true
     isPromotion?: true
-    amnietyId?: true
     imageUrl?: true
     createdAt?: true
     updatedAt?: true
@@ -6430,7 +6385,6 @@ export namespace Prisma {
     pricePerNight?: true
     promotionPrice?: true
     isPromotion?: true
-    amnietyId?: true
     imageUrl?: true
     createdAt?: true
     updatedAt?: true
@@ -6446,7 +6400,6 @@ export namespace Prisma {
     pricePerNight?: true
     promotionPrice?: true
     isPromotion?: true
-    amnietyId?: true
     imageUrl?: true
     createdAt?: true
     updatedAt?: true
@@ -6549,7 +6502,6 @@ export namespace Prisma {
     pricePerNight: Decimal | null
     promotionPrice: Decimal | null
     isPromotion: boolean | null
-    amnietyId: number | null
     imageUrl: string | null
     createdAt: Date
     updatedAt: Date
@@ -6584,12 +6536,10 @@ export namespace Prisma {
     pricePerNight?: boolean
     promotionPrice?: boolean
     isPromotion?: boolean
-    amnietyId?: boolean
     imageUrl?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     bedType?: boolean | RoomType$bedTypeArgs<ExtArgs>
-    amniety?: boolean | RoomType$amnietyArgs<ExtArgs>
     rooms?: boolean | RoomType$roomsArgs<ExtArgs>
     roomImages?: boolean | RoomType$roomImagesArgs<ExtArgs>
     roomAmniety?: boolean | RoomType$roomAmnietyArgs<ExtArgs>
@@ -6606,12 +6556,10 @@ export namespace Prisma {
     pricePerNight?: boolean
     promotionPrice?: boolean
     isPromotion?: boolean
-    amnietyId?: boolean
     imageUrl?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     bedType?: boolean | RoomType$bedTypeArgs<ExtArgs>
-    amniety?: boolean | RoomType$amnietyArgs<ExtArgs>
   }, ExtArgs["result"]["roomType"]>
 
   export type RoomTypeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6624,12 +6572,10 @@ export namespace Prisma {
     pricePerNight?: boolean
     promotionPrice?: boolean
     isPromotion?: boolean
-    amnietyId?: boolean
     imageUrl?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     bedType?: boolean | RoomType$bedTypeArgs<ExtArgs>
-    amniety?: boolean | RoomType$amnietyArgs<ExtArgs>
   }, ExtArgs["result"]["roomType"]>
 
   export type RoomTypeSelectScalar = {
@@ -6642,16 +6588,14 @@ export namespace Prisma {
     pricePerNight?: boolean
     promotionPrice?: boolean
     isPromotion?: boolean
-    amnietyId?: boolean
     imageUrl?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RoomTypeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bedTypeId" | "name" | "description" | "capacity" | "roomSize" | "pricePerNight" | "promotionPrice" | "isPromotion" | "amnietyId" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["roomType"]>
+  export type RoomTypeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bedTypeId" | "name" | "description" | "capacity" | "roomSize" | "pricePerNight" | "promotionPrice" | "isPromotion" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["roomType"]>
   export type RoomTypeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     bedType?: boolean | RoomType$bedTypeArgs<ExtArgs>
-    amniety?: boolean | RoomType$amnietyArgs<ExtArgs>
     rooms?: boolean | RoomType$roomsArgs<ExtArgs>
     roomImages?: boolean | RoomType$roomImagesArgs<ExtArgs>
     roomAmniety?: boolean | RoomType$roomAmnietyArgs<ExtArgs>
@@ -6659,18 +6603,15 @@ export namespace Prisma {
   }
   export type RoomTypeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     bedType?: boolean | RoomType$bedTypeArgs<ExtArgs>
-    amniety?: boolean | RoomType$amnietyArgs<ExtArgs>
   }
   export type RoomTypeIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     bedType?: boolean | RoomType$bedTypeArgs<ExtArgs>
-    amniety?: boolean | RoomType$amnietyArgs<ExtArgs>
   }
 
   export type $RoomTypePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "RoomType"
     objects: {
       bedType: Prisma.$BedTypePayload<ExtArgs> | null
-      amniety: Prisma.$AmnietyMasterPayload<ExtArgs> | null
       rooms: Prisma.$RoomPayload<ExtArgs>[]
       roomImages: Prisma.$RoomImagePayload<ExtArgs>[]
       roomAmniety: Prisma.$RoomAmnietyPayload<ExtArgs>[]
@@ -6685,7 +6626,6 @@ export namespace Prisma {
       pricePerNight: Prisma.Decimal | null
       promotionPrice: Prisma.Decimal | null
       isPromotion: boolean | null
-      amnietyId: number | null
       imageUrl: string | null
       createdAt: Date
       updatedAt: Date
@@ -7084,7 +7024,6 @@ export namespace Prisma {
   export interface Prisma__RoomTypeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     bedType<T extends RoomType$bedTypeArgs<ExtArgs> = {}>(args?: Subset<T, RoomType$bedTypeArgs<ExtArgs>>): Prisma__BedTypeClient<$Result.GetResult<Prisma.$BedTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    amniety<T extends RoomType$amnietyArgs<ExtArgs> = {}>(args?: Subset<T, RoomType$amnietyArgs<ExtArgs>>): Prisma__AmnietyMasterClient<$Result.GetResult<Prisma.$AmnietyMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     rooms<T extends RoomType$roomsArgs<ExtArgs> = {}>(args?: Subset<T, RoomType$roomsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     roomImages<T extends RoomType$roomImagesArgs<ExtArgs> = {}>(args?: Subset<T, RoomType$roomImagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoomImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     roomAmniety<T extends RoomType$roomAmnietyArgs<ExtArgs> = {}>(args?: Subset<T, RoomType$roomAmnietyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoomAmnietyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -7126,7 +7065,6 @@ export namespace Prisma {
     readonly pricePerNight: FieldRef<"RoomType", 'Decimal'>
     readonly promotionPrice: FieldRef<"RoomType", 'Decimal'>
     readonly isPromotion: FieldRef<"RoomType", 'Boolean'>
-    readonly amnietyId: FieldRef<"RoomType", 'Int'>
     readonly imageUrl: FieldRef<"RoomType", 'String'>
     readonly createdAt: FieldRef<"RoomType", 'DateTime'>
     readonly updatedAt: FieldRef<"RoomType", 'DateTime'>
@@ -7542,25 +7480,6 @@ export namespace Prisma {
      */
     include?: BedTypeInclude<ExtArgs> | null
     where?: BedTypeWhereInput
-  }
-
-  /**
-   * RoomType.amniety
-   */
-  export type RoomType$amnietyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AmnietyMaster
-     */
-    select?: AmnietyMasterSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AmnietyMaster
-     */
-    omit?: AmnietyMasterOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AmnietyMasterInclude<ExtArgs> | null
-    where?: AmnietyMasterWhereInput
   }
 
   /**
@@ -8840,19 +8759,19 @@ export namespace Prisma {
 
   export type RoomAmnietyAvgAggregateOutputType = {
     id: number | null
-    roomId: number | null
+    roomTypeId: number | null
     amnietyId: number | null
   }
 
   export type RoomAmnietySumAggregateOutputType = {
     id: number | null
-    roomId: number | null
+    roomTypeId: number | null
     amnietyId: number | null
   }
 
   export type RoomAmnietyMinAggregateOutputType = {
     id: number | null
-    roomId: number | null
+    roomTypeId: number | null
     amnietyId: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -8860,7 +8779,7 @@ export namespace Prisma {
 
   export type RoomAmnietyMaxAggregateOutputType = {
     id: number | null
-    roomId: number | null
+    roomTypeId: number | null
     amnietyId: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -8868,7 +8787,7 @@ export namespace Prisma {
 
   export type RoomAmnietyCountAggregateOutputType = {
     id: number
-    roomId: number
+    roomTypeId: number
     amnietyId: number
     createdAt: number
     updatedAt: number
@@ -8878,19 +8797,19 @@ export namespace Prisma {
 
   export type RoomAmnietyAvgAggregateInputType = {
     id?: true
-    roomId?: true
+    roomTypeId?: true
     amnietyId?: true
   }
 
   export type RoomAmnietySumAggregateInputType = {
     id?: true
-    roomId?: true
+    roomTypeId?: true
     amnietyId?: true
   }
 
   export type RoomAmnietyMinAggregateInputType = {
     id?: true
-    roomId?: true
+    roomTypeId?: true
     amnietyId?: true
     createdAt?: true
     updatedAt?: true
@@ -8898,7 +8817,7 @@ export namespace Prisma {
 
   export type RoomAmnietyMaxAggregateInputType = {
     id?: true
-    roomId?: true
+    roomTypeId?: true
     amnietyId?: true
     createdAt?: true
     updatedAt?: true
@@ -8906,7 +8825,7 @@ export namespace Prisma {
 
   export type RoomAmnietyCountAggregateInputType = {
     id?: true
-    roomId?: true
+    roomTypeId?: true
     amnietyId?: true
     createdAt?: true
     updatedAt?: true
@@ -9001,7 +8920,7 @@ export namespace Prisma {
 
   export type RoomAmnietyGroupByOutputType = {
     id: number
-    roomId: number | null
+    roomTypeId: number | null
     amnietyId: number | null
     createdAt: Date
     updatedAt: Date
@@ -9028,7 +8947,7 @@ export namespace Prisma {
 
   export type RoomAmnietySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    roomId?: boolean
+    roomTypeId?: boolean
     amnietyId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -9038,7 +8957,7 @@ export namespace Prisma {
 
   export type RoomAmnietySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    roomId?: boolean
+    roomTypeId?: boolean
     amnietyId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -9048,7 +8967,7 @@ export namespace Prisma {
 
   export type RoomAmnietySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    roomId?: boolean
+    roomTypeId?: boolean
     amnietyId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -9058,13 +8977,13 @@ export namespace Prisma {
 
   export type RoomAmnietySelectScalar = {
     id?: boolean
-    roomId?: boolean
+    roomTypeId?: boolean
     amnietyId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RoomAmnietyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roomId" | "amnietyId" | "createdAt" | "updatedAt", ExtArgs["result"]["roomAmniety"]>
+  export type RoomAmnietyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roomTypeId" | "amnietyId" | "createdAt" | "updatedAt", ExtArgs["result"]["roomAmniety"]>
   export type RoomAmnietyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     roomType?: boolean | RoomAmniety$roomTypeArgs<ExtArgs>
     amniety?: boolean | RoomAmniety$amnietyArgs<ExtArgs>
@@ -9086,7 +9005,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      roomId: number | null
+      roomTypeId: number | null
       amnietyId: number | null
       createdAt: Date
       updatedAt: Date
@@ -9516,7 +9435,7 @@ export namespace Prisma {
    */
   interface RoomAmnietyFieldRefs {
     readonly id: FieldRef<"RoomAmniety", 'Int'>
-    readonly roomId: FieldRef<"RoomAmniety", 'Int'>
+    readonly roomTypeId: FieldRef<"RoomAmniety", 'Int'>
     readonly amnietyId: FieldRef<"RoomAmniety", 'Int'>
     readonly createdAt: FieldRef<"RoomAmniety", 'DateTime'>
     readonly updatedAt: FieldRef<"RoomAmniety", 'DateTime'>
@@ -13288,7 +13207,6 @@ export namespace Prisma {
     pricePerNight: 'pricePerNight',
     promotionPrice: 'promotionPrice',
     isPromotion: 'isPromotion',
-    amnietyId: 'amnietyId',
     imageUrl: 'imageUrl',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -13312,7 +13230,7 @@ export namespace Prisma {
 
   export const RoomAmnietyScalarFieldEnum: {
     id: 'id',
-    roomId: 'roomId',
+    roomTypeId: 'roomTypeId',
     amnietyId: 'amnietyId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -13641,7 +13559,6 @@ export namespace Prisma {
     amnietyName?: StringNullableFilter<"AmnietyMaster"> | string | null
     createdAt?: DateTimeFilter<"AmnietyMaster"> | Date | string
     updatedAt?: DateTimeFilter<"AmnietyMaster"> | Date | string
-    roomTypes?: RoomTypeListRelationFilter
     roomAmniety?: RoomAmnietyListRelationFilter
   }
 
@@ -13650,7 +13567,6 @@ export namespace Prisma {
     amnietyName?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    roomTypes?: RoomTypeOrderByRelationAggregateInput
     roomAmniety?: RoomAmnietyOrderByRelationAggregateInput
   }
 
@@ -13662,7 +13578,6 @@ export namespace Prisma {
     amnietyName?: StringNullableFilter<"AmnietyMaster"> | string | null
     createdAt?: DateTimeFilter<"AmnietyMaster"> | Date | string
     updatedAt?: DateTimeFilter<"AmnietyMaster"> | Date | string
-    roomTypes?: RoomTypeListRelationFilter
     roomAmniety?: RoomAmnietyListRelationFilter
   }, "id">
 
@@ -13753,12 +13668,10 @@ export namespace Prisma {
     pricePerNight?: DecimalNullableFilter<"RoomType"> | Decimal | DecimalJsLike | number | string | null
     promotionPrice?: DecimalNullableFilter<"RoomType"> | Decimal | DecimalJsLike | number | string | null
     isPromotion?: BoolNullableFilter<"RoomType"> | boolean | null
-    amnietyId?: IntNullableFilter<"RoomType"> | number | null
     imageUrl?: StringNullableFilter<"RoomType"> | string | null
     createdAt?: DateTimeFilter<"RoomType"> | Date | string
     updatedAt?: DateTimeFilter<"RoomType"> | Date | string
     bedType?: XOR<BedTypeNullableScalarRelationFilter, BedTypeWhereInput> | null
-    amniety?: XOR<AmnietyMasterNullableScalarRelationFilter, AmnietyMasterWhereInput> | null
     rooms?: RoomListRelationFilter
     roomImages?: RoomImageListRelationFilter
     roomAmniety?: RoomAmnietyListRelationFilter
@@ -13774,12 +13687,10 @@ export namespace Prisma {
     pricePerNight?: SortOrderInput | SortOrder
     promotionPrice?: SortOrderInput | SortOrder
     isPromotion?: SortOrderInput | SortOrder
-    amnietyId?: SortOrderInput | SortOrder
     imageUrl?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     bedType?: BedTypeOrderByWithRelationInput
-    amniety?: AmnietyMasterOrderByWithRelationInput
     rooms?: RoomOrderByRelationAggregateInput
     roomImages?: RoomImageOrderByRelationAggregateInput
     roomAmniety?: RoomAmnietyOrderByRelationAggregateInput
@@ -13798,12 +13709,10 @@ export namespace Prisma {
     pricePerNight?: DecimalNullableFilter<"RoomType"> | Decimal | DecimalJsLike | number | string | null
     promotionPrice?: DecimalNullableFilter<"RoomType"> | Decimal | DecimalJsLike | number | string | null
     isPromotion?: BoolNullableFilter<"RoomType"> | boolean | null
-    amnietyId?: IntNullableFilter<"RoomType"> | number | null
     imageUrl?: StringNullableFilter<"RoomType"> | string | null
     createdAt?: DateTimeFilter<"RoomType"> | Date | string
     updatedAt?: DateTimeFilter<"RoomType"> | Date | string
     bedType?: XOR<BedTypeNullableScalarRelationFilter, BedTypeWhereInput> | null
-    amniety?: XOR<AmnietyMasterNullableScalarRelationFilter, AmnietyMasterWhereInput> | null
     rooms?: RoomListRelationFilter
     roomImages?: RoomImageListRelationFilter
     roomAmniety?: RoomAmnietyListRelationFilter
@@ -13819,7 +13728,6 @@ export namespace Prisma {
     pricePerNight?: SortOrderInput | SortOrder
     promotionPrice?: SortOrderInput | SortOrder
     isPromotion?: SortOrderInput | SortOrder
-    amnietyId?: SortOrderInput | SortOrder
     imageUrl?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13843,7 +13751,6 @@ export namespace Prisma {
     pricePerNight?: DecimalNullableWithAggregatesFilter<"RoomType"> | Decimal | DecimalJsLike | number | string | null
     promotionPrice?: DecimalNullableWithAggregatesFilter<"RoomType"> | Decimal | DecimalJsLike | number | string | null
     isPromotion?: BoolNullableWithAggregatesFilter<"RoomType"> | boolean | null
-    amnietyId?: IntNullableWithAggregatesFilter<"RoomType"> | number | null
     imageUrl?: StringNullableWithAggregatesFilter<"RoomType"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"RoomType"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"RoomType"> | Date | string
@@ -13924,7 +13831,7 @@ export namespace Prisma {
     OR?: RoomAmnietyWhereInput[]
     NOT?: RoomAmnietyWhereInput | RoomAmnietyWhereInput[]
     id?: IntFilter<"RoomAmniety"> | number
-    roomId?: IntNullableFilter<"RoomAmniety"> | number | null
+    roomTypeId?: IntNullableFilter<"RoomAmniety"> | number | null
     amnietyId?: IntNullableFilter<"RoomAmniety"> | number | null
     createdAt?: DateTimeFilter<"RoomAmniety"> | Date | string
     updatedAt?: DateTimeFilter<"RoomAmniety"> | Date | string
@@ -13934,7 +13841,7 @@ export namespace Prisma {
 
   export type RoomAmnietyOrderByWithRelationInput = {
     id?: SortOrder
-    roomId?: SortOrderInput | SortOrder
+    roomTypeId?: SortOrderInput | SortOrder
     amnietyId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13947,7 +13854,7 @@ export namespace Prisma {
     AND?: RoomAmnietyWhereInput | RoomAmnietyWhereInput[]
     OR?: RoomAmnietyWhereInput[]
     NOT?: RoomAmnietyWhereInput | RoomAmnietyWhereInput[]
-    roomId?: IntNullableFilter<"RoomAmniety"> | number | null
+    roomTypeId?: IntNullableFilter<"RoomAmniety"> | number | null
     amnietyId?: IntNullableFilter<"RoomAmniety"> | number | null
     createdAt?: DateTimeFilter<"RoomAmniety"> | Date | string
     updatedAt?: DateTimeFilter<"RoomAmniety"> | Date | string
@@ -13957,7 +13864,7 @@ export namespace Prisma {
 
   export type RoomAmnietyOrderByWithAggregationInput = {
     id?: SortOrder
-    roomId?: SortOrderInput | SortOrder
+    roomTypeId?: SortOrderInput | SortOrder
     amnietyId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13973,7 +13880,7 @@ export namespace Prisma {
     OR?: RoomAmnietyScalarWhereWithAggregatesInput[]
     NOT?: RoomAmnietyScalarWhereWithAggregatesInput | RoomAmnietyScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"RoomAmniety"> | number
-    roomId?: IntNullableWithAggregatesFilter<"RoomAmniety"> | number | null
+    roomTypeId?: IntNullableWithAggregatesFilter<"RoomAmniety"> | number | null
     amnietyId?: IntNullableWithAggregatesFilter<"RoomAmniety"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"RoomAmniety"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"RoomAmniety"> | Date | string
@@ -14339,7 +14246,6 @@ export namespace Prisma {
     amnietyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    roomTypes?: RoomTypeCreateNestedManyWithoutAmnietyInput
     roomAmniety?: RoomAmnietyCreateNestedManyWithoutAmnietyInput
   }
 
@@ -14348,7 +14254,6 @@ export namespace Prisma {
     amnietyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    roomTypes?: RoomTypeUncheckedCreateNestedManyWithoutAmnietyInput
     roomAmniety?: RoomAmnietyUncheckedCreateNestedManyWithoutAmnietyInput
   }
 
@@ -14356,7 +14261,6 @@ export namespace Prisma {
     amnietyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roomTypes?: RoomTypeUpdateManyWithoutAmnietyNestedInput
     roomAmniety?: RoomAmnietyUpdateManyWithoutAmnietyNestedInput
   }
 
@@ -14365,7 +14269,6 @@ export namespace Prisma {
     amnietyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roomTypes?: RoomTypeUncheckedUpdateManyWithoutAmnietyNestedInput
     roomAmniety?: RoomAmnietyUncheckedUpdateManyWithoutAmnietyNestedInput
   }
 
@@ -14451,7 +14354,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     bedType?: BedTypeCreateNestedOneWithoutRoomTypesInput
-    amniety?: AmnietyMasterCreateNestedOneWithoutRoomTypesInput
     rooms?: RoomCreateNestedManyWithoutRoomTypeInput
     roomImages?: RoomImageCreateNestedManyWithoutRoomTypeInput
     roomAmniety?: RoomAmnietyCreateNestedManyWithoutRoomTypeInput
@@ -14467,7 +14369,6 @@ export namespace Prisma {
     pricePerNight?: Decimal | DecimalJsLike | number | string | null
     promotionPrice?: Decimal | DecimalJsLike | number | string | null
     isPromotion?: boolean | null
-    amnietyId?: number | null
     imageUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14488,7 +14389,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bedType?: BedTypeUpdateOneWithoutRoomTypesNestedInput
-    amniety?: AmnietyMasterUpdateOneWithoutRoomTypesNestedInput
     rooms?: RoomUpdateManyWithoutRoomTypeNestedInput
     roomImages?: RoomImageUpdateManyWithoutRoomTypeNestedInput
     roomAmniety?: RoomAmnietyUpdateManyWithoutRoomTypeNestedInput
@@ -14504,7 +14404,6 @@ export namespace Prisma {
     pricePerNight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     promotionPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isPromotion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    amnietyId?: NullableIntFieldUpdateOperationsInput | number | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14523,7 +14422,6 @@ export namespace Prisma {
     pricePerNight?: Decimal | DecimalJsLike | number | string | null
     promotionPrice?: Decimal | DecimalJsLike | number | string | null
     isPromotion?: boolean | null
-    amnietyId?: number | null
     imageUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14552,7 +14450,6 @@ export namespace Prisma {
     pricePerNight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     promotionPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isPromotion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    amnietyId?: NullableIntFieldUpdateOperationsInput | number | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14632,7 +14529,7 @@ export namespace Prisma {
 
   export type RoomAmnietyUncheckedCreateInput = {
     id?: number
-    roomId?: number | null
+    roomTypeId?: number | null
     amnietyId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14647,7 +14544,7 @@ export namespace Prisma {
 
   export type RoomAmnietyUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    roomId?: NullableIntFieldUpdateOperationsInput | number | null
+    roomTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     amnietyId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14655,7 +14552,7 @@ export namespace Prisma {
 
   export type RoomAmnietyCreateManyInput = {
     id?: number
-    roomId?: number | null
+    roomTypeId?: number | null
     amnietyId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14668,7 +14565,7 @@ export namespace Prisma {
 
   export type RoomAmnietyUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    roomId?: NullableIntFieldUpdateOperationsInput | number | null
+    roomTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     amnietyId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15240,11 +15137,6 @@ export namespace Prisma {
     isNot?: BedTypeWhereInput | null
   }
 
-  export type AmnietyMasterNullableScalarRelationFilter = {
-    is?: AmnietyMasterWhereInput | null
-    isNot?: AmnietyMasterWhereInput | null
-  }
-
   export type RoomImageListRelationFilter = {
     every?: RoomImageWhereInput
     some?: RoomImageWhereInput
@@ -15265,7 +15157,6 @@ export namespace Prisma {
     pricePerNight?: SortOrder
     promotionPrice?: SortOrder
     isPromotion?: SortOrder
-    amnietyId?: SortOrder
     imageUrl?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15278,7 +15169,6 @@ export namespace Prisma {
     roomSize?: SortOrder
     pricePerNight?: SortOrder
     promotionPrice?: SortOrder
-    amnietyId?: SortOrder
   }
 
   export type RoomTypeMaxOrderByAggregateInput = {
@@ -15291,7 +15181,6 @@ export namespace Prisma {
     pricePerNight?: SortOrder
     promotionPrice?: SortOrder
     isPromotion?: SortOrder
-    amnietyId?: SortOrder
     imageUrl?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15307,7 +15196,6 @@ export namespace Prisma {
     pricePerNight?: SortOrder
     promotionPrice?: SortOrder
     isPromotion?: SortOrder
-    amnietyId?: SortOrder
     imageUrl?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15320,7 +15208,6 @@ export namespace Prisma {
     roomSize?: SortOrder
     pricePerNight?: SortOrder
     promotionPrice?: SortOrder
-    amnietyId?: SortOrder
   }
 
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -15415,9 +15302,14 @@ export namespace Prisma {
     roomStatusId?: SortOrder
   }
 
+  export type AmnietyMasterNullableScalarRelationFilter = {
+    is?: AmnietyMasterWhereInput | null
+    isNot?: AmnietyMasterWhereInput | null
+  }
+
   export type RoomAmnietyCountOrderByAggregateInput = {
     id?: SortOrder
-    roomId?: SortOrder
+    roomTypeId?: SortOrder
     amnietyId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15425,13 +15317,13 @@ export namespace Prisma {
 
   export type RoomAmnietyAvgOrderByAggregateInput = {
     id?: SortOrder
-    roomId?: SortOrder
+    roomTypeId?: SortOrder
     amnietyId?: SortOrder
   }
 
   export type RoomAmnietyMaxOrderByAggregateInput = {
     id?: SortOrder
-    roomId?: SortOrder
+    roomTypeId?: SortOrder
     amnietyId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15439,7 +15331,7 @@ export namespace Prisma {
 
   export type RoomAmnietyMinOrderByAggregateInput = {
     id?: SortOrder
-    roomId?: SortOrder
+    roomTypeId?: SortOrder
     amnietyId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15447,7 +15339,7 @@ export namespace Prisma {
 
   export type RoomAmnietySumOrderByAggregateInput = {
     id?: SortOrder
-    roomId?: SortOrder
+    roomTypeId?: SortOrder
     amnietyId?: SortOrder
   }
 
@@ -15636,13 +15528,6 @@ export namespace Prisma {
     deleteMany?: RoomTypeScalarWhereInput | RoomTypeScalarWhereInput[]
   }
 
-  export type RoomTypeCreateNestedManyWithoutAmnietyInput = {
-    create?: XOR<RoomTypeCreateWithoutAmnietyInput, RoomTypeUncheckedCreateWithoutAmnietyInput> | RoomTypeCreateWithoutAmnietyInput[] | RoomTypeUncheckedCreateWithoutAmnietyInput[]
-    connectOrCreate?: RoomTypeCreateOrConnectWithoutAmnietyInput | RoomTypeCreateOrConnectWithoutAmnietyInput[]
-    createMany?: RoomTypeCreateManyAmnietyInputEnvelope
-    connect?: RoomTypeWhereUniqueInput | RoomTypeWhereUniqueInput[]
-  }
-
   export type RoomAmnietyCreateNestedManyWithoutAmnietyInput = {
     create?: XOR<RoomAmnietyCreateWithoutAmnietyInput, RoomAmnietyUncheckedCreateWithoutAmnietyInput> | RoomAmnietyCreateWithoutAmnietyInput[] | RoomAmnietyUncheckedCreateWithoutAmnietyInput[]
     connectOrCreate?: RoomAmnietyCreateOrConnectWithoutAmnietyInput | RoomAmnietyCreateOrConnectWithoutAmnietyInput[]
@@ -15650,32 +15535,11 @@ export namespace Prisma {
     connect?: RoomAmnietyWhereUniqueInput | RoomAmnietyWhereUniqueInput[]
   }
 
-  export type RoomTypeUncheckedCreateNestedManyWithoutAmnietyInput = {
-    create?: XOR<RoomTypeCreateWithoutAmnietyInput, RoomTypeUncheckedCreateWithoutAmnietyInput> | RoomTypeCreateWithoutAmnietyInput[] | RoomTypeUncheckedCreateWithoutAmnietyInput[]
-    connectOrCreate?: RoomTypeCreateOrConnectWithoutAmnietyInput | RoomTypeCreateOrConnectWithoutAmnietyInput[]
-    createMany?: RoomTypeCreateManyAmnietyInputEnvelope
-    connect?: RoomTypeWhereUniqueInput | RoomTypeWhereUniqueInput[]
-  }
-
   export type RoomAmnietyUncheckedCreateNestedManyWithoutAmnietyInput = {
     create?: XOR<RoomAmnietyCreateWithoutAmnietyInput, RoomAmnietyUncheckedCreateWithoutAmnietyInput> | RoomAmnietyCreateWithoutAmnietyInput[] | RoomAmnietyUncheckedCreateWithoutAmnietyInput[]
     connectOrCreate?: RoomAmnietyCreateOrConnectWithoutAmnietyInput | RoomAmnietyCreateOrConnectWithoutAmnietyInput[]
     createMany?: RoomAmnietyCreateManyAmnietyInputEnvelope
     connect?: RoomAmnietyWhereUniqueInput | RoomAmnietyWhereUniqueInput[]
-  }
-
-  export type RoomTypeUpdateManyWithoutAmnietyNestedInput = {
-    create?: XOR<RoomTypeCreateWithoutAmnietyInput, RoomTypeUncheckedCreateWithoutAmnietyInput> | RoomTypeCreateWithoutAmnietyInput[] | RoomTypeUncheckedCreateWithoutAmnietyInput[]
-    connectOrCreate?: RoomTypeCreateOrConnectWithoutAmnietyInput | RoomTypeCreateOrConnectWithoutAmnietyInput[]
-    upsert?: RoomTypeUpsertWithWhereUniqueWithoutAmnietyInput | RoomTypeUpsertWithWhereUniqueWithoutAmnietyInput[]
-    createMany?: RoomTypeCreateManyAmnietyInputEnvelope
-    set?: RoomTypeWhereUniqueInput | RoomTypeWhereUniqueInput[]
-    disconnect?: RoomTypeWhereUniqueInput | RoomTypeWhereUniqueInput[]
-    delete?: RoomTypeWhereUniqueInput | RoomTypeWhereUniqueInput[]
-    connect?: RoomTypeWhereUniqueInput | RoomTypeWhereUniqueInput[]
-    update?: RoomTypeUpdateWithWhereUniqueWithoutAmnietyInput | RoomTypeUpdateWithWhereUniqueWithoutAmnietyInput[]
-    updateMany?: RoomTypeUpdateManyWithWhereWithoutAmnietyInput | RoomTypeUpdateManyWithWhereWithoutAmnietyInput[]
-    deleteMany?: RoomTypeScalarWhereInput | RoomTypeScalarWhereInput[]
   }
 
   export type RoomAmnietyUpdateManyWithoutAmnietyNestedInput = {
@@ -15690,20 +15554,6 @@ export namespace Prisma {
     update?: RoomAmnietyUpdateWithWhereUniqueWithoutAmnietyInput | RoomAmnietyUpdateWithWhereUniqueWithoutAmnietyInput[]
     updateMany?: RoomAmnietyUpdateManyWithWhereWithoutAmnietyInput | RoomAmnietyUpdateManyWithWhereWithoutAmnietyInput[]
     deleteMany?: RoomAmnietyScalarWhereInput | RoomAmnietyScalarWhereInput[]
-  }
-
-  export type RoomTypeUncheckedUpdateManyWithoutAmnietyNestedInput = {
-    create?: XOR<RoomTypeCreateWithoutAmnietyInput, RoomTypeUncheckedCreateWithoutAmnietyInput> | RoomTypeCreateWithoutAmnietyInput[] | RoomTypeUncheckedCreateWithoutAmnietyInput[]
-    connectOrCreate?: RoomTypeCreateOrConnectWithoutAmnietyInput | RoomTypeCreateOrConnectWithoutAmnietyInput[]
-    upsert?: RoomTypeUpsertWithWhereUniqueWithoutAmnietyInput | RoomTypeUpsertWithWhereUniqueWithoutAmnietyInput[]
-    createMany?: RoomTypeCreateManyAmnietyInputEnvelope
-    set?: RoomTypeWhereUniqueInput | RoomTypeWhereUniqueInput[]
-    disconnect?: RoomTypeWhereUniqueInput | RoomTypeWhereUniqueInput[]
-    delete?: RoomTypeWhereUniqueInput | RoomTypeWhereUniqueInput[]
-    connect?: RoomTypeWhereUniqueInput | RoomTypeWhereUniqueInput[]
-    update?: RoomTypeUpdateWithWhereUniqueWithoutAmnietyInput | RoomTypeUpdateWithWhereUniqueWithoutAmnietyInput[]
-    updateMany?: RoomTypeUpdateManyWithWhereWithoutAmnietyInput | RoomTypeUpdateManyWithWhereWithoutAmnietyInput[]
-    deleteMany?: RoomTypeScalarWhereInput | RoomTypeScalarWhereInput[]
   }
 
   export type RoomAmnietyUncheckedUpdateManyWithoutAmnietyNestedInput = {
@@ -15766,12 +15616,6 @@ export namespace Prisma {
     create?: XOR<BedTypeCreateWithoutRoomTypesInput, BedTypeUncheckedCreateWithoutRoomTypesInput>
     connectOrCreate?: BedTypeCreateOrConnectWithoutRoomTypesInput
     connect?: BedTypeWhereUniqueInput
-  }
-
-  export type AmnietyMasterCreateNestedOneWithoutRoomTypesInput = {
-    create?: XOR<AmnietyMasterCreateWithoutRoomTypesInput, AmnietyMasterUncheckedCreateWithoutRoomTypesInput>
-    connectOrCreate?: AmnietyMasterCreateOrConnectWithoutRoomTypesInput
-    connect?: AmnietyMasterWhereUniqueInput
   }
 
   export type RoomCreateNestedManyWithoutRoomTypeInput = {
@@ -15844,16 +15688,6 @@ export namespace Prisma {
     delete?: BedTypeWhereInput | boolean
     connect?: BedTypeWhereUniqueInput
     update?: XOR<XOR<BedTypeUpdateToOneWithWhereWithoutRoomTypesInput, BedTypeUpdateWithoutRoomTypesInput>, BedTypeUncheckedUpdateWithoutRoomTypesInput>
-  }
-
-  export type AmnietyMasterUpdateOneWithoutRoomTypesNestedInput = {
-    create?: XOR<AmnietyMasterCreateWithoutRoomTypesInput, AmnietyMasterUncheckedCreateWithoutRoomTypesInput>
-    connectOrCreate?: AmnietyMasterCreateOrConnectWithoutRoomTypesInput
-    upsert?: AmnietyMasterUpsertWithoutRoomTypesInput
-    disconnect?: AmnietyMasterWhereInput | boolean
-    delete?: AmnietyMasterWhereInput | boolean
-    connect?: AmnietyMasterWhereUniqueInput
-    update?: XOR<XOR<AmnietyMasterUpdateToOneWithWhereWithoutRoomTypesInput, AmnietyMasterUpdateWithoutRoomTypesInput>, AmnietyMasterUncheckedUpdateWithoutRoomTypesInput>
   }
 
   export type RoomUpdateManyWithoutRoomTypeNestedInput = {
@@ -16276,7 +16110,6 @@ export namespace Prisma {
     imageUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    amniety?: AmnietyMasterCreateNestedOneWithoutRoomTypesInput
     rooms?: RoomCreateNestedManyWithoutRoomTypeInput
     roomImages?: RoomImageCreateNestedManyWithoutRoomTypeInput
     roomAmniety?: RoomAmnietyCreateNestedManyWithoutRoomTypeInput
@@ -16291,7 +16124,6 @@ export namespace Prisma {
     pricePerNight?: Decimal | DecimalJsLike | number | string | null
     promotionPrice?: Decimal | DecimalJsLike | number | string | null
     isPromotion?: boolean | null
-    amnietyId?: number | null
     imageUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16339,55 +16171,9 @@ export namespace Prisma {
     pricePerNight?: DecimalNullableFilter<"RoomType"> | Decimal | DecimalJsLike | number | string | null
     promotionPrice?: DecimalNullableFilter<"RoomType"> | Decimal | DecimalJsLike | number | string | null
     isPromotion?: BoolNullableFilter<"RoomType"> | boolean | null
-    amnietyId?: IntNullableFilter<"RoomType"> | number | null
     imageUrl?: StringNullableFilter<"RoomType"> | string | null
     createdAt?: DateTimeFilter<"RoomType"> | Date | string
     updatedAt?: DateTimeFilter<"RoomType"> | Date | string
-  }
-
-  export type RoomTypeCreateWithoutAmnietyInput = {
-    name?: string | null
-    description?: string | null
-    capacity?: number | null
-    roomSize?: number | null
-    pricePerNight?: Decimal | DecimalJsLike | number | string | null
-    promotionPrice?: Decimal | DecimalJsLike | number | string | null
-    isPromotion?: boolean | null
-    imageUrl?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    bedType?: BedTypeCreateNestedOneWithoutRoomTypesInput
-    rooms?: RoomCreateNestedManyWithoutRoomTypeInput
-    roomImages?: RoomImageCreateNestedManyWithoutRoomTypeInput
-    roomAmniety?: RoomAmnietyCreateNestedManyWithoutRoomTypeInput
-  }
-
-  export type RoomTypeUncheckedCreateWithoutAmnietyInput = {
-    id?: number
-    bedTypeId?: number | null
-    name?: string | null
-    description?: string | null
-    capacity?: number | null
-    roomSize?: number | null
-    pricePerNight?: Decimal | DecimalJsLike | number | string | null
-    promotionPrice?: Decimal | DecimalJsLike | number | string | null
-    isPromotion?: boolean | null
-    imageUrl?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    rooms?: RoomUncheckedCreateNestedManyWithoutRoomTypeInput
-    roomImages?: RoomImageUncheckedCreateNestedManyWithoutRoomTypeInput
-    roomAmniety?: RoomAmnietyUncheckedCreateNestedManyWithoutRoomTypeInput
-  }
-
-  export type RoomTypeCreateOrConnectWithoutAmnietyInput = {
-    where: RoomTypeWhereUniqueInput
-    create: XOR<RoomTypeCreateWithoutAmnietyInput, RoomTypeUncheckedCreateWithoutAmnietyInput>
-  }
-
-  export type RoomTypeCreateManyAmnietyInputEnvelope = {
-    data: RoomTypeCreateManyAmnietyInput | RoomTypeCreateManyAmnietyInput[]
-    skipDuplicates?: boolean
   }
 
   export type RoomAmnietyCreateWithoutAmnietyInput = {
@@ -16398,7 +16184,7 @@ export namespace Prisma {
 
   export type RoomAmnietyUncheckedCreateWithoutAmnietyInput = {
     id?: number
-    roomId?: number | null
+    roomTypeId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -16411,22 +16197,6 @@ export namespace Prisma {
   export type RoomAmnietyCreateManyAmnietyInputEnvelope = {
     data: RoomAmnietyCreateManyAmnietyInput | RoomAmnietyCreateManyAmnietyInput[]
     skipDuplicates?: boolean
-  }
-
-  export type RoomTypeUpsertWithWhereUniqueWithoutAmnietyInput = {
-    where: RoomTypeWhereUniqueInput
-    update: XOR<RoomTypeUpdateWithoutAmnietyInput, RoomTypeUncheckedUpdateWithoutAmnietyInput>
-    create: XOR<RoomTypeCreateWithoutAmnietyInput, RoomTypeUncheckedCreateWithoutAmnietyInput>
-  }
-
-  export type RoomTypeUpdateWithWhereUniqueWithoutAmnietyInput = {
-    where: RoomTypeWhereUniqueInput
-    data: XOR<RoomTypeUpdateWithoutAmnietyInput, RoomTypeUncheckedUpdateWithoutAmnietyInput>
-  }
-
-  export type RoomTypeUpdateManyWithWhereWithoutAmnietyInput = {
-    where: RoomTypeScalarWhereInput
-    data: XOR<RoomTypeUpdateManyMutationInput, RoomTypeUncheckedUpdateManyWithoutAmnietyInput>
   }
 
   export type RoomAmnietyUpsertWithWhereUniqueWithoutAmnietyInput = {
@@ -16450,7 +16220,7 @@ export namespace Prisma {
     OR?: RoomAmnietyScalarWhereInput[]
     NOT?: RoomAmnietyScalarWhereInput | RoomAmnietyScalarWhereInput[]
     id?: IntFilter<"RoomAmniety"> | number
-    roomId?: IntNullableFilter<"RoomAmniety"> | number | null
+    roomTypeId?: IntNullableFilter<"RoomAmniety"> | number | null
     amnietyId?: IntNullableFilter<"RoomAmniety"> | number | null
     createdAt?: DateTimeFilter<"RoomAmniety"> | Date | string
     updatedAt?: DateTimeFilter<"RoomAmniety"> | Date | string
@@ -16528,26 +16298,6 @@ export namespace Prisma {
   export type BedTypeCreateOrConnectWithoutRoomTypesInput = {
     where: BedTypeWhereUniqueInput
     create: XOR<BedTypeCreateWithoutRoomTypesInput, BedTypeUncheckedCreateWithoutRoomTypesInput>
-  }
-
-  export type AmnietyMasterCreateWithoutRoomTypesInput = {
-    amnietyName?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    roomAmniety?: RoomAmnietyCreateNestedManyWithoutAmnietyInput
-  }
-
-  export type AmnietyMasterUncheckedCreateWithoutRoomTypesInput = {
-    id?: number
-    amnietyName?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    roomAmniety?: RoomAmnietyUncheckedCreateNestedManyWithoutAmnietyInput
-  }
-
-  export type AmnietyMasterCreateOrConnectWithoutRoomTypesInput = {
-    where: AmnietyMasterWhereUniqueInput
-    create: XOR<AmnietyMasterCreateWithoutRoomTypesInput, AmnietyMasterUncheckedCreateWithoutRoomTypesInput>
   }
 
   export type RoomCreateWithoutRoomTypeInput = {
@@ -16647,32 +16397,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type AmnietyMasterUpsertWithoutRoomTypesInput = {
-    update: XOR<AmnietyMasterUpdateWithoutRoomTypesInput, AmnietyMasterUncheckedUpdateWithoutRoomTypesInput>
-    create: XOR<AmnietyMasterCreateWithoutRoomTypesInput, AmnietyMasterUncheckedCreateWithoutRoomTypesInput>
-    where?: AmnietyMasterWhereInput
-  }
-
-  export type AmnietyMasterUpdateToOneWithWhereWithoutRoomTypesInput = {
-    where?: AmnietyMasterWhereInput
-    data: XOR<AmnietyMasterUpdateWithoutRoomTypesInput, AmnietyMasterUncheckedUpdateWithoutRoomTypesInput>
-  }
-
-  export type AmnietyMasterUpdateWithoutRoomTypesInput = {
-    amnietyName?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roomAmniety?: RoomAmnietyUpdateManyWithoutAmnietyNestedInput
-  }
-
-  export type AmnietyMasterUncheckedUpdateWithoutRoomTypesInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    amnietyName?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roomAmniety?: RoomAmnietyUncheckedUpdateManyWithoutAmnietyNestedInput
-  }
-
   export type RoomUpsertWithWhereUniqueWithoutRoomTypeInput = {
     where: RoomWhereUniqueInput
     update: XOR<RoomUpdateWithoutRoomTypeInput, RoomUncheckedUpdateWithoutRoomTypeInput>
@@ -16744,7 +16468,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     bedType?: BedTypeCreateNestedOneWithoutRoomTypesInput
-    amniety?: AmnietyMasterCreateNestedOneWithoutRoomTypesInput
     roomImages?: RoomImageCreateNestedManyWithoutRoomTypeInput
     roomAmniety?: RoomAmnietyCreateNestedManyWithoutRoomTypeInput
   }
@@ -16759,7 +16482,6 @@ export namespace Prisma {
     pricePerNight?: Decimal | DecimalJsLike | number | string | null
     promotionPrice?: Decimal | DecimalJsLike | number | string | null
     isPromotion?: boolean | null
-    amnietyId?: number | null
     imageUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16813,7 +16535,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bedType?: BedTypeUpdateOneWithoutRoomTypesNestedInput
-    amniety?: AmnietyMasterUpdateOneWithoutRoomTypesNestedInput
     roomImages?: RoomImageUpdateManyWithoutRoomTypeNestedInput
     roomAmniety?: RoomAmnietyUpdateManyWithoutRoomTypeNestedInput
   }
@@ -16828,7 +16549,6 @@ export namespace Prisma {
     pricePerNight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     promotionPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isPromotion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    amnietyId?: NullableIntFieldUpdateOperationsInput | number | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16872,7 +16592,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     bedType?: BedTypeCreateNestedOneWithoutRoomTypesInput
-    amniety?: AmnietyMasterCreateNestedOneWithoutRoomTypesInput
     rooms?: RoomCreateNestedManyWithoutRoomTypeInput
     roomImages?: RoomImageCreateNestedManyWithoutRoomTypeInput
   }
@@ -16887,7 +16606,6 @@ export namespace Prisma {
     pricePerNight?: Decimal | DecimalJsLike | number | string | null
     promotionPrice?: Decimal | DecimalJsLike | number | string | null
     isPromotion?: boolean | null
-    amnietyId?: number | null
     imageUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16904,7 +16622,6 @@ export namespace Prisma {
     amnietyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    roomTypes?: RoomTypeCreateNestedManyWithoutAmnietyInput
   }
 
   export type AmnietyMasterUncheckedCreateWithoutRoomAmnietyInput = {
@@ -16912,7 +16629,6 @@ export namespace Prisma {
     amnietyName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    roomTypes?: RoomTypeUncheckedCreateNestedManyWithoutAmnietyInput
   }
 
   export type AmnietyMasterCreateOrConnectWithoutRoomAmnietyInput = {
@@ -16943,7 +16659,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bedType?: BedTypeUpdateOneWithoutRoomTypesNestedInput
-    amniety?: AmnietyMasterUpdateOneWithoutRoomTypesNestedInput
     rooms?: RoomUpdateManyWithoutRoomTypeNestedInput
     roomImages?: RoomImageUpdateManyWithoutRoomTypeNestedInput
   }
@@ -16958,7 +16673,6 @@ export namespace Prisma {
     pricePerNight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     promotionPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isPromotion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    amnietyId?: NullableIntFieldUpdateOperationsInput | number | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16981,7 +16695,6 @@ export namespace Prisma {
     amnietyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roomTypes?: RoomTypeUpdateManyWithoutAmnietyNestedInput
   }
 
   export type AmnietyMasterUncheckedUpdateWithoutRoomAmnietyInput = {
@@ -16989,7 +16702,6 @@ export namespace Prisma {
     amnietyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roomTypes?: RoomTypeUncheckedUpdateManyWithoutAmnietyNestedInput
   }
 
   export type RoomTypeCreateWithoutRoomImagesInput = {
@@ -17004,7 +16716,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     bedType?: BedTypeCreateNestedOneWithoutRoomTypesInput
-    amniety?: AmnietyMasterCreateNestedOneWithoutRoomTypesInput
     rooms?: RoomCreateNestedManyWithoutRoomTypeInput
     roomAmniety?: RoomAmnietyCreateNestedManyWithoutRoomTypeInput
   }
@@ -17019,7 +16730,6 @@ export namespace Prisma {
     pricePerNight?: Decimal | DecimalJsLike | number | string | null
     promotionPrice?: Decimal | DecimalJsLike | number | string | null
     isPromotion?: boolean | null
-    amnietyId?: number | null
     imageUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17055,7 +16765,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bedType?: BedTypeUpdateOneWithoutRoomTypesNestedInput
-    amniety?: AmnietyMasterUpdateOneWithoutRoomTypesNestedInput
     rooms?: RoomUpdateManyWithoutRoomTypeNestedInput
     roomAmniety?: RoomAmnietyUpdateManyWithoutRoomTypeNestedInput
   }
@@ -17070,7 +16779,6 @@ export namespace Prisma {
     pricePerNight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     promotionPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isPromotion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    amnietyId?: NullableIntFieldUpdateOperationsInput | number | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17087,7 +16795,6 @@ export namespace Prisma {
     pricePerNight?: Decimal | DecimalJsLike | number | string | null
     promotionPrice?: Decimal | DecimalJsLike | number | string | null
     isPromotion?: boolean | null
-    amnietyId?: number | null
     imageUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17104,7 +16811,6 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    amniety?: AmnietyMasterUpdateOneWithoutRoomTypesNestedInput
     rooms?: RoomUpdateManyWithoutRoomTypeNestedInput
     roomImages?: RoomImageUpdateManyWithoutRoomTypeNestedInput
     roomAmniety?: RoomAmnietyUpdateManyWithoutRoomTypeNestedInput
@@ -17119,7 +16825,6 @@ export namespace Prisma {
     pricePerNight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     promotionPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isPromotion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    amnietyId?: NullableIntFieldUpdateOperationsInput | number | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17137,82 +16842,16 @@ export namespace Prisma {
     pricePerNight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     promotionPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isPromotion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    amnietyId?: NullableIntFieldUpdateOperationsInput | number | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type RoomTypeCreateManyAmnietyInput = {
-    id?: number
-    bedTypeId?: number | null
-    name?: string | null
-    description?: string | null
-    capacity?: number | null
-    roomSize?: number | null
-    pricePerNight?: Decimal | DecimalJsLike | number | string | null
-    promotionPrice?: Decimal | DecimalJsLike | number | string | null
-    isPromotion?: boolean | null
-    imageUrl?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
   export type RoomAmnietyCreateManyAmnietyInput = {
     id?: number
-    roomId?: number | null
+    roomTypeId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
-  }
-
-  export type RoomTypeUpdateWithoutAmnietyInput = {
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    capacity?: NullableIntFieldUpdateOperationsInput | number | null
-    roomSize?: NullableIntFieldUpdateOperationsInput | number | null
-    pricePerNight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    promotionPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    isPromotion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    bedType?: BedTypeUpdateOneWithoutRoomTypesNestedInput
-    rooms?: RoomUpdateManyWithoutRoomTypeNestedInput
-    roomImages?: RoomImageUpdateManyWithoutRoomTypeNestedInput
-    roomAmniety?: RoomAmnietyUpdateManyWithoutRoomTypeNestedInput
-  }
-
-  export type RoomTypeUncheckedUpdateWithoutAmnietyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    bedTypeId?: NullableIntFieldUpdateOperationsInput | number | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    capacity?: NullableIntFieldUpdateOperationsInput | number | null
-    roomSize?: NullableIntFieldUpdateOperationsInput | number | null
-    pricePerNight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    promotionPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    isPromotion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    rooms?: RoomUncheckedUpdateManyWithoutRoomTypeNestedInput
-    roomImages?: RoomImageUncheckedUpdateManyWithoutRoomTypeNestedInput
-    roomAmniety?: RoomAmnietyUncheckedUpdateManyWithoutRoomTypeNestedInput
-  }
-
-  export type RoomTypeUncheckedUpdateManyWithoutAmnietyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    bedTypeId?: NullableIntFieldUpdateOperationsInput | number | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    capacity?: NullableIntFieldUpdateOperationsInput | number | null
-    roomSize?: NullableIntFieldUpdateOperationsInput | number | null
-    pricePerNight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    promotionPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    isPromotion?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RoomAmnietyUpdateWithoutAmnietyInput = {
@@ -17223,14 +16862,14 @@ export namespace Prisma {
 
   export type RoomAmnietyUncheckedUpdateWithoutAmnietyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    roomId?: NullableIntFieldUpdateOperationsInput | number | null
+    roomTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RoomAmnietyUncheckedUpdateManyWithoutAmnietyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    roomId?: NullableIntFieldUpdateOperationsInput | number | null
+    roomTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

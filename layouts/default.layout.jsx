@@ -2,7 +2,7 @@ import Head from "next/head";
 import React from "react";
 import Navbar from "../components/global/navbar";
 
-const DefaultLayout = ({ title, children }) => {
+const DefaultLayout = ({ title, children, showFooter = false }) => {
   return (
     <>
       <Head>
@@ -11,7 +11,7 @@ const DefaultLayout = ({ title, children }) => {
       <main className="min-h-screen flex flex-col">
         <Navbar />
         <div>{children}</div>
-        <footer>footer</footer>
+        {showFooter && <footer>footer</footer>}
       </main>
     </>
   );

@@ -1,9 +1,14 @@
-'use client'
+"use client";
 
 import { Plus, X } from "lucide-react";
 import React from "react";
 
-const ImageUploader = ({ imageUrl, onChange, width = 167, height = 167 }) => {
+const ImageUploader = React.forwardRef(function ImageUploader({
+  imageUrl,
+  onChange,
+  width = 167,
+  height = 167,
+}, ref) {
   const [image, setImage] = React.useState(imageUrl);
 
   const handleRemoveImage = (e) => {
@@ -22,7 +27,10 @@ const ImageUploader = ({ imageUrl, onChange, width = 167, height = 167 }) => {
   };
 
   return (
-    <div className="relative" style={{ width: `${width}px`, height: `${height}px` }}>
+    <div
+      className="relative group"
+      style={{ width: `${width}px`, height: `${height}px` }}
+    >
       <input
         type="file"
         id="image-uploader"
@@ -43,7 +51,7 @@ const ImageUploader = ({ imageUrl, onChange, width = 167, height = 167 }) => {
         htmlFor="image-uploader"
         className="w-full h-full flex items-center justify-center"
       >
-        <div className="bg-gray-200 rounded-sm w-full h-full flex flex-col items-center justify-center gap-2">
+        <div className="bg-gray-200 group-hover:bg-gray-300 rounded-sm w-full h-full flex flex-col items-center justify-center gap-2">
           {image ? (
             <img src={image} alt="" className="w-full h-full object-cover" />
           ) : (
@@ -56,6 +64,6 @@ const ImageUploader = ({ imageUrl, onChange, width = 167, height = 167 }) => {
       </label>
     </div>
   );
-};
+});
 
 export default ImageUploader;

@@ -57,7 +57,6 @@ model AmnietyMaster {
   updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
 
   // Relations
-  roomTypes   RoomType[]
   roomAmniety RoomAmniety[]
 
   @@map("AmnietyMaster")
@@ -85,14 +84,12 @@ model RoomType {
   pricePerNight  Decimal? @map("price_per_night") @db.Decimal(10, 2)
   promotionPrice Decimal? @map("promotion_price") @db.Decimal(10, 2)
   isPromotion    Boolean? @default(false) @map("is_promotion")
-  amnietyId      Int?     @map("amniety_id")
   imageUrl       String?  @map("image_url")
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @default(now()) @updatedAt @map("updated_at")
 
   // Relations
-  bedType     BedType?       @relation(fields: [bedTypeId], references: [id])
-  amniety     AmnietyMaster? @relation(fields: [amnietyId], references: [id])
+  bedType     BedType?      @relation(fields: [bedTypeId], references: [id])
   rooms       Room[]
   roomImages  RoomImage[]
   roomAmniety RoomAmniety[]
@@ -117,14 +114,14 @@ model Room {
 }
 
 model RoomAmniety {
-  id        Int      @id @default(autoincrement())
-  roomId    Int?     @map("room_id")
-  amnietyId Int?     @map("amniety_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  id         Int      @id @default(autoincrement())
+  roomTypeId Int?     @map("room_type_id")
+  amnietyId  Int?     @map("amniety_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
   // Relations
-  roomType RoomType?      @relation(fields: [roomId], references: [id])
+  roomType RoomType?      @relation(fields: [roomTypeId], references: [id])
   amniety  AmnietyMaster? @relation(fields: [amnietyId], references: [id])
 
   @@map("RoomAmniety")

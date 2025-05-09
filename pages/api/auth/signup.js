@@ -26,6 +26,14 @@ export default async function handler(req, res) {
       profilePicturePublicId,
     } = req.body;
 
+    if (!firstName || !lastName || !username || !email || !password || !phone || !dateOfBirth || !country) {
+      return errorResponse({
+        res,
+        message: "All fields are required",
+        status: HTTP_STATUS.BAD_REQUEST,
+      });
+    }
+
     const existingUser = await db.user.findFirst({
       where: {
         OR: [
