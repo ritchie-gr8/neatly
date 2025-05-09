@@ -50,18 +50,6 @@ model BedType {
   @@map("BedType")
 }
 
-model AmnietyMaster {
-  id          Int      @id @default(autoincrement()) @map("amniety_id")
-  amnietyName String?  @map("amniety_name")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
-
-  // Relations
-  roomAmniety RoomAmniety[]
-
-  @@map("AmnietyMaster")
-}
-
 model RoomStatus {
   id         Int      @id @default(autoincrement()) @map("room_status_id")
   statusName String?  @map("status_name")
@@ -116,13 +104,13 @@ model Room {
 model RoomAmniety {
   id         Int      @id @default(autoincrement())
   roomTypeId Int?     @map("room_type_id")
-  amnietyId  Int?     @map("amniety_id")
+  name       String   @map("name")
+  order      Int      @default(0) @map("order")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
   // Relations
-  roomType RoomType?      @relation(fields: [roomTypeId], references: [id])
-  amniety  AmnietyMaster? @relation(fields: [amnietyId], references: [id])
+  roomType RoomType? @relation(fields: [roomTypeId], references: [id])
 
   @@map("RoomAmniety")
 }
@@ -153,11 +141,12 @@ model HotelMaster {
 }
 
 model RoomImage {
-  id           Int      @id @default(autoincrement()) @map("image_id")
-  roomTypeId   Int?     @map("room_type_id")
-  imageUrl     String?  @map("image_url")
-  imageOrder   Int?     @map("image_order")
-  imageDefault Boolean? @default(false) @map("image_default")
+  id            Int      @id @default(autoincrement()) @map("image_id")
+  roomTypeId    Int?     @map("room_type_id")
+  imageUrl      String?  @map("image_url")
+  imagePublicId String?  @map("image_public_id")
+  imageOrder    Int?     @map("image_order")
+  imageDefault  Boolean? @default(false) @map("image_default")
 
   // Relations
   roomType RoomType? @relation(fields: [roomTypeId], references: [id])

@@ -24,11 +24,6 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  */
 export type BedType = $Result.DefaultSelection<Prisma.$BedTypePayload>
 /**
- * Model AmnietyMaster
- * 
- */
-export type AmnietyMaster = $Result.DefaultSelection<Prisma.$AmnietyMasterPayload>
-/**
  * Model RoomStatus
  * 
  */
@@ -225,16 +220,6 @@ export class PrismaClient<
     * ```
     */
   get bedType(): Prisma.BedTypeDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.amnietyMaster`: Exposes CRUD operations for the **AmnietyMaster** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more AmnietyMasters
-    * const amnietyMasters = await prisma.amnietyMaster.findMany()
-    * ```
-    */
-  get amnietyMaster(): Prisma.AmnietyMasterDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.roomStatus`: Exposes CRUD operations for the **RoomStatus** model.
@@ -747,7 +732,6 @@ export namespace Prisma {
   export const ModelName: {
     User: 'User',
     BedType: 'BedType',
-    AmnietyMaster: 'AmnietyMaster',
     RoomStatus: 'RoomStatus',
     RoomType: 'RoomType',
     Room: 'Room',
@@ -773,7 +757,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "bedType" | "amnietyMaster" | "roomStatus" | "roomType" | "room" | "roomAmniety" | "guest" | "hotelMaster" | "roomImage"
+      modelProps: "user" | "bedType" | "roomStatus" | "roomType" | "room" | "roomAmniety" | "guest" | "hotelMaster" | "roomImage"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -922,80 +906,6 @@ export namespace Prisma {
           count: {
             args: Prisma.BedTypeCountArgs<ExtArgs>
             result: $Utils.Optional<BedTypeCountAggregateOutputType> | number
-          }
-        }
-      }
-      AmnietyMaster: {
-        payload: Prisma.$AmnietyMasterPayload<ExtArgs>
-        fields: Prisma.AmnietyMasterFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.AmnietyMasterFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AmnietyMasterPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.AmnietyMasterFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AmnietyMasterPayload>
-          }
-          findFirst: {
-            args: Prisma.AmnietyMasterFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AmnietyMasterPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.AmnietyMasterFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AmnietyMasterPayload>
-          }
-          findMany: {
-            args: Prisma.AmnietyMasterFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AmnietyMasterPayload>[]
-          }
-          create: {
-            args: Prisma.AmnietyMasterCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AmnietyMasterPayload>
-          }
-          createMany: {
-            args: Prisma.AmnietyMasterCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.AmnietyMasterCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AmnietyMasterPayload>[]
-          }
-          delete: {
-            args: Prisma.AmnietyMasterDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AmnietyMasterPayload>
-          }
-          update: {
-            args: Prisma.AmnietyMasterUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AmnietyMasterPayload>
-          }
-          deleteMany: {
-            args: Prisma.AmnietyMasterDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.AmnietyMasterUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.AmnietyMasterUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AmnietyMasterPayload>[]
-          }
-          upsert: {
-            args: Prisma.AmnietyMasterUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AmnietyMasterPayload>
-          }
-          aggregate: {
-            args: Prisma.AmnietyMasterAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateAmnietyMaster>
-          }
-          groupBy: {
-            args: Prisma.AmnietyMasterGroupByArgs<ExtArgs>
-            result: $Utils.Optional<AmnietyMasterGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.AmnietyMasterCountArgs<ExtArgs>
-            result: $Utils.Optional<AmnietyMasterCountAggregateOutputType> | number
           }
         }
       }
@@ -1603,7 +1513,6 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     user?: UserOmit
     bedType?: BedTypeOmit
-    amnietyMaster?: AmnietyMasterOmit
     roomStatus?: RoomStatusOmit
     roomType?: RoomTypeOmit
     room?: RoomOmit
@@ -1728,37 +1637,6 @@ export namespace Prisma {
    */
   export type BedTypeCountOutputTypeCountRoomTypesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RoomTypeWhereInput
-  }
-
-
-  /**
-   * Count Type AmnietyMasterCountOutputType
-   */
-
-  export type AmnietyMasterCountOutputType = {
-    roomAmniety: number
-  }
-
-  export type AmnietyMasterCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    roomAmniety?: boolean | AmnietyMasterCountOutputTypeCountRoomAmnietyArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * AmnietyMasterCountOutputType without action
-   */
-  export type AmnietyMasterCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AmnietyMasterCountOutputType
-     */
-    select?: AmnietyMasterCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * AmnietyMasterCountOutputType without action
-   */
-  export type AmnietyMasterCountOutputTypeCountRoomAmnietyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RoomAmnietyWhereInput
   }
 
 
@@ -4080,1097 +3958,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: BedTypeInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model AmnietyMaster
-   */
-
-  export type AggregateAmnietyMaster = {
-    _count: AmnietyMasterCountAggregateOutputType | null
-    _avg: AmnietyMasterAvgAggregateOutputType | null
-    _sum: AmnietyMasterSumAggregateOutputType | null
-    _min: AmnietyMasterMinAggregateOutputType | null
-    _max: AmnietyMasterMaxAggregateOutputType | null
-  }
-
-  export type AmnietyMasterAvgAggregateOutputType = {
-    id: number | null
-  }
-
-  export type AmnietyMasterSumAggregateOutputType = {
-    id: number | null
-  }
-
-  export type AmnietyMasterMinAggregateOutputType = {
-    id: number | null
-    amnietyName: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type AmnietyMasterMaxAggregateOutputType = {
-    id: number | null
-    amnietyName: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type AmnietyMasterCountAggregateOutputType = {
-    id: number
-    amnietyName: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type AmnietyMasterAvgAggregateInputType = {
-    id?: true
-  }
-
-  export type AmnietyMasterSumAggregateInputType = {
-    id?: true
-  }
-
-  export type AmnietyMasterMinAggregateInputType = {
-    id?: true
-    amnietyName?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type AmnietyMasterMaxAggregateInputType = {
-    id?: true
-    amnietyName?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type AmnietyMasterCountAggregateInputType = {
-    id?: true
-    amnietyName?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type AmnietyMasterAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which AmnietyMaster to aggregate.
-     */
-    where?: AmnietyMasterWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of AmnietyMasters to fetch.
-     */
-    orderBy?: AmnietyMasterOrderByWithRelationInput | AmnietyMasterOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: AmnietyMasterWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` AmnietyMasters from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` AmnietyMasters.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned AmnietyMasters
-    **/
-    _count?: true | AmnietyMasterCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: AmnietyMasterAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: AmnietyMasterSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: AmnietyMasterMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: AmnietyMasterMaxAggregateInputType
-  }
-
-  export type GetAmnietyMasterAggregateType<T extends AmnietyMasterAggregateArgs> = {
-        [P in keyof T & keyof AggregateAmnietyMaster]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateAmnietyMaster[P]>
-      : GetScalarType<T[P], AggregateAmnietyMaster[P]>
-  }
-
-
-
-
-  export type AmnietyMasterGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: AmnietyMasterWhereInput
-    orderBy?: AmnietyMasterOrderByWithAggregationInput | AmnietyMasterOrderByWithAggregationInput[]
-    by: AmnietyMasterScalarFieldEnum[] | AmnietyMasterScalarFieldEnum
-    having?: AmnietyMasterScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: AmnietyMasterCountAggregateInputType | true
-    _avg?: AmnietyMasterAvgAggregateInputType
-    _sum?: AmnietyMasterSumAggregateInputType
-    _min?: AmnietyMasterMinAggregateInputType
-    _max?: AmnietyMasterMaxAggregateInputType
-  }
-
-  export type AmnietyMasterGroupByOutputType = {
-    id: number
-    amnietyName: string | null
-    createdAt: Date
-    updatedAt: Date
-    _count: AmnietyMasterCountAggregateOutputType | null
-    _avg: AmnietyMasterAvgAggregateOutputType | null
-    _sum: AmnietyMasterSumAggregateOutputType | null
-    _min: AmnietyMasterMinAggregateOutputType | null
-    _max: AmnietyMasterMaxAggregateOutputType | null
-  }
-
-  type GetAmnietyMasterGroupByPayload<T extends AmnietyMasterGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<AmnietyMasterGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof AmnietyMasterGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], AmnietyMasterGroupByOutputType[P]>
-            : GetScalarType<T[P], AmnietyMasterGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type AmnietyMasterSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    amnietyName?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    roomAmniety?: boolean | AmnietyMaster$roomAmnietyArgs<ExtArgs>
-    _count?: boolean | AmnietyMasterCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["amnietyMaster"]>
-
-  export type AmnietyMasterSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    amnietyName?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["amnietyMaster"]>
-
-  export type AmnietyMasterSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    amnietyName?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["amnietyMaster"]>
-
-  export type AmnietyMasterSelectScalar = {
-    id?: boolean
-    amnietyName?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type AmnietyMasterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "amnietyName" | "createdAt" | "updatedAt", ExtArgs["result"]["amnietyMaster"]>
-  export type AmnietyMasterInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    roomAmniety?: boolean | AmnietyMaster$roomAmnietyArgs<ExtArgs>
-    _count?: boolean | AmnietyMasterCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type AmnietyMasterIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type AmnietyMasterIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-
-  export type $AmnietyMasterPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "AmnietyMaster"
-    objects: {
-      roomAmniety: Prisma.$RoomAmnietyPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      amnietyName: string | null
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["amnietyMaster"]>
-    composites: {}
-  }
-
-  type AmnietyMasterGetPayload<S extends boolean | null | undefined | AmnietyMasterDefaultArgs> = $Result.GetResult<Prisma.$AmnietyMasterPayload, S>
-
-  type AmnietyMasterCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<AmnietyMasterFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: AmnietyMasterCountAggregateInputType | true
-    }
-
-  export interface AmnietyMasterDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AmnietyMaster'], meta: { name: 'AmnietyMaster' } }
-    /**
-     * Find zero or one AmnietyMaster that matches the filter.
-     * @param {AmnietyMasterFindUniqueArgs} args - Arguments to find a AmnietyMaster
-     * @example
-     * // Get one AmnietyMaster
-     * const amnietyMaster = await prisma.amnietyMaster.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends AmnietyMasterFindUniqueArgs>(args: SelectSubset<T, AmnietyMasterFindUniqueArgs<ExtArgs>>): Prisma__AmnietyMasterClient<$Result.GetResult<Prisma.$AmnietyMasterPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one AmnietyMaster that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {AmnietyMasterFindUniqueOrThrowArgs} args - Arguments to find a AmnietyMaster
-     * @example
-     * // Get one AmnietyMaster
-     * const amnietyMaster = await prisma.amnietyMaster.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends AmnietyMasterFindUniqueOrThrowArgs>(args: SelectSubset<T, AmnietyMasterFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AmnietyMasterClient<$Result.GetResult<Prisma.$AmnietyMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first AmnietyMaster that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AmnietyMasterFindFirstArgs} args - Arguments to find a AmnietyMaster
-     * @example
-     * // Get one AmnietyMaster
-     * const amnietyMaster = await prisma.amnietyMaster.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends AmnietyMasterFindFirstArgs>(args?: SelectSubset<T, AmnietyMasterFindFirstArgs<ExtArgs>>): Prisma__AmnietyMasterClient<$Result.GetResult<Prisma.$AmnietyMasterPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first AmnietyMaster that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AmnietyMasterFindFirstOrThrowArgs} args - Arguments to find a AmnietyMaster
-     * @example
-     * // Get one AmnietyMaster
-     * const amnietyMaster = await prisma.amnietyMaster.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends AmnietyMasterFindFirstOrThrowArgs>(args?: SelectSubset<T, AmnietyMasterFindFirstOrThrowArgs<ExtArgs>>): Prisma__AmnietyMasterClient<$Result.GetResult<Prisma.$AmnietyMasterPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more AmnietyMasters that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AmnietyMasterFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all AmnietyMasters
-     * const amnietyMasters = await prisma.amnietyMaster.findMany()
-     * 
-     * // Get first 10 AmnietyMasters
-     * const amnietyMasters = await prisma.amnietyMaster.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const amnietyMasterWithIdOnly = await prisma.amnietyMaster.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends AmnietyMasterFindManyArgs>(args?: SelectSubset<T, AmnietyMasterFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AmnietyMasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a AmnietyMaster.
-     * @param {AmnietyMasterCreateArgs} args - Arguments to create a AmnietyMaster.
-     * @example
-     * // Create one AmnietyMaster
-     * const AmnietyMaster = await prisma.amnietyMaster.create({
-     *   data: {
-     *     // ... data to create a AmnietyMaster
-     *   }
-     * })
-     * 
-     */
-    create<T extends AmnietyMasterCreateArgs>(args: SelectSubset<T, AmnietyMasterCreateArgs<ExtArgs>>): Prisma__AmnietyMasterClient<$Result.GetResult<Prisma.$AmnietyMasterPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many AmnietyMasters.
-     * @param {AmnietyMasterCreateManyArgs} args - Arguments to create many AmnietyMasters.
-     * @example
-     * // Create many AmnietyMasters
-     * const amnietyMaster = await prisma.amnietyMaster.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends AmnietyMasterCreateManyArgs>(args?: SelectSubset<T, AmnietyMasterCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many AmnietyMasters and returns the data saved in the database.
-     * @param {AmnietyMasterCreateManyAndReturnArgs} args - Arguments to create many AmnietyMasters.
-     * @example
-     * // Create many AmnietyMasters
-     * const amnietyMaster = await prisma.amnietyMaster.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many AmnietyMasters and only return the `id`
-     * const amnietyMasterWithIdOnly = await prisma.amnietyMaster.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends AmnietyMasterCreateManyAndReturnArgs>(args?: SelectSubset<T, AmnietyMasterCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AmnietyMasterPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a AmnietyMaster.
-     * @param {AmnietyMasterDeleteArgs} args - Arguments to delete one AmnietyMaster.
-     * @example
-     * // Delete one AmnietyMaster
-     * const AmnietyMaster = await prisma.amnietyMaster.delete({
-     *   where: {
-     *     // ... filter to delete one AmnietyMaster
-     *   }
-     * })
-     * 
-     */
-    delete<T extends AmnietyMasterDeleteArgs>(args: SelectSubset<T, AmnietyMasterDeleteArgs<ExtArgs>>): Prisma__AmnietyMasterClient<$Result.GetResult<Prisma.$AmnietyMasterPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one AmnietyMaster.
-     * @param {AmnietyMasterUpdateArgs} args - Arguments to update one AmnietyMaster.
-     * @example
-     * // Update one AmnietyMaster
-     * const amnietyMaster = await prisma.amnietyMaster.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends AmnietyMasterUpdateArgs>(args: SelectSubset<T, AmnietyMasterUpdateArgs<ExtArgs>>): Prisma__AmnietyMasterClient<$Result.GetResult<Prisma.$AmnietyMasterPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more AmnietyMasters.
-     * @param {AmnietyMasterDeleteManyArgs} args - Arguments to filter AmnietyMasters to delete.
-     * @example
-     * // Delete a few AmnietyMasters
-     * const { count } = await prisma.amnietyMaster.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends AmnietyMasterDeleteManyArgs>(args?: SelectSubset<T, AmnietyMasterDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more AmnietyMasters.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AmnietyMasterUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many AmnietyMasters
-     * const amnietyMaster = await prisma.amnietyMaster.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends AmnietyMasterUpdateManyArgs>(args: SelectSubset<T, AmnietyMasterUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more AmnietyMasters and returns the data updated in the database.
-     * @param {AmnietyMasterUpdateManyAndReturnArgs} args - Arguments to update many AmnietyMasters.
-     * @example
-     * // Update many AmnietyMasters
-     * const amnietyMaster = await prisma.amnietyMaster.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more AmnietyMasters and only return the `id`
-     * const amnietyMasterWithIdOnly = await prisma.amnietyMaster.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends AmnietyMasterUpdateManyAndReturnArgs>(args: SelectSubset<T, AmnietyMasterUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AmnietyMasterPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one AmnietyMaster.
-     * @param {AmnietyMasterUpsertArgs} args - Arguments to update or create a AmnietyMaster.
-     * @example
-     * // Update or create a AmnietyMaster
-     * const amnietyMaster = await prisma.amnietyMaster.upsert({
-     *   create: {
-     *     // ... data to create a AmnietyMaster
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the AmnietyMaster we want to update
-     *   }
-     * })
-     */
-    upsert<T extends AmnietyMasterUpsertArgs>(args: SelectSubset<T, AmnietyMasterUpsertArgs<ExtArgs>>): Prisma__AmnietyMasterClient<$Result.GetResult<Prisma.$AmnietyMasterPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of AmnietyMasters.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AmnietyMasterCountArgs} args - Arguments to filter AmnietyMasters to count.
-     * @example
-     * // Count the number of AmnietyMasters
-     * const count = await prisma.amnietyMaster.count({
-     *   where: {
-     *     // ... the filter for the AmnietyMasters we want to count
-     *   }
-     * })
-    **/
-    count<T extends AmnietyMasterCountArgs>(
-      args?: Subset<T, AmnietyMasterCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], AmnietyMasterCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a AmnietyMaster.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AmnietyMasterAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends AmnietyMasterAggregateArgs>(args: Subset<T, AmnietyMasterAggregateArgs>): Prisma.PrismaPromise<GetAmnietyMasterAggregateType<T>>
-
-    /**
-     * Group by AmnietyMaster.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AmnietyMasterGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends AmnietyMasterGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: AmnietyMasterGroupByArgs['orderBy'] }
-        : { orderBy?: AmnietyMasterGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, AmnietyMasterGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAmnietyMasterGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the AmnietyMaster model
-   */
-  readonly fields: AmnietyMasterFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for AmnietyMaster.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__AmnietyMasterClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    roomAmniety<T extends AmnietyMaster$roomAmnietyArgs<ExtArgs> = {}>(args?: Subset<T, AmnietyMaster$roomAmnietyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoomAmnietyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the AmnietyMaster model
-   */
-  interface AmnietyMasterFieldRefs {
-    readonly id: FieldRef<"AmnietyMaster", 'Int'>
-    readonly amnietyName: FieldRef<"AmnietyMaster", 'String'>
-    readonly createdAt: FieldRef<"AmnietyMaster", 'DateTime'>
-    readonly updatedAt: FieldRef<"AmnietyMaster", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * AmnietyMaster findUnique
-   */
-  export type AmnietyMasterFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AmnietyMaster
-     */
-    select?: AmnietyMasterSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AmnietyMaster
-     */
-    omit?: AmnietyMasterOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AmnietyMasterInclude<ExtArgs> | null
-    /**
-     * Filter, which AmnietyMaster to fetch.
-     */
-    where: AmnietyMasterWhereUniqueInput
-  }
-
-  /**
-   * AmnietyMaster findUniqueOrThrow
-   */
-  export type AmnietyMasterFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AmnietyMaster
-     */
-    select?: AmnietyMasterSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AmnietyMaster
-     */
-    omit?: AmnietyMasterOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AmnietyMasterInclude<ExtArgs> | null
-    /**
-     * Filter, which AmnietyMaster to fetch.
-     */
-    where: AmnietyMasterWhereUniqueInput
-  }
-
-  /**
-   * AmnietyMaster findFirst
-   */
-  export type AmnietyMasterFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AmnietyMaster
-     */
-    select?: AmnietyMasterSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AmnietyMaster
-     */
-    omit?: AmnietyMasterOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AmnietyMasterInclude<ExtArgs> | null
-    /**
-     * Filter, which AmnietyMaster to fetch.
-     */
-    where?: AmnietyMasterWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of AmnietyMasters to fetch.
-     */
-    orderBy?: AmnietyMasterOrderByWithRelationInput | AmnietyMasterOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for AmnietyMasters.
-     */
-    cursor?: AmnietyMasterWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` AmnietyMasters from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` AmnietyMasters.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of AmnietyMasters.
-     */
-    distinct?: AmnietyMasterScalarFieldEnum | AmnietyMasterScalarFieldEnum[]
-  }
-
-  /**
-   * AmnietyMaster findFirstOrThrow
-   */
-  export type AmnietyMasterFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AmnietyMaster
-     */
-    select?: AmnietyMasterSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AmnietyMaster
-     */
-    omit?: AmnietyMasterOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AmnietyMasterInclude<ExtArgs> | null
-    /**
-     * Filter, which AmnietyMaster to fetch.
-     */
-    where?: AmnietyMasterWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of AmnietyMasters to fetch.
-     */
-    orderBy?: AmnietyMasterOrderByWithRelationInput | AmnietyMasterOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for AmnietyMasters.
-     */
-    cursor?: AmnietyMasterWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` AmnietyMasters from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` AmnietyMasters.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of AmnietyMasters.
-     */
-    distinct?: AmnietyMasterScalarFieldEnum | AmnietyMasterScalarFieldEnum[]
-  }
-
-  /**
-   * AmnietyMaster findMany
-   */
-  export type AmnietyMasterFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AmnietyMaster
-     */
-    select?: AmnietyMasterSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AmnietyMaster
-     */
-    omit?: AmnietyMasterOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AmnietyMasterInclude<ExtArgs> | null
-    /**
-     * Filter, which AmnietyMasters to fetch.
-     */
-    where?: AmnietyMasterWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of AmnietyMasters to fetch.
-     */
-    orderBy?: AmnietyMasterOrderByWithRelationInput | AmnietyMasterOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing AmnietyMasters.
-     */
-    cursor?: AmnietyMasterWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` AmnietyMasters from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` AmnietyMasters.
-     */
-    skip?: number
-    distinct?: AmnietyMasterScalarFieldEnum | AmnietyMasterScalarFieldEnum[]
-  }
-
-  /**
-   * AmnietyMaster create
-   */
-  export type AmnietyMasterCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AmnietyMaster
-     */
-    select?: AmnietyMasterSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AmnietyMaster
-     */
-    omit?: AmnietyMasterOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AmnietyMasterInclude<ExtArgs> | null
-    /**
-     * The data needed to create a AmnietyMaster.
-     */
-    data?: XOR<AmnietyMasterCreateInput, AmnietyMasterUncheckedCreateInput>
-  }
-
-  /**
-   * AmnietyMaster createMany
-   */
-  export type AmnietyMasterCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many AmnietyMasters.
-     */
-    data: AmnietyMasterCreateManyInput | AmnietyMasterCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * AmnietyMaster createManyAndReturn
-   */
-  export type AmnietyMasterCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AmnietyMaster
-     */
-    select?: AmnietyMasterSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the AmnietyMaster
-     */
-    omit?: AmnietyMasterOmit<ExtArgs> | null
-    /**
-     * The data used to create many AmnietyMasters.
-     */
-    data: AmnietyMasterCreateManyInput | AmnietyMasterCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * AmnietyMaster update
-   */
-  export type AmnietyMasterUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AmnietyMaster
-     */
-    select?: AmnietyMasterSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AmnietyMaster
-     */
-    omit?: AmnietyMasterOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AmnietyMasterInclude<ExtArgs> | null
-    /**
-     * The data needed to update a AmnietyMaster.
-     */
-    data: XOR<AmnietyMasterUpdateInput, AmnietyMasterUncheckedUpdateInput>
-    /**
-     * Choose, which AmnietyMaster to update.
-     */
-    where: AmnietyMasterWhereUniqueInput
-  }
-
-  /**
-   * AmnietyMaster updateMany
-   */
-  export type AmnietyMasterUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update AmnietyMasters.
-     */
-    data: XOR<AmnietyMasterUpdateManyMutationInput, AmnietyMasterUncheckedUpdateManyInput>
-    /**
-     * Filter which AmnietyMasters to update
-     */
-    where?: AmnietyMasterWhereInput
-    /**
-     * Limit how many AmnietyMasters to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * AmnietyMaster updateManyAndReturn
-   */
-  export type AmnietyMasterUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AmnietyMaster
-     */
-    select?: AmnietyMasterSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the AmnietyMaster
-     */
-    omit?: AmnietyMasterOmit<ExtArgs> | null
-    /**
-     * The data used to update AmnietyMasters.
-     */
-    data: XOR<AmnietyMasterUpdateManyMutationInput, AmnietyMasterUncheckedUpdateManyInput>
-    /**
-     * Filter which AmnietyMasters to update
-     */
-    where?: AmnietyMasterWhereInput
-    /**
-     * Limit how many AmnietyMasters to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * AmnietyMaster upsert
-   */
-  export type AmnietyMasterUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AmnietyMaster
-     */
-    select?: AmnietyMasterSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AmnietyMaster
-     */
-    omit?: AmnietyMasterOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AmnietyMasterInclude<ExtArgs> | null
-    /**
-     * The filter to search for the AmnietyMaster to update in case it exists.
-     */
-    where: AmnietyMasterWhereUniqueInput
-    /**
-     * In case the AmnietyMaster found by the `where` argument doesn't exist, create a new AmnietyMaster with this data.
-     */
-    create: XOR<AmnietyMasterCreateInput, AmnietyMasterUncheckedCreateInput>
-    /**
-     * In case the AmnietyMaster was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<AmnietyMasterUpdateInput, AmnietyMasterUncheckedUpdateInput>
-  }
-
-  /**
-   * AmnietyMaster delete
-   */
-  export type AmnietyMasterDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AmnietyMaster
-     */
-    select?: AmnietyMasterSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AmnietyMaster
-     */
-    omit?: AmnietyMasterOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AmnietyMasterInclude<ExtArgs> | null
-    /**
-     * Filter which AmnietyMaster to delete.
-     */
-    where: AmnietyMasterWhereUniqueInput
-  }
-
-  /**
-   * AmnietyMaster deleteMany
-   */
-  export type AmnietyMasterDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which AmnietyMasters to delete
-     */
-    where?: AmnietyMasterWhereInput
-    /**
-     * Limit how many AmnietyMasters to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * AmnietyMaster.roomAmniety
-   */
-  export type AmnietyMaster$roomAmnietyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RoomAmniety
-     */
-    select?: RoomAmnietySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RoomAmniety
-     */
-    omit?: RoomAmnietyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RoomAmnietyInclude<ExtArgs> | null
-    where?: RoomAmnietyWhereInput
-    orderBy?: RoomAmnietyOrderByWithRelationInput | RoomAmnietyOrderByWithRelationInput[]
-    cursor?: RoomAmnietyWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: RoomAmnietyScalarFieldEnum | RoomAmnietyScalarFieldEnum[]
-  }
-
-  /**
-   * AmnietyMaster without action
-   */
-  export type AmnietyMasterDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AmnietyMaster
-     */
-    select?: AmnietyMasterSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AmnietyMaster
-     */
-    omit?: AmnietyMasterOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AmnietyMasterInclude<ExtArgs> | null
   }
 
 
@@ -8760,19 +7547,20 @@ export namespace Prisma {
   export type RoomAmnietyAvgAggregateOutputType = {
     id: number | null
     roomTypeId: number | null
-    amnietyId: number | null
+    order: number | null
   }
 
   export type RoomAmnietySumAggregateOutputType = {
     id: number | null
     roomTypeId: number | null
-    amnietyId: number | null
+    order: number | null
   }
 
   export type RoomAmnietyMinAggregateOutputType = {
     id: number | null
     roomTypeId: number | null
-    amnietyId: number | null
+    name: string | null
+    order: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8780,7 +7568,8 @@ export namespace Prisma {
   export type RoomAmnietyMaxAggregateOutputType = {
     id: number | null
     roomTypeId: number | null
-    amnietyId: number | null
+    name: string | null
+    order: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8788,7 +7577,8 @@ export namespace Prisma {
   export type RoomAmnietyCountAggregateOutputType = {
     id: number
     roomTypeId: number
-    amnietyId: number
+    name: number
+    order: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -8798,19 +7588,20 @@ export namespace Prisma {
   export type RoomAmnietyAvgAggregateInputType = {
     id?: true
     roomTypeId?: true
-    amnietyId?: true
+    order?: true
   }
 
   export type RoomAmnietySumAggregateInputType = {
     id?: true
     roomTypeId?: true
-    amnietyId?: true
+    order?: true
   }
 
   export type RoomAmnietyMinAggregateInputType = {
     id?: true
     roomTypeId?: true
-    amnietyId?: true
+    name?: true
+    order?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8818,7 +7609,8 @@ export namespace Prisma {
   export type RoomAmnietyMaxAggregateInputType = {
     id?: true
     roomTypeId?: true
-    amnietyId?: true
+    name?: true
+    order?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8826,7 +7618,8 @@ export namespace Prisma {
   export type RoomAmnietyCountAggregateInputType = {
     id?: true
     roomTypeId?: true
-    amnietyId?: true
+    name?: true
+    order?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -8921,7 +7714,8 @@ export namespace Prisma {
   export type RoomAmnietyGroupByOutputType = {
     id: number
     roomTypeId: number | null
-    amnietyId: number | null
+    name: string
+    order: number
     createdAt: Date
     updatedAt: Date
     _count: RoomAmnietyCountAggregateOutputType | null
@@ -8948,65 +7742,63 @@ export namespace Prisma {
   export type RoomAmnietySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     roomTypeId?: boolean
-    amnietyId?: boolean
+    name?: boolean
+    order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     roomType?: boolean | RoomAmniety$roomTypeArgs<ExtArgs>
-    amniety?: boolean | RoomAmniety$amnietyArgs<ExtArgs>
   }, ExtArgs["result"]["roomAmniety"]>
 
   export type RoomAmnietySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     roomTypeId?: boolean
-    amnietyId?: boolean
+    name?: boolean
+    order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     roomType?: boolean | RoomAmniety$roomTypeArgs<ExtArgs>
-    amniety?: boolean | RoomAmniety$amnietyArgs<ExtArgs>
   }, ExtArgs["result"]["roomAmniety"]>
 
   export type RoomAmnietySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     roomTypeId?: boolean
-    amnietyId?: boolean
+    name?: boolean
+    order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     roomType?: boolean | RoomAmniety$roomTypeArgs<ExtArgs>
-    amniety?: boolean | RoomAmniety$amnietyArgs<ExtArgs>
   }, ExtArgs["result"]["roomAmniety"]>
 
   export type RoomAmnietySelectScalar = {
     id?: boolean
     roomTypeId?: boolean
-    amnietyId?: boolean
+    name?: boolean
+    order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RoomAmnietyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roomTypeId" | "amnietyId" | "createdAt" | "updatedAt", ExtArgs["result"]["roomAmniety"]>
+  export type RoomAmnietyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roomTypeId" | "name" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["roomAmniety"]>
   export type RoomAmnietyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     roomType?: boolean | RoomAmniety$roomTypeArgs<ExtArgs>
-    amniety?: boolean | RoomAmniety$amnietyArgs<ExtArgs>
   }
   export type RoomAmnietyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     roomType?: boolean | RoomAmniety$roomTypeArgs<ExtArgs>
-    amniety?: boolean | RoomAmniety$amnietyArgs<ExtArgs>
   }
   export type RoomAmnietyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     roomType?: boolean | RoomAmniety$roomTypeArgs<ExtArgs>
-    amniety?: boolean | RoomAmniety$amnietyArgs<ExtArgs>
   }
 
   export type $RoomAmnietyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "RoomAmniety"
     objects: {
       roomType: Prisma.$RoomTypePayload<ExtArgs> | null
-      amniety: Prisma.$AmnietyMasterPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       roomTypeId: number | null
-      amnietyId: number | null
+      name: string
+      order: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["roomAmniety"]>
@@ -9404,7 +8196,6 @@ export namespace Prisma {
   export interface Prisma__RoomAmnietyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     roomType<T extends RoomAmniety$roomTypeArgs<ExtArgs> = {}>(args?: Subset<T, RoomAmniety$roomTypeArgs<ExtArgs>>): Prisma__RoomTypeClient<$Result.GetResult<Prisma.$RoomTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    amniety<T extends RoomAmniety$amnietyArgs<ExtArgs> = {}>(args?: Subset<T, RoomAmniety$amnietyArgs<ExtArgs>>): Prisma__AmnietyMasterClient<$Result.GetResult<Prisma.$AmnietyMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9436,7 +8227,8 @@ export namespace Prisma {
   interface RoomAmnietyFieldRefs {
     readonly id: FieldRef<"RoomAmniety", 'Int'>
     readonly roomTypeId: FieldRef<"RoomAmniety", 'Int'>
-    readonly amnietyId: FieldRef<"RoomAmniety", 'Int'>
+    readonly name: FieldRef<"RoomAmniety", 'String'>
+    readonly order: FieldRef<"RoomAmniety", 'Int'>
     readonly createdAt: FieldRef<"RoomAmniety", 'DateTime'>
     readonly updatedAt: FieldRef<"RoomAmniety", 'DateTime'>
   }
@@ -9657,7 +8449,7 @@ export namespace Prisma {
     /**
      * The data needed to create a RoomAmniety.
      */
-    data?: XOR<RoomAmnietyCreateInput, RoomAmnietyUncheckedCreateInput>
+    data: XOR<RoomAmnietyCreateInput, RoomAmnietyUncheckedCreateInput>
   }
 
   /**
@@ -9851,25 +8643,6 @@ export namespace Prisma {
      */
     include?: RoomTypeInclude<ExtArgs> | null
     where?: RoomTypeWhereInput
-  }
-
-  /**
-   * RoomAmniety.amniety
-   */
-  export type RoomAmniety$amnietyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AmnietyMaster
-     */
-    select?: AmnietyMasterSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AmnietyMaster
-     */
-    omit?: AmnietyMasterOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AmnietyMasterInclude<ExtArgs> | null
-    where?: AmnietyMasterWhereInput
   }
 
   /**
@@ -12042,6 +10815,7 @@ export namespace Prisma {
     id: number | null
     roomTypeId: number | null
     imageUrl: string | null
+    imagePublicId: string | null
     imageOrder: number | null
     imageDefault: boolean | null
   }
@@ -12050,6 +10824,7 @@ export namespace Prisma {
     id: number | null
     roomTypeId: number | null
     imageUrl: string | null
+    imagePublicId: string | null
     imageOrder: number | null
     imageDefault: boolean | null
   }
@@ -12058,6 +10833,7 @@ export namespace Prisma {
     id: number
     roomTypeId: number
     imageUrl: number
+    imagePublicId: number
     imageOrder: number
     imageDefault: number
     _all: number
@@ -12080,6 +10856,7 @@ export namespace Prisma {
     id?: true
     roomTypeId?: true
     imageUrl?: true
+    imagePublicId?: true
     imageOrder?: true
     imageDefault?: true
   }
@@ -12088,6 +10865,7 @@ export namespace Prisma {
     id?: true
     roomTypeId?: true
     imageUrl?: true
+    imagePublicId?: true
     imageOrder?: true
     imageDefault?: true
   }
@@ -12096,6 +10874,7 @@ export namespace Prisma {
     id?: true
     roomTypeId?: true
     imageUrl?: true
+    imagePublicId?: true
     imageOrder?: true
     imageDefault?: true
     _all?: true
@@ -12191,6 +10970,7 @@ export namespace Prisma {
     id: number
     roomTypeId: number | null
     imageUrl: string | null
+    imagePublicId: string | null
     imageOrder: number | null
     imageDefault: boolean | null
     _count: RoomImageCountAggregateOutputType | null
@@ -12218,6 +10998,7 @@ export namespace Prisma {
     id?: boolean
     roomTypeId?: boolean
     imageUrl?: boolean
+    imagePublicId?: boolean
     imageOrder?: boolean
     imageDefault?: boolean
     roomType?: boolean | RoomImage$roomTypeArgs<ExtArgs>
@@ -12227,6 +11008,7 @@ export namespace Prisma {
     id?: boolean
     roomTypeId?: boolean
     imageUrl?: boolean
+    imagePublicId?: boolean
     imageOrder?: boolean
     imageDefault?: boolean
     roomType?: boolean | RoomImage$roomTypeArgs<ExtArgs>
@@ -12236,6 +11018,7 @@ export namespace Prisma {
     id?: boolean
     roomTypeId?: boolean
     imageUrl?: boolean
+    imagePublicId?: boolean
     imageOrder?: boolean
     imageDefault?: boolean
     roomType?: boolean | RoomImage$roomTypeArgs<ExtArgs>
@@ -12245,11 +11028,12 @@ export namespace Prisma {
     id?: boolean
     roomTypeId?: boolean
     imageUrl?: boolean
+    imagePublicId?: boolean
     imageOrder?: boolean
     imageDefault?: boolean
   }
 
-  export type RoomImageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roomTypeId" | "imageUrl" | "imageOrder" | "imageDefault", ExtArgs["result"]["roomImage"]>
+  export type RoomImageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roomTypeId" | "imageUrl" | "imagePublicId" | "imageOrder" | "imageDefault", ExtArgs["result"]["roomImage"]>
   export type RoomImageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     roomType?: boolean | RoomImage$roomTypeArgs<ExtArgs>
   }
@@ -12269,6 +11053,7 @@ export namespace Prisma {
       id: number
       roomTypeId: number | null
       imageUrl: string | null
+      imagePublicId: string | null
       imageOrder: number | null
       imageDefault: boolean | null
     }, ExtArgs["result"]["roomImage"]>
@@ -12698,6 +11483,7 @@ export namespace Prisma {
     readonly id: FieldRef<"RoomImage", 'Int'>
     readonly roomTypeId: FieldRef<"RoomImage", 'Int'>
     readonly imageUrl: FieldRef<"RoomImage", 'String'>
+    readonly imagePublicId: FieldRef<"RoomImage", 'String'>
     readonly imageOrder: FieldRef<"RoomImage", 'Int'>
     readonly imageDefault: FieldRef<"RoomImage", 'Boolean'>
   }
@@ -13177,16 +11963,6 @@ export namespace Prisma {
   export type BedTypeScalarFieldEnum = (typeof BedTypeScalarFieldEnum)[keyof typeof BedTypeScalarFieldEnum]
 
 
-  export const AmnietyMasterScalarFieldEnum: {
-    id: 'id',
-    amnietyName: 'amnietyName',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type AmnietyMasterScalarFieldEnum = (typeof AmnietyMasterScalarFieldEnum)[keyof typeof AmnietyMasterScalarFieldEnum]
-
-
   export const RoomStatusScalarFieldEnum: {
     id: 'id',
     statusName: 'statusName',
@@ -13231,7 +12007,8 @@ export namespace Prisma {
   export const RoomAmnietyScalarFieldEnum: {
     id: 'id',
     roomTypeId: 'roomTypeId',
-    amnietyId: 'amnietyId',
+    name: 'name',
+    order: 'order',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -13270,6 +12047,7 @@ export namespace Prisma {
     id: 'id',
     roomTypeId: 'roomTypeId',
     imageUrl: 'imageUrl',
+    imagePublicId: 'imagePublicId',
     imageOrder: 'imageOrder',
     imageDefault: 'imageDefault'
   };
@@ -13551,58 +12329,6 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"BedType"> | Date | string
   }
 
-  export type AmnietyMasterWhereInput = {
-    AND?: AmnietyMasterWhereInput | AmnietyMasterWhereInput[]
-    OR?: AmnietyMasterWhereInput[]
-    NOT?: AmnietyMasterWhereInput | AmnietyMasterWhereInput[]
-    id?: IntFilter<"AmnietyMaster"> | number
-    amnietyName?: StringNullableFilter<"AmnietyMaster"> | string | null
-    createdAt?: DateTimeFilter<"AmnietyMaster"> | Date | string
-    updatedAt?: DateTimeFilter<"AmnietyMaster"> | Date | string
-    roomAmniety?: RoomAmnietyListRelationFilter
-  }
-
-  export type AmnietyMasterOrderByWithRelationInput = {
-    id?: SortOrder
-    amnietyName?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    roomAmniety?: RoomAmnietyOrderByRelationAggregateInput
-  }
-
-  export type AmnietyMasterWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: AmnietyMasterWhereInput | AmnietyMasterWhereInput[]
-    OR?: AmnietyMasterWhereInput[]
-    NOT?: AmnietyMasterWhereInput | AmnietyMasterWhereInput[]
-    amnietyName?: StringNullableFilter<"AmnietyMaster"> | string | null
-    createdAt?: DateTimeFilter<"AmnietyMaster"> | Date | string
-    updatedAt?: DateTimeFilter<"AmnietyMaster"> | Date | string
-    roomAmniety?: RoomAmnietyListRelationFilter
-  }, "id">
-
-  export type AmnietyMasterOrderByWithAggregationInput = {
-    id?: SortOrder
-    amnietyName?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: AmnietyMasterCountOrderByAggregateInput
-    _avg?: AmnietyMasterAvgOrderByAggregateInput
-    _max?: AmnietyMasterMaxOrderByAggregateInput
-    _min?: AmnietyMasterMinOrderByAggregateInput
-    _sum?: AmnietyMasterSumOrderByAggregateInput
-  }
-
-  export type AmnietyMasterScalarWhereWithAggregatesInput = {
-    AND?: AmnietyMasterScalarWhereWithAggregatesInput | AmnietyMasterScalarWhereWithAggregatesInput[]
-    OR?: AmnietyMasterScalarWhereWithAggregatesInput[]
-    NOT?: AmnietyMasterScalarWhereWithAggregatesInput | AmnietyMasterScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"AmnietyMaster"> | number
-    amnietyName?: StringNullableWithAggregatesFilter<"AmnietyMaster"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"AmnietyMaster"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"AmnietyMaster"> | Date | string
-  }
-
   export type RoomStatusWhereInput = {
     AND?: RoomStatusWhereInput | RoomStatusWhereInput[]
     OR?: RoomStatusWhereInput[]
@@ -13832,21 +12558,21 @@ export namespace Prisma {
     NOT?: RoomAmnietyWhereInput | RoomAmnietyWhereInput[]
     id?: IntFilter<"RoomAmniety"> | number
     roomTypeId?: IntNullableFilter<"RoomAmniety"> | number | null
-    amnietyId?: IntNullableFilter<"RoomAmniety"> | number | null
+    name?: StringFilter<"RoomAmniety"> | string
+    order?: IntFilter<"RoomAmniety"> | number
     createdAt?: DateTimeFilter<"RoomAmniety"> | Date | string
     updatedAt?: DateTimeFilter<"RoomAmniety"> | Date | string
     roomType?: XOR<RoomTypeNullableScalarRelationFilter, RoomTypeWhereInput> | null
-    amniety?: XOR<AmnietyMasterNullableScalarRelationFilter, AmnietyMasterWhereInput> | null
   }
 
   export type RoomAmnietyOrderByWithRelationInput = {
     id?: SortOrder
     roomTypeId?: SortOrderInput | SortOrder
-    amnietyId?: SortOrderInput | SortOrder
+    name?: SortOrder
+    order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     roomType?: RoomTypeOrderByWithRelationInput
-    amniety?: AmnietyMasterOrderByWithRelationInput
   }
 
   export type RoomAmnietyWhereUniqueInput = Prisma.AtLeast<{
@@ -13855,17 +12581,18 @@ export namespace Prisma {
     OR?: RoomAmnietyWhereInput[]
     NOT?: RoomAmnietyWhereInput | RoomAmnietyWhereInput[]
     roomTypeId?: IntNullableFilter<"RoomAmniety"> | number | null
-    amnietyId?: IntNullableFilter<"RoomAmniety"> | number | null
+    name?: StringFilter<"RoomAmniety"> | string
+    order?: IntFilter<"RoomAmniety"> | number
     createdAt?: DateTimeFilter<"RoomAmniety"> | Date | string
     updatedAt?: DateTimeFilter<"RoomAmniety"> | Date | string
     roomType?: XOR<RoomTypeNullableScalarRelationFilter, RoomTypeWhereInput> | null
-    amniety?: XOR<AmnietyMasterNullableScalarRelationFilter, AmnietyMasterWhereInput> | null
   }, "id">
 
   export type RoomAmnietyOrderByWithAggregationInput = {
     id?: SortOrder
     roomTypeId?: SortOrderInput | SortOrder
-    amnietyId?: SortOrderInput | SortOrder
+    name?: SortOrder
+    order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: RoomAmnietyCountOrderByAggregateInput
@@ -13881,7 +12608,8 @@ export namespace Prisma {
     NOT?: RoomAmnietyScalarWhereWithAggregatesInput | RoomAmnietyScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"RoomAmniety"> | number
     roomTypeId?: IntNullableWithAggregatesFilter<"RoomAmniety"> | number | null
-    amnietyId?: IntNullableWithAggregatesFilter<"RoomAmniety"> | number | null
+    name?: StringWithAggregatesFilter<"RoomAmniety"> | string
+    order?: IntWithAggregatesFilter<"RoomAmniety"> | number
     createdAt?: DateTimeWithAggregatesFilter<"RoomAmniety"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"RoomAmniety"> | Date | string
   }
@@ -14026,6 +12754,7 @@ export namespace Prisma {
     id?: IntFilter<"RoomImage"> | number
     roomTypeId?: IntNullableFilter<"RoomImage"> | number | null
     imageUrl?: StringNullableFilter<"RoomImage"> | string | null
+    imagePublicId?: StringNullableFilter<"RoomImage"> | string | null
     imageOrder?: IntNullableFilter<"RoomImage"> | number | null
     imageDefault?: BoolNullableFilter<"RoomImage"> | boolean | null
     roomType?: XOR<RoomTypeNullableScalarRelationFilter, RoomTypeWhereInput> | null
@@ -14035,6 +12764,7 @@ export namespace Prisma {
     id?: SortOrder
     roomTypeId?: SortOrderInput | SortOrder
     imageUrl?: SortOrderInput | SortOrder
+    imagePublicId?: SortOrderInput | SortOrder
     imageOrder?: SortOrderInput | SortOrder
     imageDefault?: SortOrderInput | SortOrder
     roomType?: RoomTypeOrderByWithRelationInput
@@ -14047,6 +12777,7 @@ export namespace Prisma {
     NOT?: RoomImageWhereInput | RoomImageWhereInput[]
     roomTypeId?: IntNullableFilter<"RoomImage"> | number | null
     imageUrl?: StringNullableFilter<"RoomImage"> | string | null
+    imagePublicId?: StringNullableFilter<"RoomImage"> | string | null
     imageOrder?: IntNullableFilter<"RoomImage"> | number | null
     imageDefault?: BoolNullableFilter<"RoomImage"> | boolean | null
     roomType?: XOR<RoomTypeNullableScalarRelationFilter, RoomTypeWhereInput> | null
@@ -14056,6 +12787,7 @@ export namespace Prisma {
     id?: SortOrder
     roomTypeId?: SortOrderInput | SortOrder
     imageUrl?: SortOrderInput | SortOrder
+    imagePublicId?: SortOrderInput | SortOrder
     imageOrder?: SortOrderInput | SortOrder
     imageDefault?: SortOrderInput | SortOrder
     _count?: RoomImageCountOrderByAggregateInput
@@ -14072,6 +12804,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"RoomImage"> | number
     roomTypeId?: IntNullableWithAggregatesFilter<"RoomImage"> | number | null
     imageUrl?: StringNullableWithAggregatesFilter<"RoomImage"> | string | null
+    imagePublicId?: StringNullableWithAggregatesFilter<"RoomImage"> | string | null
     imageOrder?: IntNullableWithAggregatesFilter<"RoomImage"> | number | null
     imageDefault?: BoolNullableWithAggregatesFilter<"RoomImage"> | boolean | null
   }
@@ -14238,56 +12971,6 @@ export namespace Prisma {
   export type BedTypeUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     bedDescription?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AmnietyMasterCreateInput = {
-    amnietyName?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    roomAmniety?: RoomAmnietyCreateNestedManyWithoutAmnietyInput
-  }
-
-  export type AmnietyMasterUncheckedCreateInput = {
-    id?: number
-    amnietyName?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    roomAmniety?: RoomAmnietyUncheckedCreateNestedManyWithoutAmnietyInput
-  }
-
-  export type AmnietyMasterUpdateInput = {
-    amnietyName?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roomAmniety?: RoomAmnietyUpdateManyWithoutAmnietyNestedInput
-  }
-
-  export type AmnietyMasterUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    amnietyName?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roomAmniety?: RoomAmnietyUncheckedUpdateManyWithoutAmnietyNestedInput
-  }
-
-  export type AmnietyMasterCreateManyInput = {
-    id?: number
-    amnietyName?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type AmnietyMasterUpdateManyMutationInput = {
-    amnietyName?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AmnietyMasterUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    amnietyName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14521,31 +13204,35 @@ export namespace Prisma {
   }
 
   export type RoomAmnietyCreateInput = {
+    name: string
+    order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     roomType?: RoomTypeCreateNestedOneWithoutRoomAmnietyInput
-    amniety?: AmnietyMasterCreateNestedOneWithoutRoomAmnietyInput
   }
 
   export type RoomAmnietyUncheckedCreateInput = {
     id?: number
     roomTypeId?: number | null
-    amnietyId?: number | null
+    name: string
+    order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type RoomAmnietyUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     roomType?: RoomTypeUpdateOneWithoutRoomAmnietyNestedInput
-    amniety?: AmnietyMasterUpdateOneWithoutRoomAmnietyNestedInput
   }
 
   export type RoomAmnietyUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     roomTypeId?: NullableIntFieldUpdateOperationsInput | number | null
-    amnietyId?: NullableIntFieldUpdateOperationsInput | number | null
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14553,12 +13240,15 @@ export namespace Prisma {
   export type RoomAmnietyCreateManyInput = {
     id?: number
     roomTypeId?: number | null
-    amnietyId?: number | null
+    name: string
+    order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type RoomAmnietyUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14566,7 +13256,8 @@ export namespace Prisma {
   export type RoomAmnietyUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     roomTypeId?: NullableIntFieldUpdateOperationsInput | number | null
-    amnietyId?: NullableIntFieldUpdateOperationsInput | number | null
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14714,6 +13405,7 @@ export namespace Prisma {
 
   export type RoomImageCreateInput = {
     imageUrl?: string | null
+    imagePublicId?: string | null
     imageOrder?: number | null
     imageDefault?: boolean | null
     roomType?: RoomTypeCreateNestedOneWithoutRoomImagesInput
@@ -14723,12 +13415,14 @@ export namespace Prisma {
     id?: number
     roomTypeId?: number | null
     imageUrl?: string | null
+    imagePublicId?: string | null
     imageOrder?: number | null
     imageDefault?: boolean | null
   }
 
   export type RoomImageUpdateInput = {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    imagePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     imageOrder?: NullableIntFieldUpdateOperationsInput | number | null
     imageDefault?: NullableBoolFieldUpdateOperationsInput | boolean | null
     roomType?: RoomTypeUpdateOneWithoutRoomImagesNestedInput
@@ -14738,6 +13432,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     roomTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    imagePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     imageOrder?: NullableIntFieldUpdateOperationsInput | number | null
     imageDefault?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
@@ -14746,12 +13441,14 @@ export namespace Prisma {
     id?: number
     roomTypeId?: number | null
     imageUrl?: string | null
+    imagePublicId?: string | null
     imageOrder?: number | null
     imageDefault?: boolean | null
   }
 
   export type RoomImageUpdateManyMutationInput = {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    imagePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     imageOrder?: NullableIntFieldUpdateOperationsInput | number | null
     imageDefault?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
@@ -14760,6 +13457,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     roomTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    imagePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     imageOrder?: NullableIntFieldUpdateOperationsInput | number | null
     imageDefault?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
@@ -15027,45 +13725,6 @@ export namespace Prisma {
     id?: SortOrder
   }
 
-  export type RoomAmnietyListRelationFilter = {
-    every?: RoomAmnietyWhereInput
-    some?: RoomAmnietyWhereInput
-    none?: RoomAmnietyWhereInput
-  }
-
-  export type RoomAmnietyOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type AmnietyMasterCountOrderByAggregateInput = {
-    id?: SortOrder
-    amnietyName?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type AmnietyMasterAvgOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type AmnietyMasterMaxOrderByAggregateInput = {
-    id?: SortOrder
-    amnietyName?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type AmnietyMasterMinOrderByAggregateInput = {
-    id?: SortOrder
-    amnietyName?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type AmnietyMasterSumOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
   export type RoomListRelationFilter = {
     every?: RoomWhereInput
     some?: RoomWhereInput
@@ -15143,7 +13802,17 @@ export namespace Prisma {
     none?: RoomImageWhereInput
   }
 
+  export type RoomAmnietyListRelationFilter = {
+    every?: RoomAmnietyWhereInput
+    some?: RoomAmnietyWhereInput
+    none?: RoomAmnietyWhereInput
+  }
+
   export type RoomImageOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type RoomAmnietyOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -15302,15 +13971,11 @@ export namespace Prisma {
     roomStatusId?: SortOrder
   }
 
-  export type AmnietyMasterNullableScalarRelationFilter = {
-    is?: AmnietyMasterWhereInput | null
-    isNot?: AmnietyMasterWhereInput | null
-  }
-
   export type RoomAmnietyCountOrderByAggregateInput = {
     id?: SortOrder
     roomTypeId?: SortOrder
-    amnietyId?: SortOrder
+    name?: SortOrder
+    order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -15318,13 +13983,14 @@ export namespace Prisma {
   export type RoomAmnietyAvgOrderByAggregateInput = {
     id?: SortOrder
     roomTypeId?: SortOrder
-    amnietyId?: SortOrder
+    order?: SortOrder
   }
 
   export type RoomAmnietyMaxOrderByAggregateInput = {
     id?: SortOrder
     roomTypeId?: SortOrder
-    amnietyId?: SortOrder
+    name?: SortOrder
+    order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -15332,7 +13998,8 @@ export namespace Prisma {
   export type RoomAmnietyMinOrderByAggregateInput = {
     id?: SortOrder
     roomTypeId?: SortOrder
-    amnietyId?: SortOrder
+    name?: SortOrder
+    order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -15340,7 +14007,7 @@ export namespace Prisma {
   export type RoomAmnietySumOrderByAggregateInput = {
     id?: SortOrder
     roomTypeId?: SortOrder
-    amnietyId?: SortOrder
+    order?: SortOrder
   }
 
   export type GuestCountOrderByAggregateInput = {
@@ -15426,6 +14093,7 @@ export namespace Prisma {
     id?: SortOrder
     roomTypeId?: SortOrder
     imageUrl?: SortOrder
+    imagePublicId?: SortOrder
     imageOrder?: SortOrder
     imageDefault?: SortOrder
   }
@@ -15440,6 +14108,7 @@ export namespace Prisma {
     id?: SortOrder
     roomTypeId?: SortOrder
     imageUrl?: SortOrder
+    imagePublicId?: SortOrder
     imageOrder?: SortOrder
     imageDefault?: SortOrder
   }
@@ -15448,6 +14117,7 @@ export namespace Prisma {
     id?: SortOrder
     roomTypeId?: SortOrder
     imageUrl?: SortOrder
+    imagePublicId?: SortOrder
     imageOrder?: SortOrder
     imageDefault?: SortOrder
   }
@@ -15526,48 +14196,6 @@ export namespace Prisma {
     update?: RoomTypeUpdateWithWhereUniqueWithoutBedTypeInput | RoomTypeUpdateWithWhereUniqueWithoutBedTypeInput[]
     updateMany?: RoomTypeUpdateManyWithWhereWithoutBedTypeInput | RoomTypeUpdateManyWithWhereWithoutBedTypeInput[]
     deleteMany?: RoomTypeScalarWhereInput | RoomTypeScalarWhereInput[]
-  }
-
-  export type RoomAmnietyCreateNestedManyWithoutAmnietyInput = {
-    create?: XOR<RoomAmnietyCreateWithoutAmnietyInput, RoomAmnietyUncheckedCreateWithoutAmnietyInput> | RoomAmnietyCreateWithoutAmnietyInput[] | RoomAmnietyUncheckedCreateWithoutAmnietyInput[]
-    connectOrCreate?: RoomAmnietyCreateOrConnectWithoutAmnietyInput | RoomAmnietyCreateOrConnectWithoutAmnietyInput[]
-    createMany?: RoomAmnietyCreateManyAmnietyInputEnvelope
-    connect?: RoomAmnietyWhereUniqueInput | RoomAmnietyWhereUniqueInput[]
-  }
-
-  export type RoomAmnietyUncheckedCreateNestedManyWithoutAmnietyInput = {
-    create?: XOR<RoomAmnietyCreateWithoutAmnietyInput, RoomAmnietyUncheckedCreateWithoutAmnietyInput> | RoomAmnietyCreateWithoutAmnietyInput[] | RoomAmnietyUncheckedCreateWithoutAmnietyInput[]
-    connectOrCreate?: RoomAmnietyCreateOrConnectWithoutAmnietyInput | RoomAmnietyCreateOrConnectWithoutAmnietyInput[]
-    createMany?: RoomAmnietyCreateManyAmnietyInputEnvelope
-    connect?: RoomAmnietyWhereUniqueInput | RoomAmnietyWhereUniqueInput[]
-  }
-
-  export type RoomAmnietyUpdateManyWithoutAmnietyNestedInput = {
-    create?: XOR<RoomAmnietyCreateWithoutAmnietyInput, RoomAmnietyUncheckedCreateWithoutAmnietyInput> | RoomAmnietyCreateWithoutAmnietyInput[] | RoomAmnietyUncheckedCreateWithoutAmnietyInput[]
-    connectOrCreate?: RoomAmnietyCreateOrConnectWithoutAmnietyInput | RoomAmnietyCreateOrConnectWithoutAmnietyInput[]
-    upsert?: RoomAmnietyUpsertWithWhereUniqueWithoutAmnietyInput | RoomAmnietyUpsertWithWhereUniqueWithoutAmnietyInput[]
-    createMany?: RoomAmnietyCreateManyAmnietyInputEnvelope
-    set?: RoomAmnietyWhereUniqueInput | RoomAmnietyWhereUniqueInput[]
-    disconnect?: RoomAmnietyWhereUniqueInput | RoomAmnietyWhereUniqueInput[]
-    delete?: RoomAmnietyWhereUniqueInput | RoomAmnietyWhereUniqueInput[]
-    connect?: RoomAmnietyWhereUniqueInput | RoomAmnietyWhereUniqueInput[]
-    update?: RoomAmnietyUpdateWithWhereUniqueWithoutAmnietyInput | RoomAmnietyUpdateWithWhereUniqueWithoutAmnietyInput[]
-    updateMany?: RoomAmnietyUpdateManyWithWhereWithoutAmnietyInput | RoomAmnietyUpdateManyWithWhereWithoutAmnietyInput[]
-    deleteMany?: RoomAmnietyScalarWhereInput | RoomAmnietyScalarWhereInput[]
-  }
-
-  export type RoomAmnietyUncheckedUpdateManyWithoutAmnietyNestedInput = {
-    create?: XOR<RoomAmnietyCreateWithoutAmnietyInput, RoomAmnietyUncheckedCreateWithoutAmnietyInput> | RoomAmnietyCreateWithoutAmnietyInput[] | RoomAmnietyUncheckedCreateWithoutAmnietyInput[]
-    connectOrCreate?: RoomAmnietyCreateOrConnectWithoutAmnietyInput | RoomAmnietyCreateOrConnectWithoutAmnietyInput[]
-    upsert?: RoomAmnietyUpsertWithWhereUniqueWithoutAmnietyInput | RoomAmnietyUpsertWithWhereUniqueWithoutAmnietyInput[]
-    createMany?: RoomAmnietyCreateManyAmnietyInputEnvelope
-    set?: RoomAmnietyWhereUniqueInput | RoomAmnietyWhereUniqueInput[]
-    disconnect?: RoomAmnietyWhereUniqueInput | RoomAmnietyWhereUniqueInput[]
-    delete?: RoomAmnietyWhereUniqueInput | RoomAmnietyWhereUniqueInput[]
-    connect?: RoomAmnietyWhereUniqueInput | RoomAmnietyWhereUniqueInput[]
-    update?: RoomAmnietyUpdateWithWhereUniqueWithoutAmnietyInput | RoomAmnietyUpdateWithWhereUniqueWithoutAmnietyInput[]
-    updateMany?: RoomAmnietyUpdateManyWithWhereWithoutAmnietyInput | RoomAmnietyUpdateManyWithWhereWithoutAmnietyInput[]
-    deleteMany?: RoomAmnietyScalarWhereInput | RoomAmnietyScalarWhereInput[]
   }
 
   export type RoomCreateNestedManyWithoutRoomStatusInput = {
@@ -15812,12 +14440,6 @@ export namespace Prisma {
     connect?: RoomTypeWhereUniqueInput
   }
 
-  export type AmnietyMasterCreateNestedOneWithoutRoomAmnietyInput = {
-    create?: XOR<AmnietyMasterCreateWithoutRoomAmnietyInput, AmnietyMasterUncheckedCreateWithoutRoomAmnietyInput>
-    connectOrCreate?: AmnietyMasterCreateOrConnectWithoutRoomAmnietyInput
-    connect?: AmnietyMasterWhereUniqueInput
-  }
-
   export type RoomTypeUpdateOneWithoutRoomAmnietyNestedInput = {
     create?: XOR<RoomTypeCreateWithoutRoomAmnietyInput, RoomTypeUncheckedCreateWithoutRoomAmnietyInput>
     connectOrCreate?: RoomTypeCreateOrConnectWithoutRoomAmnietyInput
@@ -15826,16 +14448,6 @@ export namespace Prisma {
     delete?: RoomTypeWhereInput | boolean
     connect?: RoomTypeWhereUniqueInput
     update?: XOR<XOR<RoomTypeUpdateToOneWithWhereWithoutRoomAmnietyInput, RoomTypeUpdateWithoutRoomAmnietyInput>, RoomTypeUncheckedUpdateWithoutRoomAmnietyInput>
-  }
-
-  export type AmnietyMasterUpdateOneWithoutRoomAmnietyNestedInput = {
-    create?: XOR<AmnietyMasterCreateWithoutRoomAmnietyInput, AmnietyMasterUncheckedCreateWithoutRoomAmnietyInput>
-    connectOrCreate?: AmnietyMasterCreateOrConnectWithoutRoomAmnietyInput
-    upsert?: AmnietyMasterUpsertWithoutRoomAmnietyInput
-    disconnect?: AmnietyMasterWhereInput | boolean
-    delete?: AmnietyMasterWhereInput | boolean
-    connect?: AmnietyMasterWhereUniqueInput
-    update?: XOR<XOR<AmnietyMasterUpdateToOneWithWhereWithoutRoomAmnietyInput, AmnietyMasterUpdateWithoutRoomAmnietyInput>, AmnietyMasterUncheckedUpdateWithoutRoomAmnietyInput>
   }
 
   export type RoomTypeCreateNestedOneWithoutRoomImagesInput = {
@@ -16176,56 +14788,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"RoomType"> | Date | string
   }
 
-  export type RoomAmnietyCreateWithoutAmnietyInput = {
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    roomType?: RoomTypeCreateNestedOneWithoutRoomAmnietyInput
-  }
-
-  export type RoomAmnietyUncheckedCreateWithoutAmnietyInput = {
-    id?: number
-    roomTypeId?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type RoomAmnietyCreateOrConnectWithoutAmnietyInput = {
-    where: RoomAmnietyWhereUniqueInput
-    create: XOR<RoomAmnietyCreateWithoutAmnietyInput, RoomAmnietyUncheckedCreateWithoutAmnietyInput>
-  }
-
-  export type RoomAmnietyCreateManyAmnietyInputEnvelope = {
-    data: RoomAmnietyCreateManyAmnietyInput | RoomAmnietyCreateManyAmnietyInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type RoomAmnietyUpsertWithWhereUniqueWithoutAmnietyInput = {
-    where: RoomAmnietyWhereUniqueInput
-    update: XOR<RoomAmnietyUpdateWithoutAmnietyInput, RoomAmnietyUncheckedUpdateWithoutAmnietyInput>
-    create: XOR<RoomAmnietyCreateWithoutAmnietyInput, RoomAmnietyUncheckedCreateWithoutAmnietyInput>
-  }
-
-  export type RoomAmnietyUpdateWithWhereUniqueWithoutAmnietyInput = {
-    where: RoomAmnietyWhereUniqueInput
-    data: XOR<RoomAmnietyUpdateWithoutAmnietyInput, RoomAmnietyUncheckedUpdateWithoutAmnietyInput>
-  }
-
-  export type RoomAmnietyUpdateManyWithWhereWithoutAmnietyInput = {
-    where: RoomAmnietyScalarWhereInput
-    data: XOR<RoomAmnietyUpdateManyMutationInput, RoomAmnietyUncheckedUpdateManyWithoutAmnietyInput>
-  }
-
-  export type RoomAmnietyScalarWhereInput = {
-    AND?: RoomAmnietyScalarWhereInput | RoomAmnietyScalarWhereInput[]
-    OR?: RoomAmnietyScalarWhereInput[]
-    NOT?: RoomAmnietyScalarWhereInput | RoomAmnietyScalarWhereInput[]
-    id?: IntFilter<"RoomAmniety"> | number
-    roomTypeId?: IntNullableFilter<"RoomAmniety"> | number | null
-    amnietyId?: IntNullableFilter<"RoomAmniety"> | number | null
-    createdAt?: DateTimeFilter<"RoomAmniety"> | Date | string
-    updatedAt?: DateTimeFilter<"RoomAmniety"> | Date | string
-  }
-
   export type RoomCreateWithoutRoomStatusInput = {
     roomNumber?: string | null
     notes?: string | null
@@ -16329,6 +14891,7 @@ export namespace Prisma {
 
   export type RoomImageCreateWithoutRoomTypeInput = {
     imageUrl?: string | null
+    imagePublicId?: string | null
     imageOrder?: number | null
     imageDefault?: boolean | null
   }
@@ -16336,6 +14899,7 @@ export namespace Prisma {
   export type RoomImageUncheckedCreateWithoutRoomTypeInput = {
     id?: number
     imageUrl?: string | null
+    imagePublicId?: string | null
     imageOrder?: number | null
     imageDefault?: boolean | null
   }
@@ -16351,14 +14915,16 @@ export namespace Prisma {
   }
 
   export type RoomAmnietyCreateWithoutRoomTypeInput = {
+    name: string
+    order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    amniety?: AmnietyMasterCreateNestedOneWithoutRoomAmnietyInput
   }
 
   export type RoomAmnietyUncheckedCreateWithoutRoomTypeInput = {
     id?: number
-    amnietyId?: number | null
+    name: string
+    order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -16436,6 +15002,7 @@ export namespace Prisma {
     id?: IntFilter<"RoomImage"> | number
     roomTypeId?: IntNullableFilter<"RoomImage"> | number | null
     imageUrl?: StringNullableFilter<"RoomImage"> | string | null
+    imagePublicId?: StringNullableFilter<"RoomImage"> | string | null
     imageOrder?: IntNullableFilter<"RoomImage"> | number | null
     imageDefault?: BoolNullableFilter<"RoomImage"> | boolean | null
   }
@@ -16454,6 +15021,18 @@ export namespace Prisma {
   export type RoomAmnietyUpdateManyWithWhereWithoutRoomTypeInput = {
     where: RoomAmnietyScalarWhereInput
     data: XOR<RoomAmnietyUpdateManyMutationInput, RoomAmnietyUncheckedUpdateManyWithoutRoomTypeInput>
+  }
+
+  export type RoomAmnietyScalarWhereInput = {
+    AND?: RoomAmnietyScalarWhereInput | RoomAmnietyScalarWhereInput[]
+    OR?: RoomAmnietyScalarWhereInput[]
+    NOT?: RoomAmnietyScalarWhereInput | RoomAmnietyScalarWhereInput[]
+    id?: IntFilter<"RoomAmniety"> | number
+    roomTypeId?: IntNullableFilter<"RoomAmniety"> | number | null
+    name?: StringFilter<"RoomAmniety"> | string
+    order?: IntFilter<"RoomAmniety"> | number
+    createdAt?: DateTimeFilter<"RoomAmniety"> | Date | string
+    updatedAt?: DateTimeFilter<"RoomAmniety"> | Date | string
   }
 
   export type RoomTypeCreateWithoutRoomsInput = {
@@ -16618,24 +15197,6 @@ export namespace Prisma {
     create: XOR<RoomTypeCreateWithoutRoomAmnietyInput, RoomTypeUncheckedCreateWithoutRoomAmnietyInput>
   }
 
-  export type AmnietyMasterCreateWithoutRoomAmnietyInput = {
-    amnietyName?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type AmnietyMasterUncheckedCreateWithoutRoomAmnietyInput = {
-    id?: number
-    amnietyName?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type AmnietyMasterCreateOrConnectWithoutRoomAmnietyInput = {
-    where: AmnietyMasterWhereUniqueInput
-    create: XOR<AmnietyMasterCreateWithoutRoomAmnietyInput, AmnietyMasterUncheckedCreateWithoutRoomAmnietyInput>
-  }
-
   export type RoomTypeUpsertWithoutRoomAmnietyInput = {
     update: XOR<RoomTypeUpdateWithoutRoomAmnietyInput, RoomTypeUncheckedUpdateWithoutRoomAmnietyInput>
     create: XOR<RoomTypeCreateWithoutRoomAmnietyInput, RoomTypeUncheckedCreateWithoutRoomAmnietyInput>
@@ -16678,30 +15239,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rooms?: RoomUncheckedUpdateManyWithoutRoomTypeNestedInput
     roomImages?: RoomImageUncheckedUpdateManyWithoutRoomTypeNestedInput
-  }
-
-  export type AmnietyMasterUpsertWithoutRoomAmnietyInput = {
-    update: XOR<AmnietyMasterUpdateWithoutRoomAmnietyInput, AmnietyMasterUncheckedUpdateWithoutRoomAmnietyInput>
-    create: XOR<AmnietyMasterCreateWithoutRoomAmnietyInput, AmnietyMasterUncheckedCreateWithoutRoomAmnietyInput>
-    where?: AmnietyMasterWhereInput
-  }
-
-  export type AmnietyMasterUpdateToOneWithWhereWithoutRoomAmnietyInput = {
-    where?: AmnietyMasterWhereInput
-    data: XOR<AmnietyMasterUpdateWithoutRoomAmnietyInput, AmnietyMasterUncheckedUpdateWithoutRoomAmnietyInput>
-  }
-
-  export type AmnietyMasterUpdateWithoutRoomAmnietyInput = {
-    amnietyName?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AmnietyMasterUncheckedUpdateWithoutRoomAmnietyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    amnietyName?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RoomTypeCreateWithoutRoomImagesInput = {
@@ -16847,33 +15384,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type RoomAmnietyCreateManyAmnietyInput = {
-    id?: number
-    roomTypeId?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type RoomAmnietyUpdateWithoutAmnietyInput = {
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roomType?: RoomTypeUpdateOneWithoutRoomAmnietyNestedInput
-  }
-
-  export type RoomAmnietyUncheckedUpdateWithoutAmnietyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    roomTypeId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type RoomAmnietyUncheckedUpdateManyWithoutAmnietyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    roomTypeId?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type RoomCreateManyRoomStatusInput = {
     id?: number
     roomNumber?: string | null
@@ -16921,13 +15431,15 @@ export namespace Prisma {
   export type RoomImageCreateManyRoomTypeInput = {
     id?: number
     imageUrl?: string | null
+    imagePublicId?: string | null
     imageOrder?: number | null
     imageDefault?: boolean | null
   }
 
   export type RoomAmnietyCreateManyRoomTypeInput = {
     id?: number
-    amnietyId?: number | null
+    name: string
+    order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -16960,6 +15472,7 @@ export namespace Prisma {
 
   export type RoomImageUpdateWithoutRoomTypeInput = {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    imagePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     imageOrder?: NullableIntFieldUpdateOperationsInput | number | null
     imageDefault?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
@@ -16967,6 +15480,7 @@ export namespace Prisma {
   export type RoomImageUncheckedUpdateWithoutRoomTypeInput = {
     id?: IntFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    imagePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     imageOrder?: NullableIntFieldUpdateOperationsInput | number | null
     imageDefault?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
@@ -16974,26 +15488,30 @@ export namespace Prisma {
   export type RoomImageUncheckedUpdateManyWithoutRoomTypeInput = {
     id?: IntFieldUpdateOperationsInput | number
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    imagePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     imageOrder?: NullableIntFieldUpdateOperationsInput | number | null
     imageDefault?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
   export type RoomAmnietyUpdateWithoutRoomTypeInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    amniety?: AmnietyMasterUpdateOneWithoutRoomAmnietyNestedInput
   }
 
   export type RoomAmnietyUncheckedUpdateWithoutRoomTypeInput = {
     id?: IntFieldUpdateOperationsInput | number
-    amnietyId?: NullableIntFieldUpdateOperationsInput | number | null
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RoomAmnietyUncheckedUpdateManyWithoutRoomTypeInput = {
     id?: IntFieldUpdateOperationsInput | number
-    amnietyId?: NullableIntFieldUpdateOperationsInput | number | null
+    name?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
