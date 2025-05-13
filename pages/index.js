@@ -7,6 +7,7 @@ import api from "@/lib/axios";
 import testimonials from "@/constants/testimonials";
 import services from "@/constants/services";
 import sliderImages from "@/constants/slider-home";
+import LoadingOverlay from "@/components/global/loading-overlay";
 //icons
 import { FaArrowRight } from "react-icons/fa6";
 
@@ -19,6 +20,7 @@ export const metadata = {
 export default function Home() {
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [roomTypes, setRoomTypes] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const fetchRoomTypes = async () => {
@@ -32,6 +34,14 @@ export default function Home() {
     };
 
     fetchRoomTypes();
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize();
   }, []);
 
   const rooms = [
@@ -219,9 +229,9 @@ export default function Home() {
               <AnimatePresence mode="wait">
                 <motion.p
                   key={testimonialIndex}
-                  initial={{ opacity: 0, x: 100 }}
+                  initial={{ opacity: 0, x: isMobile ? 10 : 100 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -100 }}
+                  exit={{ opacity: 0, x: isMobile ? -10 : -100 }}
                   transition={{ duration: 0.5 }}
                   className="text-green-700 max-w-4xl text-center md:font-normal font-bold"
                 >
