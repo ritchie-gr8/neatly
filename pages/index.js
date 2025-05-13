@@ -46,7 +46,7 @@ export default function Home() {
       name: "Superior Garden View",
       image: "/images/landing-page/test1.jpg",
       colSpan: "md:col-span-3",
-      height: "h-132",
+      height: "md:h-132 h-66",
       rowSpan: "",
     },
     {
@@ -54,7 +54,7 @@ export default function Home() {
       name: "Superior Garden View",
       image: "/images/landing-page/test1.jpg",
       colSpan: "md:col-span-2",
-      height: "h-96",
+      height: "md:h-96 h-66",
       rowSpan: "",
     },
     {
@@ -62,7 +62,7 @@ export default function Home() {
       name: "Superior Garden View",
       image: "/images/landing-page/test1.jpg",
       colSpan: "md:col-span-1",
-      height: "h-96",
+      height: "md:h-96 h-66",
       rowSpan: "",
     },
     {
@@ -70,7 +70,7 @@ export default function Home() {
       name: "Superior Garden View",
       image: "/images/landing-page/test1.jpg",
       colSpan: "md:col-span-1",
-      height: "h-196",
+      height: "md:h-196 h-66",
       rowSpan: "md:row-span-2",
     },
     {
@@ -78,7 +78,7 @@ export default function Home() {
       name: "Superior Garden View",
       image: "/images/landing-page/test1.jpg",
       colSpan: "md:col-span-2",
-      height: "h-96",
+      height: "md:h-96 h-66",
       rowSpan: "",
     },
     {
@@ -86,7 +86,7 @@ export default function Home() {
       name: "Superior Garden View",
       image: "/images/landing-page/test1.jpg",
       colSpan: "md:col-span-2",
-      height: "h-96",
+      height: "md:h-96 h-66",
       rowSpan: "",
     },
   ];
@@ -112,7 +112,7 @@ export default function Home() {
   useEffect(() => {
     const interval = setInterval(() => {
       setTestimonialIndex(prev => (prev === testimonials.length - 1 ? 0 : prev + 1));
-    }, 4000);
+    }, 6000);
   
     return () => clearInterval(interval);
   }, [testimonialIndex]);
@@ -120,29 +120,35 @@ export default function Home() {
   return (
     <DefaultLayout showFooter>
       <div className="bg-util-bg">
+
         {/* First Box --- Hero Section */}
-        <section className="aspect-[2/1] relative overflow-hidden">
+        <section className="md:aspect-[2/1] aspect-[1/2] relative overflow-hidden">
           <img
             src="/images/landing-page/hotel-main.jpg"
-            alt="hotel-main"
-            className="w-full h-full object-cover object-[center_65%]"
+            alt="hotel-villa"
+            className="w-full h-full object-cover object-[center_65%] md:scale-100 scale-200"
           />
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-black/80 via-black/40 to-transparent">
-            <div className="text-white text-8xl font-light text-center leading-snug pb-30">
-              <h1> A Best Place for Your </h1>
-              <h1> Neatly Experience </h1>
-            </div>
-            <div>Search Box</div>
-          </div>
+          <h1 className="text-white text-5xl md:text-8xl font-light text-center leading-tight md:leading-[1.1] pb-12 md:pb-30">
+            <span className="md:hidden block text-center">
+              A Best Place <br /> for Your Neatly <br />Experience
+            </span>
+            <span className="hidden md:inline">
+              A Best Place for Your<br />
+              Neatly Experience
+            </span>
+          </h1>
+          <div>Search Box</div>
+        </div>
         </section>
 
         {/* Second Box --- Neatly Hotel */}
-        <section className="w-full h-full py-30" id="about">
-          <div className="px-60">
-            <h1 className="text-green-800 text-7xl font-light pb-12">
+        <section className="w-full h-full py-12 md:py-30" id="about">
+          <div className="px-6 md:px-60">
+            <h1 className="text-green-800 text-4xl md:text-7xl font-light pb-6 md:pb-12">
               Neatly Hotel
             </h1>
-            <div className="text-gray-700 space-y-6 pb-30 px-60">
+            <div className="text-gray-700 space-y-4 md:space-y-6 pb-12 md:pb-30 px-6 md:px-60">
               <p>
                 Set in Bangkok, Thailand. Neatly Hotel offers 5-star
                 accommodation with an outdoor pool, kids' club, sports
@@ -163,14 +169,14 @@ export default function Home() {
             </div>
           </div>
           <div>
-            <ImageSlider images={images} itemFlex="30%" aspect="3/4" />
+            <ImageSlider images={images} itemFlex="30%" aspect="3/4" button />
           </div>
         </section>
 
         {/* Third Box --- Service & Facilities */}
         <section className="w-full bg-green-700 text-white" id="services">
           <div className="flex flex-col items-center justify-center py-30 gap-12">
-            <h1 className="text-7xl pb-12">Service & Facilities</h1>
+            <h1 className="md:text-7xl text-5xl pb-12">Service & <br className="md:hidden block"/> Facilities</h1>
             <div className="flex gap-18 flex-wrap justify-center">
               {services.map((service, index) => (
                 <div
@@ -187,11 +193,11 @@ export default function Home() {
 
         {/* Fourth Box --- Rooms & Suits*/}
         <section className="bg-util-bg" id="rooms">
-          <div className="py-30">
-            <h1 className="text-center text-green-800 text-7xl pb-24">
+          <div className="md:py-30 py-12">
+            <h1 className="text-center text-green-800 md:text-7xl text-4xl md:pb-24 pb-12">
               Rooms & Suits
             </h1>
-            <div className="px-60">
+            <div className="px-0 md:px-60">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {rooms.map((room) => (
                   <div
@@ -205,8 +211,8 @@ export default function Home() {
                       className="absolute inset-0 w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-black/30 hover:bg-black/10 transition duration-300" />
-                    <div className="flex flex-col absolute left-18 bottom-18 z-10 gap-6 text-white">
-                      <h1 className="text-5xl ">{room.name}</h1>
+                    <div className="flex flex-col absolute md:left-18 md:bottom-18 left-6 bottom-6 z-10 md:gap-6 gap-3 text-white">
+                      <h1 className="md:text-5xl text-3xl">{room.name}</h1>
                       <span className="flex text-xl items-center justify-start gap-2">
                         Explore Room
                         <FaArrowRight size="18" />
@@ -220,13 +226,14 @@ export default function Home() {
         </section>
 
         {/* Fifth Box --- Our Customer Says */}
-        <section className="flex flex-col px-60 py-30 bg-green-200">
-          <h1 className="text-center text-7xl text-green-800 pb-24">
-            Our Customer Says
+        <section className="flex flex-col md:px-60 px-6 md:py-30 py-12 bg-green-200">
+          <h1 className="text-center md:text-7xl text-4xl md:pb-24 pb-12 text-green-800">
+            Our Customer <br className="md:hidden block"/> Says
           </h1>
           <div className="relative">
             <div className="flex items-center justify-between">
               <button 
+                className="md:block hidden"
                 onClick={() => {
                   setIsForward(false);
                   setTestimonialIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
@@ -241,12 +248,13 @@ export default function Home() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: isForward ? -100 : 100 }}
                   transition={{ duration: 0.5 }}
-                  className="text-green-700 max-w-4xl text-center"
+                  className="text-green-700 max-w-4xl text-center md:font-normal font-bold"
                 >
                   {testimonials[testimonialIndex].quote}
                 </motion.p>
               </AnimatePresence>
               <button 
+                className="md:block hidden"
                 onClick={() => {
                   setIsForward(true);
                   setTestimonialIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
@@ -259,11 +267,11 @@ export default function Home() {
           <AnimatePresence mode="wait">
             <motion.div
               key={testimonialIndex}
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: isForward ? 20 : -20 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
+              exit={{ opacity: 0, x: isForward ? -20 : 20 }}
               transition={{ duration: 0.5 }}
-              className="flex items-center justify-center pt-12 gap-4"
+              className="flex items-center justify-center md:pt-12 pt-6 gap-4"
             >
               <motion.img
                 src={testimonials[testimonialIndex].img}
@@ -290,6 +298,24 @@ export default function Home() {
                 }`}
               />
             ))}
+          </div>
+          <div className="flex items-center justify-center gap-6 md:hidden pt-6">
+          <button 
+                onClick={() => {
+                  setIsForward(false);
+                  setTestimonialIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
+                }}
+              >
+                <PiArrowCircleLeftThin size="60" className="text-orange-500 hover:text-orange-300 transition duration-300 flex-shrink-0 cursor-pointer"/>
+              </button>
+              <button 
+                onClick={() => {
+                  setIsForward(true);
+                  setTestimonialIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
+                }}
+              >
+                <PiArrowCircleRightThin size="60" className="text-orange-500 hover:text-orange-300 transition duration-300 flex-shrink-0 cursor-pointer"/>
+              </button>
           </div>
         </section>
       </div>

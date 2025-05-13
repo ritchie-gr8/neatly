@@ -9,6 +9,7 @@ export default function ImageSlider({
   images,
   itemFlex = "30%",
   aspect = "3/4",
+  button = false,
 }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, speed: 5 });
   const [selectedImage, setSelectedImage] = useState(null);
@@ -49,7 +50,7 @@ export default function ImageSlider({
                 "flex-shrink-0",
                 ASPECT_MAP[aspect] || "aspect-[3/4]",
                 FLEX_MAP[itemFlex] || "flex-[0_0_30%]",
-                "px-2 cursor-pointer"
+                "md:px-2 px-1 cursor-pointer"
               )}
               onClick={() => setSelectedImage(img)}
             >
@@ -65,27 +66,31 @@ export default function ImageSlider({
       </div>
 
       {/* Arrow Buttons */}
+      {button && (
       <button
         onClick={scrollPrev}
         aria-label="Scroll previous"
         className={cn(
-          "absolute left-36 top-1/2 -translate-y-1/2",
+          "hidden md:flex absolute left-36 top-1/2 -translate-y-1/2",
           "opacity-80 hover:opacity-100 cursor-pointer"
         )}
       >
         <SlArrowLeftCircle size="36" />
       </button>
+      )}
 
+      {button && (
       <button
         onClick={scrollNext}
         aria-label="Scroll next"
         className={cn(
-          "absolute right-36 top-1/2 -translate-y-1/2",
+          "hidden md:flex absolute right-36 top-1/2 -translate-y-1/2",
           "opacity-80 hover:opacity-100 cursor-pointer"
         )}
       >
         <SlArrowRightCircle size="36" />
       </button>
+      )}
 
       {/* Modal */}
       {selectedImage && (
