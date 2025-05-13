@@ -1,14 +1,12 @@
 "use client";
 
 import { Plus, X } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 
-const ImageUploader = React.forwardRef(function ImageUploader({
-  imageUrl,
-  onChange,
-  width = 167,
-  height = 167,
-}, ref) {
+const ImageUploader = React.forwardRef(function ImageUploader(
+  { imageUrl, onChange, width = 167, height = 167 },
+  ref
+) {
   const [image, setImage] = React.useState(imageUrl);
 
   const handleRemoveImage = (e) => {
@@ -25,6 +23,12 @@ const ImageUploader = React.forwardRef(function ImageUploader({
     reader.readAsDataURL(file);
     onChange({ url: reader.result, file });
   };
+
+  useEffect(() => {
+    if (imageUrl) {
+      setImage(imageUrl);
+    }
+  }, [imageUrl]);
 
   return (
     <div
