@@ -1,16 +1,35 @@
 import { PrismaClient } from "@/lib/generated/prisma/client";
 
-const prisma = new PrismaClient();
+declare global {
+  var prismaClientInstance: PrismaClient | undefined;
+}
 
-const globalForPrisma = global as unknown as { prisma: typeof prisma };
+let prisma: PrismaClient;
 
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
+if (process.env.NODE_ENV === "production") {
+  prisma = new PrismaClient({});
+} else {
+  if (!globalThis.prismaClientInstance) {
+    console.log("Development: Creating new PrismaClient instance.");
+    globalThis.prismaClientInstance = new PrismaClient({});
+  }
+  prisma = globalThis.prismaClientInstance;
+}
 
-  if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === "development") {
+  const exitHandlerSymbol = Symbol.for("prismaExitHandlerAttached");
+
+  if (!globalThis[exitHandlerSymbol]) {
     process.on("beforeExit", async () => {
-      await prisma.$disconnect();
+      console.log(
+        "Prisma client disconnecting via beforeExit hook (development)..."
+      );
+      if (globalThis.prismaClientInstance) {
+        await globalThis.prismaClientInstance.$disconnect();
+        console.log("Prisma client disconnected.");
+      }
     });
+    globalThis[exitHandlerSymbol] = true;
   }
 }
 
