@@ -2,13 +2,11 @@ import { useState, useEffect} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import DefaultLayout from "@/layouts/default.layout";
 import ImageSlider from "@/components/global/image-slider";
+import api from "@/lib/axios";
+import testimonials from "@/constants/testimonials";
+import services from "@/constants/services";
+import sliderImages from "@/constants/slider-home";
 //icons
-import { BiSpa } from "react-icons/bi";
-import { LiaHotTubSolid, LiaCarSideSolid } from "react-icons/lia";
-import { PiBarbell } from "react-icons/pi";
-import { LuSofa } from "react-icons/lu";
-import { FaWifi } from "react-icons/fa";
-import { TbPhoneCall } from "react-icons/tb";
 import { FaArrowRight } from "react-icons/fa6";
 import { PiArrowCircleLeftThin, PiArrowCircleRightThin } from "react-icons/pi";
 
@@ -21,93 +19,73 @@ export const metadata = {
 export default function Home() {
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [isForward, setIsForward] = useState(true);
+  const [roomTypes, setRoomTypes] = useState([]);
 
-  const images = [
-    "/images/landing-page/test1.jpg",
-    "/images/landing-page/test2.jpg",
-    "/images/landing-page/test3.jpg",
-    "/images/landing-page/test4.jpg",
-    "/images/landing-page/test5.jpg",
-  ];
+  useEffect(() => {
+    const fetchRoomTypes = async () => {
+      try {
+        const response = await api.get('/admin/room-type/list');
+        const data = response.data.data.items;
+        setRoomTypes(data);
+      } catch (error) {
+        console.error('Error fetching room types:', error);
+      }
+    };
 
-  const services = [
-    { icon: <BiSpa size="48" />, label: "Spa" },
-    { icon: <LiaHotTubSolid size="48" />, label: "Sauna" },
-    { icon: <PiBarbell size="48" />, label: "Fitness" },
-    { icon: <LuSofa size="48" />, label: "Arrival Lounge" },
-    { icon: <FaWifi size="48" />, label: "Free Wifi" },
-    { icon: <LiaCarSideSolid size="48" />, label: "Parking" },
-    { icon: <TbPhoneCall size="48" />, label: "24 hours operation" },
-  ];
+    fetchRoomTypes();
+  }, []);
 
   const rooms = [
     {
       id: 1,
-      name: "Superior Garden View",
-      image: "/images/landing-page/test1.jpg",
+      name: roomTypes[0]?.name || "Error Loading Room",
+      image: roomTypes[0]?.defaultImage || "",
       colSpan: "md:col-span-3",
       height: "md:h-132 h-66",
       rowSpan: "",
     },
     {
       id: 2,
-      name: "Superior Garden View",
-      image: "/images/landing-page/test1.jpg",
+      name: roomTypes[1]?.name || "Error Loading Room",
+      image: roomTypes[1]?.defaultImage || "",
       colSpan: "md:col-span-2",
       height: "md:h-96 h-66",
       rowSpan: "",
     },
     {
       id: 3,
-      name: "Superior Garden View",
-      image: "/images/landing-page/test1.jpg",
+      name: roomTypes[2]?.name || "Error Loading Room",
+      image: roomTypes[2]?.defaultImage || "",
       colSpan: "md:col-span-1",
       height: "md:h-96 h-66",
       rowSpan: "",
     },
     {
       id: 4,
-      name: "Superior Garden View",
-      image: "/images/landing-page/test1.jpg",
+      name: roomTypes[3]?.name || "Error Loading Room",
+      image: roomTypes[3]?.defaultImage || "",
       colSpan: "md:col-span-1",
       height: "md:h-196 h-66",
       rowSpan: "md:row-span-2",
     },
     {
       id: 5,
-      name: "Superior Garden View",
-      image: "/images/landing-page/test1.jpg",
+      name: roomTypes[4]?.name || "Error Loading Room",
+      image: roomTypes[4]?.defaultImage || "",
       colSpan: "md:col-span-2",
       height: "md:h-96 h-66",
       rowSpan: "",
     },
     {
       id: 6,
-      name: "Superior Garden View",
-      image: "/images/landing-page/test1.jpg",
+      name: roomTypes[5]?.name || "Error Loading Room",
+      image: roomTypes[5]?.defaultImage || "",
       colSpan: "md:col-span-2",
       height: "md:h-96 h-66",
       rowSpan: "",
     },
   ];
 
-  const testimonials = [
-    {
-      quote: `"The room was spotless and the bed was incredibly comfortable. The staff were friendly and helped us book a local tour. Great location, just 5 minutes from the beach!"`,
-      name: "John Donut",
-      img:"/images/landing-page/testimonial1.jpg"
-    },
-    {
-      quote: `"I stayed for three nights and had a wonderful experience. The breakfast buffet had a lot of options and the rooftop pool was a highlight. Would definitely come back!"`,
-      name: "Sarah Popcorn",
-      img:"/images/landing-page/testimonial2.jpg"
-    },
-    {
-      quote: `"Beautiful hotel with excellent service. Check-in was fast, and the concierge gave great recommendations for restaurants nearby. Highly recommend for couples!"`,
-      name: "Emily Davis",
-      img:"/images/landing-page/testimonial3.jpg"
-    }
-  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -169,7 +147,7 @@ export default function Home() {
             </div>
           </div>
           <div>
-            <ImageSlider images={images} itemFlex="30%" aspect="3/4" button />
+            <ImageSlider images={sliderImages} itemFlex="30%" aspect="3/4" button />
           </div>
         </section>
 
