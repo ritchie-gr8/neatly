@@ -77,10 +77,11 @@ model RoomType {
   updatedAt      DateTime @default(now()) @updatedAt @map("updated_at")
 
   // Relations
-  bedType     BedType?      @relation(fields: [bedTypeId], references: [id])
-  rooms       Room[]
-  roomImages  RoomImage[]
-  roomAmniety RoomAmniety[]
+  bedType      BedType?      @relation(fields: [bedTypeId], references: [id])
+  rooms        Room[]
+  roomImages   RoomImage[]
+  roomAmniety  RoomAmniety[]
+  bookingRooms BookingRoom[]
 
   @@map("RoomTypes")
 }
@@ -95,8 +96,9 @@ model Room {
   updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
 
   // Relations
-  roomType   RoomType?   @relation(fields: [roomTypeId], references: [id])
-  roomStatus RoomStatus? @relation(fields: [roomStatusId], references: [id])
+  roomType     RoomType?     @relation(fields: [roomTypeId], references: [id])
+  roomStatus   RoomStatus?   @relation(fields: [roomStatusId], references: [id])
+  bookingRooms BookingRoom[]
 
   @@map("Rooms")
 }
@@ -126,6 +128,9 @@ model Guest {
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
 
+  // Relations
+  bookings Booking[]
+
   @@map("Guests")
 }
 
@@ -152,4 +157,100 @@ model RoomImage {
   roomType RoomType? @relation(fields: [roomTypeId], references: [id])
 
   @@map("RoomImages")
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CHECKED_IN
+  CHECKED_OUT
+  CANCELLED
+  NO_SHOW
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  CASH
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  REFUNDED
+  CANCELLED
+  FAILED
+}
+
+model Booking {
+  id                 Int           @id @default(autoincrement()) @map("booking_id")
+  bookingNumber      String        @unique @map("booking_number")
+  guestId            Int           @map("guest_id")
+  checkInDate        DateTime      @map("check_in_date") @db.Date
+  checkOutDate       DateTime      @map("check_out_date") @db.Date
+  adults             Int           @default(1)
+  additionalRequests String?       @map("additional_requests") @db.Text
+  totalAmount        Decimal       @map("total_amount") @db.Decimal(10, 2)
+  bookingStatus      BookingStatus @default(PENDING) @map("booking_status")
+  createdAt          DateTime      @default(now()) @map("created_at")
+  updatedAt          DateTime      @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  guest         Guest          @relation(fields: [guestId], references: [id])
+  bookingRooms  BookingRoom[]
+  payments      Payment[]
+  bookingAddons BookingAddon[]
+
+  @@map("Bookings")
+}
+
+model BookingRoom {
+  id            Int      @id @default(autoincrement()) @map("booking_room_id")
+  bookingId     Int      @map("booking_id")
+  roomId        Int      @map("room_id")
+  roomTypeId    Int      @map("room_type_id")
+  pricePerNight Decimal  @map("price_per_night") @db.Decimal(10, 2)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  booking  Booking  @relation(fields: [bookingId], references: [id])
+  room     Room     @relation(fields: [roomId], references: [id])
+  roomType RoomType @relation(fields: [roomTypeId], references: [id])
+
+  @@map("BookingRooms")
+}
+
+model Payment {
+  id            Int           @id @default(autoincrement()) @map("payment_id")
+  bookingId     Int           @map("booking_id")
+  amount        Decimal       @map("amount") @db.Decimal(10, 2)
+  paymentMethod PaymentMethod @map("payment_method")
+  paymentStatus PaymentStatus @default(PENDING) @map("payment_status")
+  transactionId String?       @map("transaction_id")
+  omiseChargeId String?       @map("omise_charge_id")
+  paymentDate   DateTime?     @map("payment_date")
+  notes         String?       @db.Text
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  booking Booking @relation(fields: [bookingId], references: [id])
+
+  @@map("Payments")
+}
+
+model BookingAddon {
+  id        Int      @id @default(autoincrement()) @map("booking_addon_id")
+  bookingId Int      @map("booking_id")
+  addonName String   @map("addon_name")
+  quantity  Int      @default(1)
+  price     Decimal  @map("price") @db.Decimal(10, 2)
+  notes     String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  booking Booking @relation(fields: [bookingId], references: [id])
+
+  @@map("BookingAddons")
 }

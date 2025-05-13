@@ -58,6 +58,26 @@ export type HotelMaster = $Result.DefaultSelection<Prisma.$HotelMasterPayload>
  * 
  */
 export type RoomImage = $Result.DefaultSelection<Prisma.$RoomImagePayload>
+/**
+ * Model Booking
+ * 
+ */
+export type Booking = $Result.DefaultSelection<Prisma.$BookingPayload>
+/**
+ * Model BookingRoom
+ * 
+ */
+export type BookingRoom = $Result.DefaultSelection<Prisma.$BookingRoomPayload>
+/**
+ * Model Payment
+ * 
+ */
+export type Payment = $Result.DefaultSelection<Prisma.$PaymentPayload>
+/**
+ * Model BookingAddon
+ * 
+ */
+export type BookingAddon = $Result.DefaultSelection<Prisma.$BookingAddonPayload>
 
 /**
  * Enums
@@ -70,11 +90,54 @@ export namespace $Enums {
 
 export type Role = (typeof Role)[keyof typeof Role]
 
+
+export const BookingStatus: {
+  PENDING: 'PENDING',
+  CONFIRMED: 'CONFIRMED',
+  CHECKED_IN: 'CHECKED_IN',
+  CHECKED_OUT: 'CHECKED_OUT',
+  CANCELLED: 'CANCELLED',
+  NO_SHOW: 'NO_SHOW'
+};
+
+export type BookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus]
+
+
+export const PaymentMethod: {
+  CREDIT_CARD: 'CREDIT_CARD',
+  CASH: 'CASH'
+};
+
+export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
+
+
+export const PaymentStatus: {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  REFUNDED: 'REFUNDED',
+  CANCELLED: 'CANCELLED',
+  FAILED: 'FAILED'
+};
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
 }
 
 export type Role = $Enums.Role
 
 export const Role: typeof $Enums.Role
+
+export type BookingStatus = $Enums.BookingStatus
+
+export const BookingStatus: typeof $Enums.BookingStatus
+
+export type PaymentMethod = $Enums.PaymentMethod
+
+export const PaymentMethod: typeof $Enums.PaymentMethod
+
+export type PaymentStatus = $Enums.PaymentStatus
+
+export const PaymentStatus: typeof $Enums.PaymentStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -290,6 +353,46 @@ export class PrismaClient<
     * ```
     */
   get roomImage(): Prisma.RoomImageDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.booking`: Exposes CRUD operations for the **Booking** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Bookings
+    * const bookings = await prisma.booking.findMany()
+    * ```
+    */
+  get booking(): Prisma.BookingDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.bookingRoom`: Exposes CRUD operations for the **BookingRoom** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more BookingRooms
+    * const bookingRooms = await prisma.bookingRoom.findMany()
+    * ```
+    */
+  get bookingRoom(): Prisma.BookingRoomDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.payment`: Exposes CRUD operations for the **Payment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Payments
+    * const payments = await prisma.payment.findMany()
+    * ```
+    */
+  get payment(): Prisma.PaymentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.bookingAddon`: Exposes CRUD operations for the **BookingAddon** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more BookingAddons
+    * const bookingAddons = await prisma.bookingAddon.findMany()
+    * ```
+    */
+  get bookingAddon(): Prisma.BookingAddonDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -738,7 +841,11 @@ export namespace Prisma {
     RoomAmniety: 'RoomAmniety',
     Guest: 'Guest',
     HotelMaster: 'HotelMaster',
-    RoomImage: 'RoomImage'
+    RoomImage: 'RoomImage',
+    Booking: 'Booking',
+    BookingRoom: 'BookingRoom',
+    Payment: 'Payment',
+    BookingAddon: 'BookingAddon'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -757,7 +864,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "bedType" | "roomStatus" | "roomType" | "room" | "roomAmniety" | "guest" | "hotelMaster" | "roomImage"
+      modelProps: "user" | "bedType" | "roomStatus" | "roomType" | "room" | "roomAmniety" | "guest" | "hotelMaster" | "roomImage" | "booking" | "bookingRoom" | "payment" | "bookingAddon"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1427,6 +1534,302 @@ export namespace Prisma {
           }
         }
       }
+      Booking: {
+        payload: Prisma.$BookingPayload<ExtArgs>
+        fields: Prisma.BookingFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BookingFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BookingFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingPayload>
+          }
+          findFirst: {
+            args: Prisma.BookingFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BookingFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingPayload>
+          }
+          findMany: {
+            args: Prisma.BookingFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingPayload>[]
+          }
+          create: {
+            args: Prisma.BookingCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingPayload>
+          }
+          createMany: {
+            args: Prisma.BookingCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BookingCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingPayload>[]
+          }
+          delete: {
+            args: Prisma.BookingDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingPayload>
+          }
+          update: {
+            args: Prisma.BookingUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingPayload>
+          }
+          deleteMany: {
+            args: Prisma.BookingDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BookingUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.BookingUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingPayload>[]
+          }
+          upsert: {
+            args: Prisma.BookingUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingPayload>
+          }
+          aggregate: {
+            args: Prisma.BookingAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBooking>
+          }
+          groupBy: {
+            args: Prisma.BookingGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BookingGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BookingCountArgs<ExtArgs>
+            result: $Utils.Optional<BookingCountAggregateOutputType> | number
+          }
+        }
+      }
+      BookingRoom: {
+        payload: Prisma.$BookingRoomPayload<ExtArgs>
+        fields: Prisma.BookingRoomFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BookingRoomFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingRoomPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BookingRoomFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingRoomPayload>
+          }
+          findFirst: {
+            args: Prisma.BookingRoomFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingRoomPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BookingRoomFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingRoomPayload>
+          }
+          findMany: {
+            args: Prisma.BookingRoomFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingRoomPayload>[]
+          }
+          create: {
+            args: Prisma.BookingRoomCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingRoomPayload>
+          }
+          createMany: {
+            args: Prisma.BookingRoomCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BookingRoomCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingRoomPayload>[]
+          }
+          delete: {
+            args: Prisma.BookingRoomDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingRoomPayload>
+          }
+          update: {
+            args: Prisma.BookingRoomUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingRoomPayload>
+          }
+          deleteMany: {
+            args: Prisma.BookingRoomDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BookingRoomUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.BookingRoomUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingRoomPayload>[]
+          }
+          upsert: {
+            args: Prisma.BookingRoomUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingRoomPayload>
+          }
+          aggregate: {
+            args: Prisma.BookingRoomAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBookingRoom>
+          }
+          groupBy: {
+            args: Prisma.BookingRoomGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BookingRoomGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BookingRoomCountArgs<ExtArgs>
+            result: $Utils.Optional<BookingRoomCountAggregateOutputType> | number
+          }
+        }
+      }
+      Payment: {
+        payload: Prisma.$PaymentPayload<ExtArgs>
+        fields: Prisma.PaymentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PaymentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PaymentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload>
+          }
+          findFirst: {
+            args: Prisma.PaymentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PaymentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload>
+          }
+          findMany: {
+            args: Prisma.PaymentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload>[]
+          }
+          create: {
+            args: Prisma.PaymentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload>
+          }
+          createMany: {
+            args: Prisma.PaymentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PaymentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload>[]
+          }
+          delete: {
+            args: Prisma.PaymentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload>
+          }
+          update: {
+            args: Prisma.PaymentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload>
+          }
+          deleteMany: {
+            args: Prisma.PaymentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PaymentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PaymentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload>[]
+          }
+          upsert: {
+            args: Prisma.PaymentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPayload>
+          }
+          aggregate: {
+            args: Prisma.PaymentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePayment>
+          }
+          groupBy: {
+            args: Prisma.PaymentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PaymentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PaymentCountArgs<ExtArgs>
+            result: $Utils.Optional<PaymentCountAggregateOutputType> | number
+          }
+        }
+      }
+      BookingAddon: {
+        payload: Prisma.$BookingAddonPayload<ExtArgs>
+        fields: Prisma.BookingAddonFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BookingAddonFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingAddonPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BookingAddonFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingAddonPayload>
+          }
+          findFirst: {
+            args: Prisma.BookingAddonFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingAddonPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BookingAddonFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingAddonPayload>
+          }
+          findMany: {
+            args: Prisma.BookingAddonFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingAddonPayload>[]
+          }
+          create: {
+            args: Prisma.BookingAddonCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingAddonPayload>
+          }
+          createMany: {
+            args: Prisma.BookingAddonCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BookingAddonCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingAddonPayload>[]
+          }
+          delete: {
+            args: Prisma.BookingAddonDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingAddonPayload>
+          }
+          update: {
+            args: Prisma.BookingAddonUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingAddonPayload>
+          }
+          deleteMany: {
+            args: Prisma.BookingAddonDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BookingAddonUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.BookingAddonUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingAddonPayload>[]
+          }
+          upsert: {
+            args: Prisma.BookingAddonUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BookingAddonPayload>
+          }
+          aggregate: {
+            args: Prisma.BookingAddonAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBookingAddon>
+          }
+          groupBy: {
+            args: Prisma.BookingAddonGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BookingAddonGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BookingAddonCountArgs<ExtArgs>
+            result: $Utils.Optional<BookingAddonCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1520,6 +1923,10 @@ export namespace Prisma {
     guest?: GuestOmit
     hotelMaster?: HotelMasterOmit
     roomImage?: RoomImageOmit
+    booking?: BookingOmit
+    bookingRoom?: BookingRoomOmit
+    payment?: PaymentOmit
+    bookingAddon?: BookingAddonOmit
   }
 
   /* Types for Logging */
@@ -1679,12 +2086,14 @@ export namespace Prisma {
     rooms: number
     roomImages: number
     roomAmniety: number
+    bookingRooms: number
   }
 
   export type RoomTypeCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     rooms?: boolean | RoomTypeCountOutputTypeCountRoomsArgs
     roomImages?: boolean | RoomTypeCountOutputTypeCountRoomImagesArgs
     roomAmniety?: boolean | RoomTypeCountOutputTypeCountRoomAmnietyArgs
+    bookingRooms?: boolean | RoomTypeCountOutputTypeCountBookingRoomsArgs
   }
 
   // Custom InputTypes
@@ -1717,6 +2126,124 @@ export namespace Prisma {
    */
   export type RoomTypeCountOutputTypeCountRoomAmnietyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RoomAmnietyWhereInput
+  }
+
+  /**
+   * RoomTypeCountOutputType without action
+   */
+  export type RoomTypeCountOutputTypeCountBookingRoomsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BookingRoomWhereInput
+  }
+
+
+  /**
+   * Count Type RoomCountOutputType
+   */
+
+  export type RoomCountOutputType = {
+    bookingRooms: number
+  }
+
+  export type RoomCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    bookingRooms?: boolean | RoomCountOutputTypeCountBookingRoomsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * RoomCountOutputType without action
+   */
+  export type RoomCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoomCountOutputType
+     */
+    select?: RoomCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * RoomCountOutputType without action
+   */
+  export type RoomCountOutputTypeCountBookingRoomsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BookingRoomWhereInput
+  }
+
+
+  /**
+   * Count Type GuestCountOutputType
+   */
+
+  export type GuestCountOutputType = {
+    bookings: number
+  }
+
+  export type GuestCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    bookings?: boolean | GuestCountOutputTypeCountBookingsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * GuestCountOutputType without action
+   */
+  export type GuestCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GuestCountOutputType
+     */
+    select?: GuestCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * GuestCountOutputType without action
+   */
+  export type GuestCountOutputTypeCountBookingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BookingWhereInput
+  }
+
+
+  /**
+   * Count Type BookingCountOutputType
+   */
+
+  export type BookingCountOutputType = {
+    bookingRooms: number
+    payments: number
+    bookingAddons: number
+  }
+
+  export type BookingCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    bookingRooms?: boolean | BookingCountOutputTypeCountBookingRoomsArgs
+    payments?: boolean | BookingCountOutputTypeCountPaymentsArgs
+    bookingAddons?: boolean | BookingCountOutputTypeCountBookingAddonsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * BookingCountOutputType without action
+   */
+  export type BookingCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingCountOutputType
+     */
+    select?: BookingCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * BookingCountOutputType without action
+   */
+  export type BookingCountOutputTypeCountBookingRoomsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BookingRoomWhereInput
+  }
+
+  /**
+   * BookingCountOutputType without action
+   */
+  export type BookingCountOutputTypeCountPaymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PaymentWhereInput
+  }
+
+  /**
+   * BookingCountOutputType without action
+   */
+  export type BookingCountOutputTypeCountBookingAddonsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BookingAddonWhereInput
   }
 
 
@@ -5330,6 +5857,7 @@ export namespace Prisma {
     rooms?: boolean | RoomType$roomsArgs<ExtArgs>
     roomImages?: boolean | RoomType$roomImagesArgs<ExtArgs>
     roomAmniety?: boolean | RoomType$roomAmnietyArgs<ExtArgs>
+    bookingRooms?: boolean | RoomType$bookingRoomsArgs<ExtArgs>
     _count?: boolean | RoomTypeCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["roomType"]>
 
@@ -5386,6 +5914,7 @@ export namespace Prisma {
     rooms?: boolean | RoomType$roomsArgs<ExtArgs>
     roomImages?: boolean | RoomType$roomImagesArgs<ExtArgs>
     roomAmniety?: boolean | RoomType$roomAmnietyArgs<ExtArgs>
+    bookingRooms?: boolean | RoomType$bookingRoomsArgs<ExtArgs>
     _count?: boolean | RoomTypeCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type RoomTypeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5402,6 +5931,7 @@ export namespace Prisma {
       rooms: Prisma.$RoomPayload<ExtArgs>[]
       roomImages: Prisma.$RoomImagePayload<ExtArgs>[]
       roomAmniety: Prisma.$RoomAmnietyPayload<ExtArgs>[]
+      bookingRooms: Prisma.$BookingRoomPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -5814,6 +6344,7 @@ export namespace Prisma {
     rooms<T extends RoomType$roomsArgs<ExtArgs> = {}>(args?: Subset<T, RoomType$roomsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     roomImages<T extends RoomType$roomImagesArgs<ExtArgs> = {}>(args?: Subset<T, RoomType$roomImagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoomImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     roomAmniety<T extends RoomType$roomAmnietyArgs<ExtArgs> = {}>(args?: Subset<T, RoomType$roomAmnietyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoomAmnietyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    bookingRooms<T extends RoomType$bookingRoomsArgs<ExtArgs> = {}>(args?: Subset<T, RoomType$bookingRoomsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingRoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6342,6 +6873,30 @@ export namespace Prisma {
   }
 
   /**
+   * RoomType.bookingRooms
+   */
+  export type RoomType$bookingRoomsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingRoom
+     */
+    select?: BookingRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingRoom
+     */
+    omit?: BookingRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingRoomInclude<ExtArgs> | null
+    where?: BookingRoomWhereInput
+    orderBy?: BookingRoomOrderByWithRelationInput | BookingRoomOrderByWithRelationInput[]
+    cursor?: BookingRoomWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BookingRoomScalarFieldEnum | BookingRoomScalarFieldEnum[]
+  }
+
+  /**
    * RoomType without action
    */
   export type RoomTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6584,6 +7139,8 @@ export namespace Prisma {
     updatedAt?: boolean
     roomType?: boolean | Room$roomTypeArgs<ExtArgs>
     roomStatus?: boolean | Room$roomStatusArgs<ExtArgs>
+    bookingRooms?: boolean | Room$bookingRoomsArgs<ExtArgs>
+    _count?: boolean | RoomCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["room"]>
 
   export type RoomSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6624,6 +7181,8 @@ export namespace Prisma {
   export type RoomInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     roomType?: boolean | Room$roomTypeArgs<ExtArgs>
     roomStatus?: boolean | Room$roomStatusArgs<ExtArgs>
+    bookingRooms?: boolean | Room$bookingRoomsArgs<ExtArgs>
+    _count?: boolean | RoomCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type RoomIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     roomType?: boolean | Room$roomTypeArgs<ExtArgs>
@@ -6639,6 +7198,7 @@ export namespace Prisma {
     objects: {
       roomType: Prisma.$RoomTypePayload<ExtArgs> | null
       roomStatus: Prisma.$RoomStatusPayload<ExtArgs> | null
+      bookingRooms: Prisma.$BookingRoomPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -7044,6 +7604,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     roomType<T extends Room$roomTypeArgs<ExtArgs> = {}>(args?: Subset<T, Room$roomTypeArgs<ExtArgs>>): Prisma__RoomTypeClient<$Result.GetResult<Prisma.$RoomTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     roomStatus<T extends Room$roomStatusArgs<ExtArgs> = {}>(args?: Subset<T, Room$roomStatusArgs<ExtArgs>>): Prisma__RoomStatusClient<$Result.GetResult<Prisma.$RoomStatusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    bookingRooms<T extends Room$bookingRoomsArgs<ExtArgs> = {}>(args?: Subset<T, Room$bookingRoomsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingRoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7511,6 +8072,30 @@ export namespace Prisma {
      */
     include?: RoomStatusInclude<ExtArgs> | null
     where?: RoomStatusWhereInput
+  }
+
+  /**
+   * Room.bookingRooms
+   */
+  export type Room$bookingRoomsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingRoom
+     */
+    select?: BookingRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingRoom
+     */
+    omit?: BookingRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingRoomInclude<ExtArgs> | null
+    where?: BookingRoomWhereInput
+    orderBy?: BookingRoomOrderByWithRelationInput | BookingRoomOrderByWithRelationInput[]
+    cursor?: BookingRoomWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BookingRoomScalarFieldEnum | BookingRoomScalarFieldEnum[]
   }
 
   /**
@@ -8894,6 +9479,8 @@ export namespace Prisma {
     dateOfBirth?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    bookings?: boolean | Guest$bookingsArgs<ExtArgs>
+    _count?: boolean | GuestCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["guest"]>
 
   export type GuestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -8933,10 +9520,18 @@ export namespace Prisma {
   }
 
   export type GuestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "phone" | "country" | "dateOfBirth" | "createdAt" | "updatedAt", ExtArgs["result"]["guest"]>
+  export type GuestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    bookings?: boolean | Guest$bookingsArgs<ExtArgs>
+    _count?: boolean | GuestCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type GuestIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type GuestIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $GuestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Guest"
-    objects: {}
+    objects: {
+      bookings: Prisma.$BookingPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       firstName: string | null
@@ -9341,6 +9936,7 @@ export namespace Prisma {
    */
   export interface Prisma__GuestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    bookings<T extends Guest$bookingsArgs<ExtArgs> = {}>(args?: Subset<T, Guest$bookingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9396,6 +9992,10 @@ export namespace Prisma {
      */
     omit?: GuestOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
      * Filter, which Guest to fetch.
      */
     where: GuestWhereUniqueInput
@@ -9414,6 +10014,10 @@ export namespace Prisma {
      */
     omit?: GuestOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
      * Filter, which Guest to fetch.
      */
     where: GuestWhereUniqueInput
@@ -9431,6 +10035,10 @@ export namespace Prisma {
      * Omit specific fields from the Guest
      */
     omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
     /**
      * Filter, which Guest to fetch.
      */
@@ -9480,6 +10088,10 @@ export namespace Prisma {
      */
     omit?: GuestOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
      * Filter, which Guest to fetch.
      */
     where?: GuestWhereInput
@@ -9528,6 +10140,10 @@ export namespace Prisma {
      */
     omit?: GuestOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
      * Filter, which Guests to fetch.
      */
     where?: GuestWhereInput
@@ -9570,6 +10186,10 @@ export namespace Prisma {
      * Omit specific fields from the Guest
      */
     omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
     /**
      * The data needed to create a Guest.
      */
@@ -9618,6 +10238,10 @@ export namespace Prisma {
      * Omit specific fields from the Guest
      */
     omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
     /**
      * The data needed to update a Guest.
      */
@@ -9685,6 +10309,10 @@ export namespace Prisma {
      */
     omit?: GuestOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
      * The filter to search for the Guest to update in case it exists.
      */
     where: GuestWhereUniqueInput
@@ -9711,6 +10339,10 @@ export namespace Prisma {
      */
     omit?: GuestOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
      * Filter which Guest to delete.
      */
     where: GuestWhereUniqueInput
@@ -9731,6 +10363,30 @@ export namespace Prisma {
   }
 
   /**
+   * Guest.bookings
+   */
+  export type Guest$bookingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Booking
+     */
+    select?: BookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Booking
+     */
+    omit?: BookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+    where?: BookingWhereInput
+    orderBy?: BookingOrderByWithRelationInput | BookingOrderByWithRelationInput[]
+    cursor?: BookingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BookingScalarFieldEnum | BookingScalarFieldEnum[]
+  }
+
+  /**
    * Guest without action
    */
   export type GuestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9742,6 +10398,10 @@ export namespace Prisma {
      * Omit specific fields from the Guest
      */
     omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
   }
 
 
@@ -11920,6 +12580,4745 @@ export namespace Prisma {
 
 
   /**
+   * Model Booking
+   */
+
+  export type AggregateBooking = {
+    _count: BookingCountAggregateOutputType | null
+    _avg: BookingAvgAggregateOutputType | null
+    _sum: BookingSumAggregateOutputType | null
+    _min: BookingMinAggregateOutputType | null
+    _max: BookingMaxAggregateOutputType | null
+  }
+
+  export type BookingAvgAggregateOutputType = {
+    id: number | null
+    guestId: number | null
+    adults: number | null
+    totalAmount: Decimal | null
+  }
+
+  export type BookingSumAggregateOutputType = {
+    id: number | null
+    guestId: number | null
+    adults: number | null
+    totalAmount: Decimal | null
+  }
+
+  export type BookingMinAggregateOutputType = {
+    id: number | null
+    bookingNumber: string | null
+    guestId: number | null
+    checkInDate: Date | null
+    checkOutDate: Date | null
+    adults: number | null
+    additionalRequests: string | null
+    totalAmount: Decimal | null
+    bookingStatus: $Enums.BookingStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BookingMaxAggregateOutputType = {
+    id: number | null
+    bookingNumber: string | null
+    guestId: number | null
+    checkInDate: Date | null
+    checkOutDate: Date | null
+    adults: number | null
+    additionalRequests: string | null
+    totalAmount: Decimal | null
+    bookingStatus: $Enums.BookingStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BookingCountAggregateOutputType = {
+    id: number
+    bookingNumber: number
+    guestId: number
+    checkInDate: number
+    checkOutDate: number
+    adults: number
+    additionalRequests: number
+    totalAmount: number
+    bookingStatus: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type BookingAvgAggregateInputType = {
+    id?: true
+    guestId?: true
+    adults?: true
+    totalAmount?: true
+  }
+
+  export type BookingSumAggregateInputType = {
+    id?: true
+    guestId?: true
+    adults?: true
+    totalAmount?: true
+  }
+
+  export type BookingMinAggregateInputType = {
+    id?: true
+    bookingNumber?: true
+    guestId?: true
+    checkInDate?: true
+    checkOutDate?: true
+    adults?: true
+    additionalRequests?: true
+    totalAmount?: true
+    bookingStatus?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BookingMaxAggregateInputType = {
+    id?: true
+    bookingNumber?: true
+    guestId?: true
+    checkInDate?: true
+    checkOutDate?: true
+    adults?: true
+    additionalRequests?: true
+    totalAmount?: true
+    bookingStatus?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BookingCountAggregateInputType = {
+    id?: true
+    bookingNumber?: true
+    guestId?: true
+    checkInDate?: true
+    checkOutDate?: true
+    adults?: true
+    additionalRequests?: true
+    totalAmount?: true
+    bookingStatus?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type BookingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Booking to aggregate.
+     */
+    where?: BookingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Bookings to fetch.
+     */
+    orderBy?: BookingOrderByWithRelationInput | BookingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BookingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Bookings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Bookings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Bookings
+    **/
+    _count?: true | BookingCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: BookingAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: BookingSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BookingMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BookingMaxAggregateInputType
+  }
+
+  export type GetBookingAggregateType<T extends BookingAggregateArgs> = {
+        [P in keyof T & keyof AggregateBooking]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBooking[P]>
+      : GetScalarType<T[P], AggregateBooking[P]>
+  }
+
+
+
+
+  export type BookingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BookingWhereInput
+    orderBy?: BookingOrderByWithAggregationInput | BookingOrderByWithAggregationInput[]
+    by: BookingScalarFieldEnum[] | BookingScalarFieldEnum
+    having?: BookingScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BookingCountAggregateInputType | true
+    _avg?: BookingAvgAggregateInputType
+    _sum?: BookingSumAggregateInputType
+    _min?: BookingMinAggregateInputType
+    _max?: BookingMaxAggregateInputType
+  }
+
+  export type BookingGroupByOutputType = {
+    id: number
+    bookingNumber: string
+    guestId: number
+    checkInDate: Date
+    checkOutDate: Date
+    adults: number
+    additionalRequests: string | null
+    totalAmount: Decimal
+    bookingStatus: $Enums.BookingStatus
+    createdAt: Date
+    updatedAt: Date
+    _count: BookingCountAggregateOutputType | null
+    _avg: BookingAvgAggregateOutputType | null
+    _sum: BookingSumAggregateOutputType | null
+    _min: BookingMinAggregateOutputType | null
+    _max: BookingMaxAggregateOutputType | null
+  }
+
+  type GetBookingGroupByPayload<T extends BookingGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BookingGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BookingGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BookingGroupByOutputType[P]>
+            : GetScalarType<T[P], BookingGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BookingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingNumber?: boolean
+    guestId?: boolean
+    checkInDate?: boolean
+    checkOutDate?: boolean
+    adults?: boolean
+    additionalRequests?: boolean
+    totalAmount?: boolean
+    bookingStatus?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    guest?: boolean | GuestDefaultArgs<ExtArgs>
+    bookingRooms?: boolean | Booking$bookingRoomsArgs<ExtArgs>
+    payments?: boolean | Booking$paymentsArgs<ExtArgs>
+    bookingAddons?: boolean | Booking$bookingAddonsArgs<ExtArgs>
+    _count?: boolean | BookingCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["booking"]>
+
+  export type BookingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingNumber?: boolean
+    guestId?: boolean
+    checkInDate?: boolean
+    checkOutDate?: boolean
+    adults?: boolean
+    additionalRequests?: boolean
+    totalAmount?: boolean
+    bookingStatus?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    guest?: boolean | GuestDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["booking"]>
+
+  export type BookingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingNumber?: boolean
+    guestId?: boolean
+    checkInDate?: boolean
+    checkOutDate?: boolean
+    adults?: boolean
+    additionalRequests?: boolean
+    totalAmount?: boolean
+    bookingStatus?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    guest?: boolean | GuestDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["booking"]>
+
+  export type BookingSelectScalar = {
+    id?: boolean
+    bookingNumber?: boolean
+    guestId?: boolean
+    checkInDate?: boolean
+    checkOutDate?: boolean
+    adults?: boolean
+    additionalRequests?: boolean
+    totalAmount?: boolean
+    bookingStatus?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type BookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bookingNumber" | "guestId" | "checkInDate" | "checkOutDate" | "adults" | "additionalRequests" | "totalAmount" | "bookingStatus" | "createdAt" | "updatedAt", ExtArgs["result"]["booking"]>
+  export type BookingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    guest?: boolean | GuestDefaultArgs<ExtArgs>
+    bookingRooms?: boolean | Booking$bookingRoomsArgs<ExtArgs>
+    payments?: boolean | Booking$paymentsArgs<ExtArgs>
+    bookingAddons?: boolean | Booking$bookingAddonsArgs<ExtArgs>
+    _count?: boolean | BookingCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type BookingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    guest?: boolean | GuestDefaultArgs<ExtArgs>
+  }
+  export type BookingIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    guest?: boolean | GuestDefaultArgs<ExtArgs>
+  }
+
+  export type $BookingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Booking"
+    objects: {
+      guest: Prisma.$GuestPayload<ExtArgs>
+      bookingRooms: Prisma.$BookingRoomPayload<ExtArgs>[]
+      payments: Prisma.$PaymentPayload<ExtArgs>[]
+      bookingAddons: Prisma.$BookingAddonPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      bookingNumber: string
+      guestId: number
+      checkInDate: Date
+      checkOutDate: Date
+      adults: number
+      additionalRequests: string | null
+      totalAmount: Prisma.Decimal
+      bookingStatus: $Enums.BookingStatus
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["booking"]>
+    composites: {}
+  }
+
+  type BookingGetPayload<S extends boolean | null | undefined | BookingDefaultArgs> = $Result.GetResult<Prisma.$BookingPayload, S>
+
+  type BookingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<BookingFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: BookingCountAggregateInputType | true
+    }
+
+  export interface BookingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Booking'], meta: { name: 'Booking' } }
+    /**
+     * Find zero or one Booking that matches the filter.
+     * @param {BookingFindUniqueArgs} args - Arguments to find a Booking
+     * @example
+     * // Get one Booking
+     * const booking = await prisma.booking.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BookingFindUniqueArgs>(args: SelectSubset<T, BookingFindUniqueArgs<ExtArgs>>): Prisma__BookingClient<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Booking that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {BookingFindUniqueOrThrowArgs} args - Arguments to find a Booking
+     * @example
+     * // Get one Booking
+     * const booking = await prisma.booking.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BookingFindUniqueOrThrowArgs>(args: SelectSubset<T, BookingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BookingClient<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Booking that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingFindFirstArgs} args - Arguments to find a Booking
+     * @example
+     * // Get one Booking
+     * const booking = await prisma.booking.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BookingFindFirstArgs>(args?: SelectSubset<T, BookingFindFirstArgs<ExtArgs>>): Prisma__BookingClient<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Booking that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingFindFirstOrThrowArgs} args - Arguments to find a Booking
+     * @example
+     * // Get one Booking
+     * const booking = await prisma.booking.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BookingFindFirstOrThrowArgs>(args?: SelectSubset<T, BookingFindFirstOrThrowArgs<ExtArgs>>): Prisma__BookingClient<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Bookings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Bookings
+     * const bookings = await prisma.booking.findMany()
+     * 
+     * // Get first 10 Bookings
+     * const bookings = await prisma.booking.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const bookingWithIdOnly = await prisma.booking.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BookingFindManyArgs>(args?: SelectSubset<T, BookingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Booking.
+     * @param {BookingCreateArgs} args - Arguments to create a Booking.
+     * @example
+     * // Create one Booking
+     * const Booking = await prisma.booking.create({
+     *   data: {
+     *     // ... data to create a Booking
+     *   }
+     * })
+     * 
+     */
+    create<T extends BookingCreateArgs>(args: SelectSubset<T, BookingCreateArgs<ExtArgs>>): Prisma__BookingClient<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Bookings.
+     * @param {BookingCreateManyArgs} args - Arguments to create many Bookings.
+     * @example
+     * // Create many Bookings
+     * const booking = await prisma.booking.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BookingCreateManyArgs>(args?: SelectSubset<T, BookingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Bookings and returns the data saved in the database.
+     * @param {BookingCreateManyAndReturnArgs} args - Arguments to create many Bookings.
+     * @example
+     * // Create many Bookings
+     * const booking = await prisma.booking.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Bookings and only return the `id`
+     * const bookingWithIdOnly = await prisma.booking.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BookingCreateManyAndReturnArgs>(args?: SelectSubset<T, BookingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Booking.
+     * @param {BookingDeleteArgs} args - Arguments to delete one Booking.
+     * @example
+     * // Delete one Booking
+     * const Booking = await prisma.booking.delete({
+     *   where: {
+     *     // ... filter to delete one Booking
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BookingDeleteArgs>(args: SelectSubset<T, BookingDeleteArgs<ExtArgs>>): Prisma__BookingClient<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Booking.
+     * @param {BookingUpdateArgs} args - Arguments to update one Booking.
+     * @example
+     * // Update one Booking
+     * const booking = await prisma.booking.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BookingUpdateArgs>(args: SelectSubset<T, BookingUpdateArgs<ExtArgs>>): Prisma__BookingClient<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Bookings.
+     * @param {BookingDeleteManyArgs} args - Arguments to filter Bookings to delete.
+     * @example
+     * // Delete a few Bookings
+     * const { count } = await prisma.booking.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BookingDeleteManyArgs>(args?: SelectSubset<T, BookingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Bookings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Bookings
+     * const booking = await prisma.booking.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BookingUpdateManyArgs>(args: SelectSubset<T, BookingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Bookings and returns the data updated in the database.
+     * @param {BookingUpdateManyAndReturnArgs} args - Arguments to update many Bookings.
+     * @example
+     * // Update many Bookings
+     * const booking = await prisma.booking.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Bookings and only return the `id`
+     * const bookingWithIdOnly = await prisma.booking.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends BookingUpdateManyAndReturnArgs>(args: SelectSubset<T, BookingUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Booking.
+     * @param {BookingUpsertArgs} args - Arguments to update or create a Booking.
+     * @example
+     * // Update or create a Booking
+     * const booking = await prisma.booking.upsert({
+     *   create: {
+     *     // ... data to create a Booking
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Booking we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BookingUpsertArgs>(args: SelectSubset<T, BookingUpsertArgs<ExtArgs>>): Prisma__BookingClient<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Bookings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingCountArgs} args - Arguments to filter Bookings to count.
+     * @example
+     * // Count the number of Bookings
+     * const count = await prisma.booking.count({
+     *   where: {
+     *     // ... the filter for the Bookings we want to count
+     *   }
+     * })
+    **/
+    count<T extends BookingCountArgs>(
+      args?: Subset<T, BookingCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BookingCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Booking.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BookingAggregateArgs>(args: Subset<T, BookingAggregateArgs>): Prisma.PrismaPromise<GetBookingAggregateType<T>>
+
+    /**
+     * Group by Booking.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BookingGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BookingGroupByArgs['orderBy'] }
+        : { orderBy?: BookingGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BookingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBookingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Booking model
+   */
+  readonly fields: BookingFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Booking.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BookingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    guest<T extends GuestDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GuestDefaultArgs<ExtArgs>>): Prisma__GuestClient<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    bookingRooms<T extends Booking$bookingRoomsArgs<ExtArgs> = {}>(args?: Subset<T, Booking$bookingRoomsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingRoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    payments<T extends Booking$paymentsArgs<ExtArgs> = {}>(args?: Subset<T, Booking$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    bookingAddons<T extends Booking$bookingAddonsArgs<ExtArgs> = {}>(args?: Subset<T, Booking$bookingAddonsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingAddonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Booking model
+   */
+  interface BookingFieldRefs {
+    readonly id: FieldRef<"Booking", 'Int'>
+    readonly bookingNumber: FieldRef<"Booking", 'String'>
+    readonly guestId: FieldRef<"Booking", 'Int'>
+    readonly checkInDate: FieldRef<"Booking", 'DateTime'>
+    readonly checkOutDate: FieldRef<"Booking", 'DateTime'>
+    readonly adults: FieldRef<"Booking", 'Int'>
+    readonly additionalRequests: FieldRef<"Booking", 'String'>
+    readonly totalAmount: FieldRef<"Booking", 'Decimal'>
+    readonly bookingStatus: FieldRef<"Booking", 'BookingStatus'>
+    readonly createdAt: FieldRef<"Booking", 'DateTime'>
+    readonly updatedAt: FieldRef<"Booking", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Booking findUnique
+   */
+  export type BookingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Booking
+     */
+    select?: BookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Booking
+     */
+    omit?: BookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+    /**
+     * Filter, which Booking to fetch.
+     */
+    where: BookingWhereUniqueInput
+  }
+
+  /**
+   * Booking findUniqueOrThrow
+   */
+  export type BookingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Booking
+     */
+    select?: BookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Booking
+     */
+    omit?: BookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+    /**
+     * Filter, which Booking to fetch.
+     */
+    where: BookingWhereUniqueInput
+  }
+
+  /**
+   * Booking findFirst
+   */
+  export type BookingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Booking
+     */
+    select?: BookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Booking
+     */
+    omit?: BookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+    /**
+     * Filter, which Booking to fetch.
+     */
+    where?: BookingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Bookings to fetch.
+     */
+    orderBy?: BookingOrderByWithRelationInput | BookingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Bookings.
+     */
+    cursor?: BookingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Bookings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Bookings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Bookings.
+     */
+    distinct?: BookingScalarFieldEnum | BookingScalarFieldEnum[]
+  }
+
+  /**
+   * Booking findFirstOrThrow
+   */
+  export type BookingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Booking
+     */
+    select?: BookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Booking
+     */
+    omit?: BookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+    /**
+     * Filter, which Booking to fetch.
+     */
+    where?: BookingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Bookings to fetch.
+     */
+    orderBy?: BookingOrderByWithRelationInput | BookingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Bookings.
+     */
+    cursor?: BookingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Bookings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Bookings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Bookings.
+     */
+    distinct?: BookingScalarFieldEnum | BookingScalarFieldEnum[]
+  }
+
+  /**
+   * Booking findMany
+   */
+  export type BookingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Booking
+     */
+    select?: BookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Booking
+     */
+    omit?: BookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+    /**
+     * Filter, which Bookings to fetch.
+     */
+    where?: BookingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Bookings to fetch.
+     */
+    orderBy?: BookingOrderByWithRelationInput | BookingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Bookings.
+     */
+    cursor?: BookingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Bookings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Bookings.
+     */
+    skip?: number
+    distinct?: BookingScalarFieldEnum | BookingScalarFieldEnum[]
+  }
+
+  /**
+   * Booking create
+   */
+  export type BookingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Booking
+     */
+    select?: BookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Booking
+     */
+    omit?: BookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Booking.
+     */
+    data: XOR<BookingCreateInput, BookingUncheckedCreateInput>
+  }
+
+  /**
+   * Booking createMany
+   */
+  export type BookingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Bookings.
+     */
+    data: BookingCreateManyInput | BookingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Booking createManyAndReturn
+   */
+  export type BookingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Booking
+     */
+    select?: BookingSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Booking
+     */
+    omit?: BookingOmit<ExtArgs> | null
+    /**
+     * The data used to create many Bookings.
+     */
+    data: BookingCreateManyInput | BookingCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Booking update
+   */
+  export type BookingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Booking
+     */
+    select?: BookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Booking
+     */
+    omit?: BookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Booking.
+     */
+    data: XOR<BookingUpdateInput, BookingUncheckedUpdateInput>
+    /**
+     * Choose, which Booking to update.
+     */
+    where: BookingWhereUniqueInput
+  }
+
+  /**
+   * Booking updateMany
+   */
+  export type BookingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Bookings.
+     */
+    data: XOR<BookingUpdateManyMutationInput, BookingUncheckedUpdateManyInput>
+    /**
+     * Filter which Bookings to update
+     */
+    where?: BookingWhereInput
+    /**
+     * Limit how many Bookings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Booking updateManyAndReturn
+   */
+  export type BookingUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Booking
+     */
+    select?: BookingSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Booking
+     */
+    omit?: BookingOmit<ExtArgs> | null
+    /**
+     * The data used to update Bookings.
+     */
+    data: XOR<BookingUpdateManyMutationInput, BookingUncheckedUpdateManyInput>
+    /**
+     * Filter which Bookings to update
+     */
+    where?: BookingWhereInput
+    /**
+     * Limit how many Bookings to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Booking upsert
+   */
+  export type BookingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Booking
+     */
+    select?: BookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Booking
+     */
+    omit?: BookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Booking to update in case it exists.
+     */
+    where: BookingWhereUniqueInput
+    /**
+     * In case the Booking found by the `where` argument doesn't exist, create a new Booking with this data.
+     */
+    create: XOR<BookingCreateInput, BookingUncheckedCreateInput>
+    /**
+     * In case the Booking was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BookingUpdateInput, BookingUncheckedUpdateInput>
+  }
+
+  /**
+   * Booking delete
+   */
+  export type BookingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Booking
+     */
+    select?: BookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Booking
+     */
+    omit?: BookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+    /**
+     * Filter which Booking to delete.
+     */
+    where: BookingWhereUniqueInput
+  }
+
+  /**
+   * Booking deleteMany
+   */
+  export type BookingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Bookings to delete
+     */
+    where?: BookingWhereInput
+    /**
+     * Limit how many Bookings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Booking.bookingRooms
+   */
+  export type Booking$bookingRoomsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingRoom
+     */
+    select?: BookingRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingRoom
+     */
+    omit?: BookingRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingRoomInclude<ExtArgs> | null
+    where?: BookingRoomWhereInput
+    orderBy?: BookingRoomOrderByWithRelationInput | BookingRoomOrderByWithRelationInput[]
+    cursor?: BookingRoomWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BookingRoomScalarFieldEnum | BookingRoomScalarFieldEnum[]
+  }
+
+  /**
+   * Booking.payments
+   */
+  export type Booking$paymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    where?: PaymentWhereInput
+    orderBy?: PaymentOrderByWithRelationInput | PaymentOrderByWithRelationInput[]
+    cursor?: PaymentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PaymentScalarFieldEnum | PaymentScalarFieldEnum[]
+  }
+
+  /**
+   * Booking.bookingAddons
+   */
+  export type Booking$bookingAddonsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingAddon
+     */
+    select?: BookingAddonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingAddon
+     */
+    omit?: BookingAddonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingAddonInclude<ExtArgs> | null
+    where?: BookingAddonWhereInput
+    orderBy?: BookingAddonOrderByWithRelationInput | BookingAddonOrderByWithRelationInput[]
+    cursor?: BookingAddonWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BookingAddonScalarFieldEnum | BookingAddonScalarFieldEnum[]
+  }
+
+  /**
+   * Booking without action
+   */
+  export type BookingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Booking
+     */
+    select?: BookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Booking
+     */
+    omit?: BookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model BookingRoom
+   */
+
+  export type AggregateBookingRoom = {
+    _count: BookingRoomCountAggregateOutputType | null
+    _avg: BookingRoomAvgAggregateOutputType | null
+    _sum: BookingRoomSumAggregateOutputType | null
+    _min: BookingRoomMinAggregateOutputType | null
+    _max: BookingRoomMaxAggregateOutputType | null
+  }
+
+  export type BookingRoomAvgAggregateOutputType = {
+    id: number | null
+    bookingId: number | null
+    roomId: number | null
+    roomTypeId: number | null
+    pricePerNight: Decimal | null
+  }
+
+  export type BookingRoomSumAggregateOutputType = {
+    id: number | null
+    bookingId: number | null
+    roomId: number | null
+    roomTypeId: number | null
+    pricePerNight: Decimal | null
+  }
+
+  export type BookingRoomMinAggregateOutputType = {
+    id: number | null
+    bookingId: number | null
+    roomId: number | null
+    roomTypeId: number | null
+    pricePerNight: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BookingRoomMaxAggregateOutputType = {
+    id: number | null
+    bookingId: number | null
+    roomId: number | null
+    roomTypeId: number | null
+    pricePerNight: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BookingRoomCountAggregateOutputType = {
+    id: number
+    bookingId: number
+    roomId: number
+    roomTypeId: number
+    pricePerNight: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type BookingRoomAvgAggregateInputType = {
+    id?: true
+    bookingId?: true
+    roomId?: true
+    roomTypeId?: true
+    pricePerNight?: true
+  }
+
+  export type BookingRoomSumAggregateInputType = {
+    id?: true
+    bookingId?: true
+    roomId?: true
+    roomTypeId?: true
+    pricePerNight?: true
+  }
+
+  export type BookingRoomMinAggregateInputType = {
+    id?: true
+    bookingId?: true
+    roomId?: true
+    roomTypeId?: true
+    pricePerNight?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BookingRoomMaxAggregateInputType = {
+    id?: true
+    bookingId?: true
+    roomId?: true
+    roomTypeId?: true
+    pricePerNight?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BookingRoomCountAggregateInputType = {
+    id?: true
+    bookingId?: true
+    roomId?: true
+    roomTypeId?: true
+    pricePerNight?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type BookingRoomAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BookingRoom to aggregate.
+     */
+    where?: BookingRoomWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BookingRooms to fetch.
+     */
+    orderBy?: BookingRoomOrderByWithRelationInput | BookingRoomOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BookingRoomWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BookingRooms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BookingRooms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned BookingRooms
+    **/
+    _count?: true | BookingRoomCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: BookingRoomAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: BookingRoomSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BookingRoomMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BookingRoomMaxAggregateInputType
+  }
+
+  export type GetBookingRoomAggregateType<T extends BookingRoomAggregateArgs> = {
+        [P in keyof T & keyof AggregateBookingRoom]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBookingRoom[P]>
+      : GetScalarType<T[P], AggregateBookingRoom[P]>
+  }
+
+
+
+
+  export type BookingRoomGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BookingRoomWhereInput
+    orderBy?: BookingRoomOrderByWithAggregationInput | BookingRoomOrderByWithAggregationInput[]
+    by: BookingRoomScalarFieldEnum[] | BookingRoomScalarFieldEnum
+    having?: BookingRoomScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BookingRoomCountAggregateInputType | true
+    _avg?: BookingRoomAvgAggregateInputType
+    _sum?: BookingRoomSumAggregateInputType
+    _min?: BookingRoomMinAggregateInputType
+    _max?: BookingRoomMaxAggregateInputType
+  }
+
+  export type BookingRoomGroupByOutputType = {
+    id: number
+    bookingId: number
+    roomId: number
+    roomTypeId: number
+    pricePerNight: Decimal
+    createdAt: Date
+    updatedAt: Date
+    _count: BookingRoomCountAggregateOutputType | null
+    _avg: BookingRoomAvgAggregateOutputType | null
+    _sum: BookingRoomSumAggregateOutputType | null
+    _min: BookingRoomMinAggregateOutputType | null
+    _max: BookingRoomMaxAggregateOutputType | null
+  }
+
+  type GetBookingRoomGroupByPayload<T extends BookingRoomGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BookingRoomGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BookingRoomGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BookingRoomGroupByOutputType[P]>
+            : GetScalarType<T[P], BookingRoomGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BookingRoomSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingId?: boolean
+    roomId?: boolean
+    roomTypeId?: boolean
+    pricePerNight?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+    room?: boolean | RoomDefaultArgs<ExtArgs>
+    roomType?: boolean | RoomTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["bookingRoom"]>
+
+  export type BookingRoomSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingId?: boolean
+    roomId?: boolean
+    roomTypeId?: boolean
+    pricePerNight?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+    room?: boolean | RoomDefaultArgs<ExtArgs>
+    roomType?: boolean | RoomTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["bookingRoom"]>
+
+  export type BookingRoomSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingId?: boolean
+    roomId?: boolean
+    roomTypeId?: boolean
+    pricePerNight?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+    room?: boolean | RoomDefaultArgs<ExtArgs>
+    roomType?: boolean | RoomTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["bookingRoom"]>
+
+  export type BookingRoomSelectScalar = {
+    id?: boolean
+    bookingId?: boolean
+    roomId?: boolean
+    roomTypeId?: boolean
+    pricePerNight?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type BookingRoomOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bookingId" | "roomId" | "roomTypeId" | "pricePerNight" | "createdAt" | "updatedAt", ExtArgs["result"]["bookingRoom"]>
+  export type BookingRoomInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+    room?: boolean | RoomDefaultArgs<ExtArgs>
+    roomType?: boolean | RoomTypeDefaultArgs<ExtArgs>
+  }
+  export type BookingRoomIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+    room?: boolean | RoomDefaultArgs<ExtArgs>
+    roomType?: boolean | RoomTypeDefaultArgs<ExtArgs>
+  }
+  export type BookingRoomIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+    room?: boolean | RoomDefaultArgs<ExtArgs>
+    roomType?: boolean | RoomTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $BookingRoomPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "BookingRoom"
+    objects: {
+      booking: Prisma.$BookingPayload<ExtArgs>
+      room: Prisma.$RoomPayload<ExtArgs>
+      roomType: Prisma.$RoomTypePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      bookingId: number
+      roomId: number
+      roomTypeId: number
+      pricePerNight: Prisma.Decimal
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["bookingRoom"]>
+    composites: {}
+  }
+
+  type BookingRoomGetPayload<S extends boolean | null | undefined | BookingRoomDefaultArgs> = $Result.GetResult<Prisma.$BookingRoomPayload, S>
+
+  type BookingRoomCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<BookingRoomFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: BookingRoomCountAggregateInputType | true
+    }
+
+  export interface BookingRoomDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BookingRoom'], meta: { name: 'BookingRoom' } }
+    /**
+     * Find zero or one BookingRoom that matches the filter.
+     * @param {BookingRoomFindUniqueArgs} args - Arguments to find a BookingRoom
+     * @example
+     * // Get one BookingRoom
+     * const bookingRoom = await prisma.bookingRoom.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BookingRoomFindUniqueArgs>(args: SelectSubset<T, BookingRoomFindUniqueArgs<ExtArgs>>): Prisma__BookingRoomClient<$Result.GetResult<Prisma.$BookingRoomPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one BookingRoom that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {BookingRoomFindUniqueOrThrowArgs} args - Arguments to find a BookingRoom
+     * @example
+     * // Get one BookingRoom
+     * const bookingRoom = await prisma.bookingRoom.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BookingRoomFindUniqueOrThrowArgs>(args: SelectSubset<T, BookingRoomFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BookingRoomClient<$Result.GetResult<Prisma.$BookingRoomPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first BookingRoom that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingRoomFindFirstArgs} args - Arguments to find a BookingRoom
+     * @example
+     * // Get one BookingRoom
+     * const bookingRoom = await prisma.bookingRoom.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BookingRoomFindFirstArgs>(args?: SelectSubset<T, BookingRoomFindFirstArgs<ExtArgs>>): Prisma__BookingRoomClient<$Result.GetResult<Prisma.$BookingRoomPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first BookingRoom that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingRoomFindFirstOrThrowArgs} args - Arguments to find a BookingRoom
+     * @example
+     * // Get one BookingRoom
+     * const bookingRoom = await prisma.bookingRoom.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BookingRoomFindFirstOrThrowArgs>(args?: SelectSubset<T, BookingRoomFindFirstOrThrowArgs<ExtArgs>>): Prisma__BookingRoomClient<$Result.GetResult<Prisma.$BookingRoomPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more BookingRooms that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingRoomFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all BookingRooms
+     * const bookingRooms = await prisma.bookingRoom.findMany()
+     * 
+     * // Get first 10 BookingRooms
+     * const bookingRooms = await prisma.bookingRoom.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const bookingRoomWithIdOnly = await prisma.bookingRoom.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BookingRoomFindManyArgs>(args?: SelectSubset<T, BookingRoomFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingRoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a BookingRoom.
+     * @param {BookingRoomCreateArgs} args - Arguments to create a BookingRoom.
+     * @example
+     * // Create one BookingRoom
+     * const BookingRoom = await prisma.bookingRoom.create({
+     *   data: {
+     *     // ... data to create a BookingRoom
+     *   }
+     * })
+     * 
+     */
+    create<T extends BookingRoomCreateArgs>(args: SelectSubset<T, BookingRoomCreateArgs<ExtArgs>>): Prisma__BookingRoomClient<$Result.GetResult<Prisma.$BookingRoomPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many BookingRooms.
+     * @param {BookingRoomCreateManyArgs} args - Arguments to create many BookingRooms.
+     * @example
+     * // Create many BookingRooms
+     * const bookingRoom = await prisma.bookingRoom.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BookingRoomCreateManyArgs>(args?: SelectSubset<T, BookingRoomCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many BookingRooms and returns the data saved in the database.
+     * @param {BookingRoomCreateManyAndReturnArgs} args - Arguments to create many BookingRooms.
+     * @example
+     * // Create many BookingRooms
+     * const bookingRoom = await prisma.bookingRoom.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many BookingRooms and only return the `id`
+     * const bookingRoomWithIdOnly = await prisma.bookingRoom.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BookingRoomCreateManyAndReturnArgs>(args?: SelectSubset<T, BookingRoomCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingRoomPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a BookingRoom.
+     * @param {BookingRoomDeleteArgs} args - Arguments to delete one BookingRoom.
+     * @example
+     * // Delete one BookingRoom
+     * const BookingRoom = await prisma.bookingRoom.delete({
+     *   where: {
+     *     // ... filter to delete one BookingRoom
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BookingRoomDeleteArgs>(args: SelectSubset<T, BookingRoomDeleteArgs<ExtArgs>>): Prisma__BookingRoomClient<$Result.GetResult<Prisma.$BookingRoomPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one BookingRoom.
+     * @param {BookingRoomUpdateArgs} args - Arguments to update one BookingRoom.
+     * @example
+     * // Update one BookingRoom
+     * const bookingRoom = await prisma.bookingRoom.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BookingRoomUpdateArgs>(args: SelectSubset<T, BookingRoomUpdateArgs<ExtArgs>>): Prisma__BookingRoomClient<$Result.GetResult<Prisma.$BookingRoomPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more BookingRooms.
+     * @param {BookingRoomDeleteManyArgs} args - Arguments to filter BookingRooms to delete.
+     * @example
+     * // Delete a few BookingRooms
+     * const { count } = await prisma.bookingRoom.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BookingRoomDeleteManyArgs>(args?: SelectSubset<T, BookingRoomDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BookingRooms.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingRoomUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many BookingRooms
+     * const bookingRoom = await prisma.bookingRoom.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BookingRoomUpdateManyArgs>(args: SelectSubset<T, BookingRoomUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BookingRooms and returns the data updated in the database.
+     * @param {BookingRoomUpdateManyAndReturnArgs} args - Arguments to update many BookingRooms.
+     * @example
+     * // Update many BookingRooms
+     * const bookingRoom = await prisma.bookingRoom.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more BookingRooms and only return the `id`
+     * const bookingRoomWithIdOnly = await prisma.bookingRoom.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends BookingRoomUpdateManyAndReturnArgs>(args: SelectSubset<T, BookingRoomUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingRoomPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one BookingRoom.
+     * @param {BookingRoomUpsertArgs} args - Arguments to update or create a BookingRoom.
+     * @example
+     * // Update or create a BookingRoom
+     * const bookingRoom = await prisma.bookingRoom.upsert({
+     *   create: {
+     *     // ... data to create a BookingRoom
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the BookingRoom we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BookingRoomUpsertArgs>(args: SelectSubset<T, BookingRoomUpsertArgs<ExtArgs>>): Prisma__BookingRoomClient<$Result.GetResult<Prisma.$BookingRoomPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of BookingRooms.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingRoomCountArgs} args - Arguments to filter BookingRooms to count.
+     * @example
+     * // Count the number of BookingRooms
+     * const count = await prisma.bookingRoom.count({
+     *   where: {
+     *     // ... the filter for the BookingRooms we want to count
+     *   }
+     * })
+    **/
+    count<T extends BookingRoomCountArgs>(
+      args?: Subset<T, BookingRoomCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BookingRoomCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a BookingRoom.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingRoomAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BookingRoomAggregateArgs>(args: Subset<T, BookingRoomAggregateArgs>): Prisma.PrismaPromise<GetBookingRoomAggregateType<T>>
+
+    /**
+     * Group by BookingRoom.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingRoomGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BookingRoomGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BookingRoomGroupByArgs['orderBy'] }
+        : { orderBy?: BookingRoomGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BookingRoomGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBookingRoomGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the BookingRoom model
+   */
+  readonly fields: BookingRoomFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for BookingRoom.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BookingRoomClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    booking<T extends BookingDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BookingDefaultArgs<ExtArgs>>): Prisma__BookingClient<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    room<T extends RoomDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RoomDefaultArgs<ExtArgs>>): Prisma__RoomClient<$Result.GetResult<Prisma.$RoomPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    roomType<T extends RoomTypeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RoomTypeDefaultArgs<ExtArgs>>): Prisma__RoomTypeClient<$Result.GetResult<Prisma.$RoomTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the BookingRoom model
+   */
+  interface BookingRoomFieldRefs {
+    readonly id: FieldRef<"BookingRoom", 'Int'>
+    readonly bookingId: FieldRef<"BookingRoom", 'Int'>
+    readonly roomId: FieldRef<"BookingRoom", 'Int'>
+    readonly roomTypeId: FieldRef<"BookingRoom", 'Int'>
+    readonly pricePerNight: FieldRef<"BookingRoom", 'Decimal'>
+    readonly createdAt: FieldRef<"BookingRoom", 'DateTime'>
+    readonly updatedAt: FieldRef<"BookingRoom", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * BookingRoom findUnique
+   */
+  export type BookingRoomFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingRoom
+     */
+    select?: BookingRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingRoom
+     */
+    omit?: BookingRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingRoomInclude<ExtArgs> | null
+    /**
+     * Filter, which BookingRoom to fetch.
+     */
+    where: BookingRoomWhereUniqueInput
+  }
+
+  /**
+   * BookingRoom findUniqueOrThrow
+   */
+  export type BookingRoomFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingRoom
+     */
+    select?: BookingRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingRoom
+     */
+    omit?: BookingRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingRoomInclude<ExtArgs> | null
+    /**
+     * Filter, which BookingRoom to fetch.
+     */
+    where: BookingRoomWhereUniqueInput
+  }
+
+  /**
+   * BookingRoom findFirst
+   */
+  export type BookingRoomFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingRoom
+     */
+    select?: BookingRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingRoom
+     */
+    omit?: BookingRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingRoomInclude<ExtArgs> | null
+    /**
+     * Filter, which BookingRoom to fetch.
+     */
+    where?: BookingRoomWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BookingRooms to fetch.
+     */
+    orderBy?: BookingRoomOrderByWithRelationInput | BookingRoomOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BookingRooms.
+     */
+    cursor?: BookingRoomWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BookingRooms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BookingRooms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BookingRooms.
+     */
+    distinct?: BookingRoomScalarFieldEnum | BookingRoomScalarFieldEnum[]
+  }
+
+  /**
+   * BookingRoom findFirstOrThrow
+   */
+  export type BookingRoomFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingRoom
+     */
+    select?: BookingRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingRoom
+     */
+    omit?: BookingRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingRoomInclude<ExtArgs> | null
+    /**
+     * Filter, which BookingRoom to fetch.
+     */
+    where?: BookingRoomWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BookingRooms to fetch.
+     */
+    orderBy?: BookingRoomOrderByWithRelationInput | BookingRoomOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BookingRooms.
+     */
+    cursor?: BookingRoomWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BookingRooms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BookingRooms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BookingRooms.
+     */
+    distinct?: BookingRoomScalarFieldEnum | BookingRoomScalarFieldEnum[]
+  }
+
+  /**
+   * BookingRoom findMany
+   */
+  export type BookingRoomFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingRoom
+     */
+    select?: BookingRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingRoom
+     */
+    omit?: BookingRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingRoomInclude<ExtArgs> | null
+    /**
+     * Filter, which BookingRooms to fetch.
+     */
+    where?: BookingRoomWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BookingRooms to fetch.
+     */
+    orderBy?: BookingRoomOrderByWithRelationInput | BookingRoomOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing BookingRooms.
+     */
+    cursor?: BookingRoomWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BookingRooms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BookingRooms.
+     */
+    skip?: number
+    distinct?: BookingRoomScalarFieldEnum | BookingRoomScalarFieldEnum[]
+  }
+
+  /**
+   * BookingRoom create
+   */
+  export type BookingRoomCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingRoom
+     */
+    select?: BookingRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingRoom
+     */
+    omit?: BookingRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingRoomInclude<ExtArgs> | null
+    /**
+     * The data needed to create a BookingRoom.
+     */
+    data: XOR<BookingRoomCreateInput, BookingRoomUncheckedCreateInput>
+  }
+
+  /**
+   * BookingRoom createMany
+   */
+  export type BookingRoomCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many BookingRooms.
+     */
+    data: BookingRoomCreateManyInput | BookingRoomCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BookingRoom createManyAndReturn
+   */
+  export type BookingRoomCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingRoom
+     */
+    select?: BookingRoomSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingRoom
+     */
+    omit?: BookingRoomOmit<ExtArgs> | null
+    /**
+     * The data used to create many BookingRooms.
+     */
+    data: BookingRoomCreateManyInput | BookingRoomCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingRoomIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * BookingRoom update
+   */
+  export type BookingRoomUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingRoom
+     */
+    select?: BookingRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingRoom
+     */
+    omit?: BookingRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingRoomInclude<ExtArgs> | null
+    /**
+     * The data needed to update a BookingRoom.
+     */
+    data: XOR<BookingRoomUpdateInput, BookingRoomUncheckedUpdateInput>
+    /**
+     * Choose, which BookingRoom to update.
+     */
+    where: BookingRoomWhereUniqueInput
+  }
+
+  /**
+   * BookingRoom updateMany
+   */
+  export type BookingRoomUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update BookingRooms.
+     */
+    data: XOR<BookingRoomUpdateManyMutationInput, BookingRoomUncheckedUpdateManyInput>
+    /**
+     * Filter which BookingRooms to update
+     */
+    where?: BookingRoomWhereInput
+    /**
+     * Limit how many BookingRooms to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * BookingRoom updateManyAndReturn
+   */
+  export type BookingRoomUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingRoom
+     */
+    select?: BookingRoomSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingRoom
+     */
+    omit?: BookingRoomOmit<ExtArgs> | null
+    /**
+     * The data used to update BookingRooms.
+     */
+    data: XOR<BookingRoomUpdateManyMutationInput, BookingRoomUncheckedUpdateManyInput>
+    /**
+     * Filter which BookingRooms to update
+     */
+    where?: BookingRoomWhereInput
+    /**
+     * Limit how many BookingRooms to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingRoomIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * BookingRoom upsert
+   */
+  export type BookingRoomUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingRoom
+     */
+    select?: BookingRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingRoom
+     */
+    omit?: BookingRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingRoomInclude<ExtArgs> | null
+    /**
+     * The filter to search for the BookingRoom to update in case it exists.
+     */
+    where: BookingRoomWhereUniqueInput
+    /**
+     * In case the BookingRoom found by the `where` argument doesn't exist, create a new BookingRoom with this data.
+     */
+    create: XOR<BookingRoomCreateInput, BookingRoomUncheckedCreateInput>
+    /**
+     * In case the BookingRoom was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BookingRoomUpdateInput, BookingRoomUncheckedUpdateInput>
+  }
+
+  /**
+   * BookingRoom delete
+   */
+  export type BookingRoomDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingRoom
+     */
+    select?: BookingRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingRoom
+     */
+    omit?: BookingRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingRoomInclude<ExtArgs> | null
+    /**
+     * Filter which BookingRoom to delete.
+     */
+    where: BookingRoomWhereUniqueInput
+  }
+
+  /**
+   * BookingRoom deleteMany
+   */
+  export type BookingRoomDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BookingRooms to delete
+     */
+    where?: BookingRoomWhereInput
+    /**
+     * Limit how many BookingRooms to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * BookingRoom without action
+   */
+  export type BookingRoomDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingRoom
+     */
+    select?: BookingRoomSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingRoom
+     */
+    omit?: BookingRoomOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingRoomInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Payment
+   */
+
+  export type AggregatePayment = {
+    _count: PaymentCountAggregateOutputType | null
+    _avg: PaymentAvgAggregateOutputType | null
+    _sum: PaymentSumAggregateOutputType | null
+    _min: PaymentMinAggregateOutputType | null
+    _max: PaymentMaxAggregateOutputType | null
+  }
+
+  export type PaymentAvgAggregateOutputType = {
+    id: number | null
+    bookingId: number | null
+    amount: Decimal | null
+  }
+
+  export type PaymentSumAggregateOutputType = {
+    id: number | null
+    bookingId: number | null
+    amount: Decimal | null
+  }
+
+  export type PaymentMinAggregateOutputType = {
+    id: number | null
+    bookingId: number | null
+    amount: Decimal | null
+    paymentMethod: $Enums.PaymentMethod | null
+    paymentStatus: $Enums.PaymentStatus | null
+    transactionId: string | null
+    omiseChargeId: string | null
+    paymentDate: Date | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PaymentMaxAggregateOutputType = {
+    id: number | null
+    bookingId: number | null
+    amount: Decimal | null
+    paymentMethod: $Enums.PaymentMethod | null
+    paymentStatus: $Enums.PaymentStatus | null
+    transactionId: string | null
+    omiseChargeId: string | null
+    paymentDate: Date | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PaymentCountAggregateOutputType = {
+    id: number
+    bookingId: number
+    amount: number
+    paymentMethod: number
+    paymentStatus: number
+    transactionId: number
+    omiseChargeId: number
+    paymentDate: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PaymentAvgAggregateInputType = {
+    id?: true
+    bookingId?: true
+    amount?: true
+  }
+
+  export type PaymentSumAggregateInputType = {
+    id?: true
+    bookingId?: true
+    amount?: true
+  }
+
+  export type PaymentMinAggregateInputType = {
+    id?: true
+    bookingId?: true
+    amount?: true
+    paymentMethod?: true
+    paymentStatus?: true
+    transactionId?: true
+    omiseChargeId?: true
+    paymentDate?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PaymentMaxAggregateInputType = {
+    id?: true
+    bookingId?: true
+    amount?: true
+    paymentMethod?: true
+    paymentStatus?: true
+    transactionId?: true
+    omiseChargeId?: true
+    paymentDate?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PaymentCountAggregateInputType = {
+    id?: true
+    bookingId?: true
+    amount?: true
+    paymentMethod?: true
+    paymentStatus?: true
+    transactionId?: true
+    omiseChargeId?: true
+    paymentDate?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PaymentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Payment to aggregate.
+     */
+    where?: PaymentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Payments to fetch.
+     */
+    orderBy?: PaymentOrderByWithRelationInput | PaymentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PaymentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Payments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Payments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Payments
+    **/
+    _count?: true | PaymentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PaymentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PaymentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PaymentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PaymentMaxAggregateInputType
+  }
+
+  export type GetPaymentAggregateType<T extends PaymentAggregateArgs> = {
+        [P in keyof T & keyof AggregatePayment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePayment[P]>
+      : GetScalarType<T[P], AggregatePayment[P]>
+  }
+
+
+
+
+  export type PaymentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PaymentWhereInput
+    orderBy?: PaymentOrderByWithAggregationInput | PaymentOrderByWithAggregationInput[]
+    by: PaymentScalarFieldEnum[] | PaymentScalarFieldEnum
+    having?: PaymentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PaymentCountAggregateInputType | true
+    _avg?: PaymentAvgAggregateInputType
+    _sum?: PaymentSumAggregateInputType
+    _min?: PaymentMinAggregateInputType
+    _max?: PaymentMaxAggregateInputType
+  }
+
+  export type PaymentGroupByOutputType = {
+    id: number
+    bookingId: number
+    amount: Decimal
+    paymentMethod: $Enums.PaymentMethod
+    paymentStatus: $Enums.PaymentStatus
+    transactionId: string | null
+    omiseChargeId: string | null
+    paymentDate: Date | null
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: PaymentCountAggregateOutputType | null
+    _avg: PaymentAvgAggregateOutputType | null
+    _sum: PaymentSumAggregateOutputType | null
+    _min: PaymentMinAggregateOutputType | null
+    _max: PaymentMaxAggregateOutputType | null
+  }
+
+  type GetPaymentGroupByPayload<T extends PaymentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PaymentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PaymentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PaymentGroupByOutputType[P]>
+            : GetScalarType<T[P], PaymentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PaymentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingId?: boolean
+    amount?: boolean
+    paymentMethod?: boolean
+    paymentStatus?: boolean
+    transactionId?: boolean
+    omiseChargeId?: boolean
+    paymentDate?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["payment"]>
+
+  export type PaymentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingId?: boolean
+    amount?: boolean
+    paymentMethod?: boolean
+    paymentStatus?: boolean
+    transactionId?: boolean
+    omiseChargeId?: boolean
+    paymentDate?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["payment"]>
+
+  export type PaymentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingId?: boolean
+    amount?: boolean
+    paymentMethod?: boolean
+    paymentStatus?: boolean
+    transactionId?: boolean
+    omiseChargeId?: boolean
+    paymentDate?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["payment"]>
+
+  export type PaymentSelectScalar = {
+    id?: boolean
+    bookingId?: boolean
+    amount?: boolean
+    paymentMethod?: boolean
+    paymentStatus?: boolean
+    transactionId?: boolean
+    omiseChargeId?: boolean
+    paymentDate?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bookingId" | "amount" | "paymentMethod" | "paymentStatus" | "transactionId" | "omiseChargeId" | "paymentDate" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
+  export type PaymentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+  }
+  export type PaymentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+  }
+  export type PaymentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+  }
+
+  export type $PaymentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Payment"
+    objects: {
+      booking: Prisma.$BookingPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      bookingId: number
+      amount: Prisma.Decimal
+      paymentMethod: $Enums.PaymentMethod
+      paymentStatus: $Enums.PaymentStatus
+      transactionId: string | null
+      omiseChargeId: string | null
+      paymentDate: Date | null
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["payment"]>
+    composites: {}
+  }
+
+  type PaymentGetPayload<S extends boolean | null | undefined | PaymentDefaultArgs> = $Result.GetResult<Prisma.$PaymentPayload, S>
+
+  type PaymentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PaymentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PaymentCountAggregateInputType | true
+    }
+
+  export interface PaymentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Payment'], meta: { name: 'Payment' } }
+    /**
+     * Find zero or one Payment that matches the filter.
+     * @param {PaymentFindUniqueArgs} args - Arguments to find a Payment
+     * @example
+     * // Get one Payment
+     * const payment = await prisma.payment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PaymentFindUniqueArgs>(args: SelectSubset<T, PaymentFindUniqueArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Payment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PaymentFindUniqueOrThrowArgs} args - Arguments to find a Payment
+     * @example
+     * // Get one Payment
+     * const payment = await prisma.payment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PaymentFindUniqueOrThrowArgs>(args: SelectSubset<T, PaymentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Payment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentFindFirstArgs} args - Arguments to find a Payment
+     * @example
+     * // Get one Payment
+     * const payment = await prisma.payment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PaymentFindFirstArgs>(args?: SelectSubset<T, PaymentFindFirstArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Payment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentFindFirstOrThrowArgs} args - Arguments to find a Payment
+     * @example
+     * // Get one Payment
+     * const payment = await prisma.payment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PaymentFindFirstOrThrowArgs>(args?: SelectSubset<T, PaymentFindFirstOrThrowArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Payments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Payments
+     * const payments = await prisma.payment.findMany()
+     * 
+     * // Get first 10 Payments
+     * const payments = await prisma.payment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const paymentWithIdOnly = await prisma.payment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PaymentFindManyArgs>(args?: SelectSubset<T, PaymentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Payment.
+     * @param {PaymentCreateArgs} args - Arguments to create a Payment.
+     * @example
+     * // Create one Payment
+     * const Payment = await prisma.payment.create({
+     *   data: {
+     *     // ... data to create a Payment
+     *   }
+     * })
+     * 
+     */
+    create<T extends PaymentCreateArgs>(args: SelectSubset<T, PaymentCreateArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Payments.
+     * @param {PaymentCreateManyArgs} args - Arguments to create many Payments.
+     * @example
+     * // Create many Payments
+     * const payment = await prisma.payment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PaymentCreateManyArgs>(args?: SelectSubset<T, PaymentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Payments and returns the data saved in the database.
+     * @param {PaymentCreateManyAndReturnArgs} args - Arguments to create many Payments.
+     * @example
+     * // Create many Payments
+     * const payment = await prisma.payment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Payments and only return the `id`
+     * const paymentWithIdOnly = await prisma.payment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PaymentCreateManyAndReturnArgs>(args?: SelectSubset<T, PaymentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Payment.
+     * @param {PaymentDeleteArgs} args - Arguments to delete one Payment.
+     * @example
+     * // Delete one Payment
+     * const Payment = await prisma.payment.delete({
+     *   where: {
+     *     // ... filter to delete one Payment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PaymentDeleteArgs>(args: SelectSubset<T, PaymentDeleteArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Payment.
+     * @param {PaymentUpdateArgs} args - Arguments to update one Payment.
+     * @example
+     * // Update one Payment
+     * const payment = await prisma.payment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PaymentUpdateArgs>(args: SelectSubset<T, PaymentUpdateArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Payments.
+     * @param {PaymentDeleteManyArgs} args - Arguments to filter Payments to delete.
+     * @example
+     * // Delete a few Payments
+     * const { count } = await prisma.payment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PaymentDeleteManyArgs>(args?: SelectSubset<T, PaymentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Payments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Payments
+     * const payment = await prisma.payment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PaymentUpdateManyArgs>(args: SelectSubset<T, PaymentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Payments and returns the data updated in the database.
+     * @param {PaymentUpdateManyAndReturnArgs} args - Arguments to update many Payments.
+     * @example
+     * // Update many Payments
+     * const payment = await prisma.payment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Payments and only return the `id`
+     * const paymentWithIdOnly = await prisma.payment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PaymentUpdateManyAndReturnArgs>(args: SelectSubset<T, PaymentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Payment.
+     * @param {PaymentUpsertArgs} args - Arguments to update or create a Payment.
+     * @example
+     * // Update or create a Payment
+     * const payment = await prisma.payment.upsert({
+     *   create: {
+     *     // ... data to create a Payment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Payment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PaymentUpsertArgs>(args: SelectSubset<T, PaymentUpsertArgs<ExtArgs>>): Prisma__PaymentClient<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Payments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentCountArgs} args - Arguments to filter Payments to count.
+     * @example
+     * // Count the number of Payments
+     * const count = await prisma.payment.count({
+     *   where: {
+     *     // ... the filter for the Payments we want to count
+     *   }
+     * })
+    **/
+    count<T extends PaymentCountArgs>(
+      args?: Subset<T, PaymentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PaymentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Payment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PaymentAggregateArgs>(args: Subset<T, PaymentAggregateArgs>): Prisma.PrismaPromise<GetPaymentAggregateType<T>>
+
+    /**
+     * Group by Payment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PaymentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PaymentGroupByArgs['orderBy'] }
+        : { orderBy?: PaymentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PaymentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPaymentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Payment model
+   */
+  readonly fields: PaymentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Payment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PaymentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    booking<T extends BookingDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BookingDefaultArgs<ExtArgs>>): Prisma__BookingClient<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Payment model
+   */
+  interface PaymentFieldRefs {
+    readonly id: FieldRef<"Payment", 'Int'>
+    readonly bookingId: FieldRef<"Payment", 'Int'>
+    readonly amount: FieldRef<"Payment", 'Decimal'>
+    readonly paymentMethod: FieldRef<"Payment", 'PaymentMethod'>
+    readonly paymentStatus: FieldRef<"Payment", 'PaymentStatus'>
+    readonly transactionId: FieldRef<"Payment", 'String'>
+    readonly omiseChargeId: FieldRef<"Payment", 'String'>
+    readonly paymentDate: FieldRef<"Payment", 'DateTime'>
+    readonly notes: FieldRef<"Payment", 'String'>
+    readonly createdAt: FieldRef<"Payment", 'DateTime'>
+    readonly updatedAt: FieldRef<"Payment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Payment findUnique
+   */
+  export type PaymentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    /**
+     * Filter, which Payment to fetch.
+     */
+    where: PaymentWhereUniqueInput
+  }
+
+  /**
+   * Payment findUniqueOrThrow
+   */
+  export type PaymentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    /**
+     * Filter, which Payment to fetch.
+     */
+    where: PaymentWhereUniqueInput
+  }
+
+  /**
+   * Payment findFirst
+   */
+  export type PaymentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    /**
+     * Filter, which Payment to fetch.
+     */
+    where?: PaymentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Payments to fetch.
+     */
+    orderBy?: PaymentOrderByWithRelationInput | PaymentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Payments.
+     */
+    cursor?: PaymentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Payments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Payments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Payments.
+     */
+    distinct?: PaymentScalarFieldEnum | PaymentScalarFieldEnum[]
+  }
+
+  /**
+   * Payment findFirstOrThrow
+   */
+  export type PaymentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    /**
+     * Filter, which Payment to fetch.
+     */
+    where?: PaymentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Payments to fetch.
+     */
+    orderBy?: PaymentOrderByWithRelationInput | PaymentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Payments.
+     */
+    cursor?: PaymentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Payments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Payments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Payments.
+     */
+    distinct?: PaymentScalarFieldEnum | PaymentScalarFieldEnum[]
+  }
+
+  /**
+   * Payment findMany
+   */
+  export type PaymentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    /**
+     * Filter, which Payments to fetch.
+     */
+    where?: PaymentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Payments to fetch.
+     */
+    orderBy?: PaymentOrderByWithRelationInput | PaymentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Payments.
+     */
+    cursor?: PaymentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Payments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Payments.
+     */
+    skip?: number
+    distinct?: PaymentScalarFieldEnum | PaymentScalarFieldEnum[]
+  }
+
+  /**
+   * Payment create
+   */
+  export type PaymentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Payment.
+     */
+    data: XOR<PaymentCreateInput, PaymentUncheckedCreateInput>
+  }
+
+  /**
+   * Payment createMany
+   */
+  export type PaymentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Payments.
+     */
+    data: PaymentCreateManyInput | PaymentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Payment createManyAndReturn
+   */
+  export type PaymentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * The data used to create many Payments.
+     */
+    data: PaymentCreateManyInput | PaymentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Payment update
+   */
+  export type PaymentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Payment.
+     */
+    data: XOR<PaymentUpdateInput, PaymentUncheckedUpdateInput>
+    /**
+     * Choose, which Payment to update.
+     */
+    where: PaymentWhereUniqueInput
+  }
+
+  /**
+   * Payment updateMany
+   */
+  export type PaymentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Payments.
+     */
+    data: XOR<PaymentUpdateManyMutationInput, PaymentUncheckedUpdateManyInput>
+    /**
+     * Filter which Payments to update
+     */
+    where?: PaymentWhereInput
+    /**
+     * Limit how many Payments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Payment updateManyAndReturn
+   */
+  export type PaymentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * The data used to update Payments.
+     */
+    data: XOR<PaymentUpdateManyMutationInput, PaymentUncheckedUpdateManyInput>
+    /**
+     * Filter which Payments to update
+     */
+    where?: PaymentWhereInput
+    /**
+     * Limit how many Payments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Payment upsert
+   */
+  export type PaymentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Payment to update in case it exists.
+     */
+    where: PaymentWhereUniqueInput
+    /**
+     * In case the Payment found by the `where` argument doesn't exist, create a new Payment with this data.
+     */
+    create: XOR<PaymentCreateInput, PaymentUncheckedCreateInput>
+    /**
+     * In case the Payment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PaymentUpdateInput, PaymentUncheckedUpdateInput>
+  }
+
+  /**
+   * Payment delete
+   */
+  export type PaymentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+    /**
+     * Filter which Payment to delete.
+     */
+    where: PaymentWhereUniqueInput
+  }
+
+  /**
+   * Payment deleteMany
+   */
+  export type PaymentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Payments to delete
+     */
+    where?: PaymentWhereInput
+    /**
+     * Limit how many Payments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Payment without action
+   */
+  export type PaymentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payment
+     */
+    select?: PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payment
+     */
+    omit?: PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model BookingAddon
+   */
+
+  export type AggregateBookingAddon = {
+    _count: BookingAddonCountAggregateOutputType | null
+    _avg: BookingAddonAvgAggregateOutputType | null
+    _sum: BookingAddonSumAggregateOutputType | null
+    _min: BookingAddonMinAggregateOutputType | null
+    _max: BookingAddonMaxAggregateOutputType | null
+  }
+
+  export type BookingAddonAvgAggregateOutputType = {
+    id: number | null
+    bookingId: number | null
+    quantity: number | null
+    price: Decimal | null
+  }
+
+  export type BookingAddonSumAggregateOutputType = {
+    id: number | null
+    bookingId: number | null
+    quantity: number | null
+    price: Decimal | null
+  }
+
+  export type BookingAddonMinAggregateOutputType = {
+    id: number | null
+    bookingId: number | null
+    addonName: string | null
+    quantity: number | null
+    price: Decimal | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BookingAddonMaxAggregateOutputType = {
+    id: number | null
+    bookingId: number | null
+    addonName: string | null
+    quantity: number | null
+    price: Decimal | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BookingAddonCountAggregateOutputType = {
+    id: number
+    bookingId: number
+    addonName: number
+    quantity: number
+    price: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type BookingAddonAvgAggregateInputType = {
+    id?: true
+    bookingId?: true
+    quantity?: true
+    price?: true
+  }
+
+  export type BookingAddonSumAggregateInputType = {
+    id?: true
+    bookingId?: true
+    quantity?: true
+    price?: true
+  }
+
+  export type BookingAddonMinAggregateInputType = {
+    id?: true
+    bookingId?: true
+    addonName?: true
+    quantity?: true
+    price?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BookingAddonMaxAggregateInputType = {
+    id?: true
+    bookingId?: true
+    addonName?: true
+    quantity?: true
+    price?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BookingAddonCountAggregateInputType = {
+    id?: true
+    bookingId?: true
+    addonName?: true
+    quantity?: true
+    price?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type BookingAddonAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BookingAddon to aggregate.
+     */
+    where?: BookingAddonWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BookingAddons to fetch.
+     */
+    orderBy?: BookingAddonOrderByWithRelationInput | BookingAddonOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BookingAddonWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BookingAddons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BookingAddons.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned BookingAddons
+    **/
+    _count?: true | BookingAddonCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: BookingAddonAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: BookingAddonSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BookingAddonMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BookingAddonMaxAggregateInputType
+  }
+
+  export type GetBookingAddonAggregateType<T extends BookingAddonAggregateArgs> = {
+        [P in keyof T & keyof AggregateBookingAddon]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBookingAddon[P]>
+      : GetScalarType<T[P], AggregateBookingAddon[P]>
+  }
+
+
+
+
+  export type BookingAddonGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BookingAddonWhereInput
+    orderBy?: BookingAddonOrderByWithAggregationInput | BookingAddonOrderByWithAggregationInput[]
+    by: BookingAddonScalarFieldEnum[] | BookingAddonScalarFieldEnum
+    having?: BookingAddonScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BookingAddonCountAggregateInputType | true
+    _avg?: BookingAddonAvgAggregateInputType
+    _sum?: BookingAddonSumAggregateInputType
+    _min?: BookingAddonMinAggregateInputType
+    _max?: BookingAddonMaxAggregateInputType
+  }
+
+  export type BookingAddonGroupByOutputType = {
+    id: number
+    bookingId: number
+    addonName: string
+    quantity: number
+    price: Decimal
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: BookingAddonCountAggregateOutputType | null
+    _avg: BookingAddonAvgAggregateOutputType | null
+    _sum: BookingAddonSumAggregateOutputType | null
+    _min: BookingAddonMinAggregateOutputType | null
+    _max: BookingAddonMaxAggregateOutputType | null
+  }
+
+  type GetBookingAddonGroupByPayload<T extends BookingAddonGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BookingAddonGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BookingAddonGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BookingAddonGroupByOutputType[P]>
+            : GetScalarType<T[P], BookingAddonGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BookingAddonSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingId?: boolean
+    addonName?: boolean
+    quantity?: boolean
+    price?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["bookingAddon"]>
+
+  export type BookingAddonSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingId?: boolean
+    addonName?: boolean
+    quantity?: boolean
+    price?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["bookingAddon"]>
+
+  export type BookingAddonSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingId?: boolean
+    addonName?: boolean
+    quantity?: boolean
+    price?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["bookingAddon"]>
+
+  export type BookingAddonSelectScalar = {
+    id?: boolean
+    bookingId?: boolean
+    addonName?: boolean
+    quantity?: boolean
+    price?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type BookingAddonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bookingId" | "addonName" | "quantity" | "price" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["bookingAddon"]>
+  export type BookingAddonInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+  }
+  export type BookingAddonIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+  }
+  export type BookingAddonIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    booking?: boolean | BookingDefaultArgs<ExtArgs>
+  }
+
+  export type $BookingAddonPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "BookingAddon"
+    objects: {
+      booking: Prisma.$BookingPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      bookingId: number
+      addonName: string
+      quantity: number
+      price: Prisma.Decimal
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["bookingAddon"]>
+    composites: {}
+  }
+
+  type BookingAddonGetPayload<S extends boolean | null | undefined | BookingAddonDefaultArgs> = $Result.GetResult<Prisma.$BookingAddonPayload, S>
+
+  type BookingAddonCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<BookingAddonFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: BookingAddonCountAggregateInputType | true
+    }
+
+  export interface BookingAddonDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BookingAddon'], meta: { name: 'BookingAddon' } }
+    /**
+     * Find zero or one BookingAddon that matches the filter.
+     * @param {BookingAddonFindUniqueArgs} args - Arguments to find a BookingAddon
+     * @example
+     * // Get one BookingAddon
+     * const bookingAddon = await prisma.bookingAddon.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BookingAddonFindUniqueArgs>(args: SelectSubset<T, BookingAddonFindUniqueArgs<ExtArgs>>): Prisma__BookingAddonClient<$Result.GetResult<Prisma.$BookingAddonPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one BookingAddon that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {BookingAddonFindUniqueOrThrowArgs} args - Arguments to find a BookingAddon
+     * @example
+     * // Get one BookingAddon
+     * const bookingAddon = await prisma.bookingAddon.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BookingAddonFindUniqueOrThrowArgs>(args: SelectSubset<T, BookingAddonFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BookingAddonClient<$Result.GetResult<Prisma.$BookingAddonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first BookingAddon that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingAddonFindFirstArgs} args - Arguments to find a BookingAddon
+     * @example
+     * // Get one BookingAddon
+     * const bookingAddon = await prisma.bookingAddon.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BookingAddonFindFirstArgs>(args?: SelectSubset<T, BookingAddonFindFirstArgs<ExtArgs>>): Prisma__BookingAddonClient<$Result.GetResult<Prisma.$BookingAddonPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first BookingAddon that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingAddonFindFirstOrThrowArgs} args - Arguments to find a BookingAddon
+     * @example
+     * // Get one BookingAddon
+     * const bookingAddon = await prisma.bookingAddon.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BookingAddonFindFirstOrThrowArgs>(args?: SelectSubset<T, BookingAddonFindFirstOrThrowArgs<ExtArgs>>): Prisma__BookingAddonClient<$Result.GetResult<Prisma.$BookingAddonPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more BookingAddons that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingAddonFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all BookingAddons
+     * const bookingAddons = await prisma.bookingAddon.findMany()
+     * 
+     * // Get first 10 BookingAddons
+     * const bookingAddons = await prisma.bookingAddon.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const bookingAddonWithIdOnly = await prisma.bookingAddon.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BookingAddonFindManyArgs>(args?: SelectSubset<T, BookingAddonFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingAddonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a BookingAddon.
+     * @param {BookingAddonCreateArgs} args - Arguments to create a BookingAddon.
+     * @example
+     * // Create one BookingAddon
+     * const BookingAddon = await prisma.bookingAddon.create({
+     *   data: {
+     *     // ... data to create a BookingAddon
+     *   }
+     * })
+     * 
+     */
+    create<T extends BookingAddonCreateArgs>(args: SelectSubset<T, BookingAddonCreateArgs<ExtArgs>>): Prisma__BookingAddonClient<$Result.GetResult<Prisma.$BookingAddonPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many BookingAddons.
+     * @param {BookingAddonCreateManyArgs} args - Arguments to create many BookingAddons.
+     * @example
+     * // Create many BookingAddons
+     * const bookingAddon = await prisma.bookingAddon.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BookingAddonCreateManyArgs>(args?: SelectSubset<T, BookingAddonCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many BookingAddons and returns the data saved in the database.
+     * @param {BookingAddonCreateManyAndReturnArgs} args - Arguments to create many BookingAddons.
+     * @example
+     * // Create many BookingAddons
+     * const bookingAddon = await prisma.bookingAddon.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many BookingAddons and only return the `id`
+     * const bookingAddonWithIdOnly = await prisma.bookingAddon.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BookingAddonCreateManyAndReturnArgs>(args?: SelectSubset<T, BookingAddonCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingAddonPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a BookingAddon.
+     * @param {BookingAddonDeleteArgs} args - Arguments to delete one BookingAddon.
+     * @example
+     * // Delete one BookingAddon
+     * const BookingAddon = await prisma.bookingAddon.delete({
+     *   where: {
+     *     // ... filter to delete one BookingAddon
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BookingAddonDeleteArgs>(args: SelectSubset<T, BookingAddonDeleteArgs<ExtArgs>>): Prisma__BookingAddonClient<$Result.GetResult<Prisma.$BookingAddonPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one BookingAddon.
+     * @param {BookingAddonUpdateArgs} args - Arguments to update one BookingAddon.
+     * @example
+     * // Update one BookingAddon
+     * const bookingAddon = await prisma.bookingAddon.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BookingAddonUpdateArgs>(args: SelectSubset<T, BookingAddonUpdateArgs<ExtArgs>>): Prisma__BookingAddonClient<$Result.GetResult<Prisma.$BookingAddonPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more BookingAddons.
+     * @param {BookingAddonDeleteManyArgs} args - Arguments to filter BookingAddons to delete.
+     * @example
+     * // Delete a few BookingAddons
+     * const { count } = await prisma.bookingAddon.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BookingAddonDeleteManyArgs>(args?: SelectSubset<T, BookingAddonDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BookingAddons.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingAddonUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many BookingAddons
+     * const bookingAddon = await prisma.bookingAddon.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BookingAddonUpdateManyArgs>(args: SelectSubset<T, BookingAddonUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BookingAddons and returns the data updated in the database.
+     * @param {BookingAddonUpdateManyAndReturnArgs} args - Arguments to update many BookingAddons.
+     * @example
+     * // Update many BookingAddons
+     * const bookingAddon = await prisma.bookingAddon.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more BookingAddons and only return the `id`
+     * const bookingAddonWithIdOnly = await prisma.bookingAddon.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends BookingAddonUpdateManyAndReturnArgs>(args: SelectSubset<T, BookingAddonUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingAddonPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one BookingAddon.
+     * @param {BookingAddonUpsertArgs} args - Arguments to update or create a BookingAddon.
+     * @example
+     * // Update or create a BookingAddon
+     * const bookingAddon = await prisma.bookingAddon.upsert({
+     *   create: {
+     *     // ... data to create a BookingAddon
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the BookingAddon we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BookingAddonUpsertArgs>(args: SelectSubset<T, BookingAddonUpsertArgs<ExtArgs>>): Prisma__BookingAddonClient<$Result.GetResult<Prisma.$BookingAddonPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of BookingAddons.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingAddonCountArgs} args - Arguments to filter BookingAddons to count.
+     * @example
+     * // Count the number of BookingAddons
+     * const count = await prisma.bookingAddon.count({
+     *   where: {
+     *     // ... the filter for the BookingAddons we want to count
+     *   }
+     * })
+    **/
+    count<T extends BookingAddonCountArgs>(
+      args?: Subset<T, BookingAddonCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BookingAddonCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a BookingAddon.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingAddonAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BookingAddonAggregateArgs>(args: Subset<T, BookingAddonAggregateArgs>): Prisma.PrismaPromise<GetBookingAddonAggregateType<T>>
+
+    /**
+     * Group by BookingAddon.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BookingAddonGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BookingAddonGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BookingAddonGroupByArgs['orderBy'] }
+        : { orderBy?: BookingAddonGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BookingAddonGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBookingAddonGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the BookingAddon model
+   */
+  readonly fields: BookingAddonFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for BookingAddon.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BookingAddonClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    booking<T extends BookingDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BookingDefaultArgs<ExtArgs>>): Prisma__BookingClient<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the BookingAddon model
+   */
+  interface BookingAddonFieldRefs {
+    readonly id: FieldRef<"BookingAddon", 'Int'>
+    readonly bookingId: FieldRef<"BookingAddon", 'Int'>
+    readonly addonName: FieldRef<"BookingAddon", 'String'>
+    readonly quantity: FieldRef<"BookingAddon", 'Int'>
+    readonly price: FieldRef<"BookingAddon", 'Decimal'>
+    readonly notes: FieldRef<"BookingAddon", 'String'>
+    readonly createdAt: FieldRef<"BookingAddon", 'DateTime'>
+    readonly updatedAt: FieldRef<"BookingAddon", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * BookingAddon findUnique
+   */
+  export type BookingAddonFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingAddon
+     */
+    select?: BookingAddonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingAddon
+     */
+    omit?: BookingAddonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingAddonInclude<ExtArgs> | null
+    /**
+     * Filter, which BookingAddon to fetch.
+     */
+    where: BookingAddonWhereUniqueInput
+  }
+
+  /**
+   * BookingAddon findUniqueOrThrow
+   */
+  export type BookingAddonFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingAddon
+     */
+    select?: BookingAddonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingAddon
+     */
+    omit?: BookingAddonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingAddonInclude<ExtArgs> | null
+    /**
+     * Filter, which BookingAddon to fetch.
+     */
+    where: BookingAddonWhereUniqueInput
+  }
+
+  /**
+   * BookingAddon findFirst
+   */
+  export type BookingAddonFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingAddon
+     */
+    select?: BookingAddonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingAddon
+     */
+    omit?: BookingAddonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingAddonInclude<ExtArgs> | null
+    /**
+     * Filter, which BookingAddon to fetch.
+     */
+    where?: BookingAddonWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BookingAddons to fetch.
+     */
+    orderBy?: BookingAddonOrderByWithRelationInput | BookingAddonOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BookingAddons.
+     */
+    cursor?: BookingAddonWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BookingAddons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BookingAddons.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BookingAddons.
+     */
+    distinct?: BookingAddonScalarFieldEnum | BookingAddonScalarFieldEnum[]
+  }
+
+  /**
+   * BookingAddon findFirstOrThrow
+   */
+  export type BookingAddonFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingAddon
+     */
+    select?: BookingAddonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingAddon
+     */
+    omit?: BookingAddonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingAddonInclude<ExtArgs> | null
+    /**
+     * Filter, which BookingAddon to fetch.
+     */
+    where?: BookingAddonWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BookingAddons to fetch.
+     */
+    orderBy?: BookingAddonOrderByWithRelationInput | BookingAddonOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BookingAddons.
+     */
+    cursor?: BookingAddonWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BookingAddons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BookingAddons.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BookingAddons.
+     */
+    distinct?: BookingAddonScalarFieldEnum | BookingAddonScalarFieldEnum[]
+  }
+
+  /**
+   * BookingAddon findMany
+   */
+  export type BookingAddonFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingAddon
+     */
+    select?: BookingAddonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingAddon
+     */
+    omit?: BookingAddonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingAddonInclude<ExtArgs> | null
+    /**
+     * Filter, which BookingAddons to fetch.
+     */
+    where?: BookingAddonWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BookingAddons to fetch.
+     */
+    orderBy?: BookingAddonOrderByWithRelationInput | BookingAddonOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing BookingAddons.
+     */
+    cursor?: BookingAddonWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BookingAddons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BookingAddons.
+     */
+    skip?: number
+    distinct?: BookingAddonScalarFieldEnum | BookingAddonScalarFieldEnum[]
+  }
+
+  /**
+   * BookingAddon create
+   */
+  export type BookingAddonCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingAddon
+     */
+    select?: BookingAddonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingAddon
+     */
+    omit?: BookingAddonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingAddonInclude<ExtArgs> | null
+    /**
+     * The data needed to create a BookingAddon.
+     */
+    data: XOR<BookingAddonCreateInput, BookingAddonUncheckedCreateInput>
+  }
+
+  /**
+   * BookingAddon createMany
+   */
+  export type BookingAddonCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many BookingAddons.
+     */
+    data: BookingAddonCreateManyInput | BookingAddonCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BookingAddon createManyAndReturn
+   */
+  export type BookingAddonCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingAddon
+     */
+    select?: BookingAddonSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingAddon
+     */
+    omit?: BookingAddonOmit<ExtArgs> | null
+    /**
+     * The data used to create many BookingAddons.
+     */
+    data: BookingAddonCreateManyInput | BookingAddonCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingAddonIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * BookingAddon update
+   */
+  export type BookingAddonUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingAddon
+     */
+    select?: BookingAddonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingAddon
+     */
+    omit?: BookingAddonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingAddonInclude<ExtArgs> | null
+    /**
+     * The data needed to update a BookingAddon.
+     */
+    data: XOR<BookingAddonUpdateInput, BookingAddonUncheckedUpdateInput>
+    /**
+     * Choose, which BookingAddon to update.
+     */
+    where: BookingAddonWhereUniqueInput
+  }
+
+  /**
+   * BookingAddon updateMany
+   */
+  export type BookingAddonUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update BookingAddons.
+     */
+    data: XOR<BookingAddonUpdateManyMutationInput, BookingAddonUncheckedUpdateManyInput>
+    /**
+     * Filter which BookingAddons to update
+     */
+    where?: BookingAddonWhereInput
+    /**
+     * Limit how many BookingAddons to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * BookingAddon updateManyAndReturn
+   */
+  export type BookingAddonUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingAddon
+     */
+    select?: BookingAddonSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingAddon
+     */
+    omit?: BookingAddonOmit<ExtArgs> | null
+    /**
+     * The data used to update BookingAddons.
+     */
+    data: XOR<BookingAddonUpdateManyMutationInput, BookingAddonUncheckedUpdateManyInput>
+    /**
+     * Filter which BookingAddons to update
+     */
+    where?: BookingAddonWhereInput
+    /**
+     * Limit how many BookingAddons to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingAddonIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * BookingAddon upsert
+   */
+  export type BookingAddonUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingAddon
+     */
+    select?: BookingAddonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingAddon
+     */
+    omit?: BookingAddonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingAddonInclude<ExtArgs> | null
+    /**
+     * The filter to search for the BookingAddon to update in case it exists.
+     */
+    where: BookingAddonWhereUniqueInput
+    /**
+     * In case the BookingAddon found by the `where` argument doesn't exist, create a new BookingAddon with this data.
+     */
+    create: XOR<BookingAddonCreateInput, BookingAddonUncheckedCreateInput>
+    /**
+     * In case the BookingAddon was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BookingAddonUpdateInput, BookingAddonUncheckedUpdateInput>
+  }
+
+  /**
+   * BookingAddon delete
+   */
+  export type BookingAddonDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingAddon
+     */
+    select?: BookingAddonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingAddon
+     */
+    omit?: BookingAddonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingAddonInclude<ExtArgs> | null
+    /**
+     * Filter which BookingAddon to delete.
+     */
+    where: BookingAddonWhereUniqueInput
+  }
+
+  /**
+   * BookingAddon deleteMany
+   */
+  export type BookingAddonDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BookingAddons to delete
+     */
+    where?: BookingAddonWhereInput
+    /**
+     * Limit how many BookingAddons to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * BookingAddon without action
+   */
+  export type BookingAddonDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BookingAddon
+     */
+    select?: BookingAddonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BookingAddon
+     */
+    omit?: BookingAddonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BookingAddonInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -12055,6 +17454,67 @@ export namespace Prisma {
   export type RoomImageScalarFieldEnum = (typeof RoomImageScalarFieldEnum)[keyof typeof RoomImageScalarFieldEnum]
 
 
+  export const BookingScalarFieldEnum: {
+    id: 'id',
+    bookingNumber: 'bookingNumber',
+    guestId: 'guestId',
+    checkInDate: 'checkInDate',
+    checkOutDate: 'checkOutDate',
+    adults: 'adults',
+    additionalRequests: 'additionalRequests',
+    totalAmount: 'totalAmount',
+    bookingStatus: 'bookingStatus',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type BookingScalarFieldEnum = (typeof BookingScalarFieldEnum)[keyof typeof BookingScalarFieldEnum]
+
+
+  export const BookingRoomScalarFieldEnum: {
+    id: 'id',
+    bookingId: 'bookingId',
+    roomId: 'roomId',
+    roomTypeId: 'roomTypeId',
+    pricePerNight: 'pricePerNight',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type BookingRoomScalarFieldEnum = (typeof BookingRoomScalarFieldEnum)[keyof typeof BookingRoomScalarFieldEnum]
+
+
+  export const PaymentScalarFieldEnum: {
+    id: 'id',
+    bookingId: 'bookingId',
+    amount: 'amount',
+    paymentMethod: 'paymentMethod',
+    paymentStatus: 'paymentStatus',
+    transactionId: 'transactionId',
+    omiseChargeId: 'omiseChargeId',
+    paymentDate: 'paymentDate',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+  export const BookingAddonScalarFieldEnum: {
+    id: 'id',
+    bookingId: 'bookingId',
+    addonName: 'addonName',
+    quantity: 'quantity',
+    price: 'price',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type BookingAddonScalarFieldEnum = (typeof BookingAddonScalarFieldEnum)[keyof typeof BookingAddonScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -12158,6 +17618,48 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'BookingStatus'
+   */
+  export type EnumBookingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BookingStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'BookingStatus[]'
+   */
+  export type ListEnumBookingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BookingStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PaymentMethod'
+   */
+  export type EnumPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentMethod'>
+    
+
+
+  /**
+   * Reference to a field of type 'PaymentMethod[]'
+   */
+  export type ListEnumPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentMethod[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PaymentStatus'
+   */
+  export type EnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'PaymentStatus[]'
+   */
+  export type ListEnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus[]'>
     
 
 
@@ -12401,6 +17903,7 @@ export namespace Prisma {
     rooms?: RoomListRelationFilter
     roomImages?: RoomImageListRelationFilter
     roomAmniety?: RoomAmnietyListRelationFilter
+    bookingRooms?: BookingRoomListRelationFilter
   }
 
   export type RoomTypeOrderByWithRelationInput = {
@@ -12420,6 +17923,7 @@ export namespace Prisma {
     rooms?: RoomOrderByRelationAggregateInput
     roomImages?: RoomImageOrderByRelationAggregateInput
     roomAmniety?: RoomAmnietyOrderByRelationAggregateInput
+    bookingRooms?: BookingRoomOrderByRelationAggregateInput
   }
 
   export type RoomTypeWhereUniqueInput = Prisma.AtLeast<{
@@ -12442,6 +17946,7 @@ export namespace Prisma {
     rooms?: RoomListRelationFilter
     roomImages?: RoomImageListRelationFilter
     roomAmniety?: RoomAmnietyListRelationFilter
+    bookingRooms?: BookingRoomListRelationFilter
   }, "id">
 
   export type RoomTypeOrderByWithAggregationInput = {
@@ -12495,6 +18000,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Room"> | Date | string
     roomType?: XOR<RoomTypeNullableScalarRelationFilter, RoomTypeWhereInput> | null
     roomStatus?: XOR<RoomStatusNullableScalarRelationFilter, RoomStatusWhereInput> | null
+    bookingRooms?: BookingRoomListRelationFilter
   }
 
   export type RoomOrderByWithRelationInput = {
@@ -12507,6 +18013,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     roomType?: RoomTypeOrderByWithRelationInput
     roomStatus?: RoomStatusOrderByWithRelationInput
+    bookingRooms?: BookingRoomOrderByRelationAggregateInput
   }
 
   export type RoomWhereUniqueInput = Prisma.AtLeast<{
@@ -12522,6 +18029,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Room"> | Date | string
     roomType?: XOR<RoomTypeNullableScalarRelationFilter, RoomTypeWhereInput> | null
     roomStatus?: XOR<RoomStatusNullableScalarRelationFilter, RoomStatusWhereInput> | null
+    bookingRooms?: BookingRoomListRelationFilter
   }, "id">
 
   export type RoomOrderByWithAggregationInput = {
@@ -12627,6 +18135,7 @@ export namespace Prisma {
     dateOfBirth?: DateTimeNullableFilter<"Guest"> | Date | string | null
     createdAt?: DateTimeFilter<"Guest"> | Date | string
     updatedAt?: DateTimeFilter<"Guest"> | Date | string
+    bookings?: BookingListRelationFilter
   }
 
   export type GuestOrderByWithRelationInput = {
@@ -12639,6 +18148,7 @@ export namespace Prisma {
     dateOfBirth?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    bookings?: BookingOrderByRelationAggregateInput
   }
 
   export type GuestWhereUniqueInput = Prisma.AtLeast<{
@@ -12654,6 +18164,7 @@ export namespace Prisma {
     dateOfBirth?: DateTimeNullableFilter<"Guest"> | Date | string | null
     createdAt?: DateTimeFilter<"Guest"> | Date | string
     updatedAt?: DateTimeFilter<"Guest"> | Date | string
+    bookings?: BookingListRelationFilter
   }, "id">
 
   export type GuestOrderByWithAggregationInput = {
@@ -12807,6 +18318,334 @@ export namespace Prisma {
     imagePublicId?: StringNullableWithAggregatesFilter<"RoomImage"> | string | null
     imageOrder?: IntNullableWithAggregatesFilter<"RoomImage"> | number | null
     imageDefault?: BoolNullableWithAggregatesFilter<"RoomImage"> | boolean | null
+  }
+
+  export type BookingWhereInput = {
+    AND?: BookingWhereInput | BookingWhereInput[]
+    OR?: BookingWhereInput[]
+    NOT?: BookingWhereInput | BookingWhereInput[]
+    id?: IntFilter<"Booking"> | number
+    bookingNumber?: StringFilter<"Booking"> | string
+    guestId?: IntFilter<"Booking"> | number
+    checkInDate?: DateTimeFilter<"Booking"> | Date | string
+    checkOutDate?: DateTimeFilter<"Booking"> | Date | string
+    adults?: IntFilter<"Booking"> | number
+    additionalRequests?: StringNullableFilter<"Booking"> | string | null
+    totalAmount?: DecimalFilter<"Booking"> | Decimal | DecimalJsLike | number | string
+    bookingStatus?: EnumBookingStatusFilter<"Booking"> | $Enums.BookingStatus
+    createdAt?: DateTimeFilter<"Booking"> | Date | string
+    updatedAt?: DateTimeFilter<"Booking"> | Date | string
+    guest?: XOR<GuestScalarRelationFilter, GuestWhereInput>
+    bookingRooms?: BookingRoomListRelationFilter
+    payments?: PaymentListRelationFilter
+    bookingAddons?: BookingAddonListRelationFilter
+  }
+
+  export type BookingOrderByWithRelationInput = {
+    id?: SortOrder
+    bookingNumber?: SortOrder
+    guestId?: SortOrder
+    checkInDate?: SortOrder
+    checkOutDate?: SortOrder
+    adults?: SortOrder
+    additionalRequests?: SortOrderInput | SortOrder
+    totalAmount?: SortOrder
+    bookingStatus?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    guest?: GuestOrderByWithRelationInput
+    bookingRooms?: BookingRoomOrderByRelationAggregateInput
+    payments?: PaymentOrderByRelationAggregateInput
+    bookingAddons?: BookingAddonOrderByRelationAggregateInput
+  }
+
+  export type BookingWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    bookingNumber?: string
+    AND?: BookingWhereInput | BookingWhereInput[]
+    OR?: BookingWhereInput[]
+    NOT?: BookingWhereInput | BookingWhereInput[]
+    guestId?: IntFilter<"Booking"> | number
+    checkInDate?: DateTimeFilter<"Booking"> | Date | string
+    checkOutDate?: DateTimeFilter<"Booking"> | Date | string
+    adults?: IntFilter<"Booking"> | number
+    additionalRequests?: StringNullableFilter<"Booking"> | string | null
+    totalAmount?: DecimalFilter<"Booking"> | Decimal | DecimalJsLike | number | string
+    bookingStatus?: EnumBookingStatusFilter<"Booking"> | $Enums.BookingStatus
+    createdAt?: DateTimeFilter<"Booking"> | Date | string
+    updatedAt?: DateTimeFilter<"Booking"> | Date | string
+    guest?: XOR<GuestScalarRelationFilter, GuestWhereInput>
+    bookingRooms?: BookingRoomListRelationFilter
+    payments?: PaymentListRelationFilter
+    bookingAddons?: BookingAddonListRelationFilter
+  }, "id" | "bookingNumber">
+
+  export type BookingOrderByWithAggregationInput = {
+    id?: SortOrder
+    bookingNumber?: SortOrder
+    guestId?: SortOrder
+    checkInDate?: SortOrder
+    checkOutDate?: SortOrder
+    adults?: SortOrder
+    additionalRequests?: SortOrderInput | SortOrder
+    totalAmount?: SortOrder
+    bookingStatus?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: BookingCountOrderByAggregateInput
+    _avg?: BookingAvgOrderByAggregateInput
+    _max?: BookingMaxOrderByAggregateInput
+    _min?: BookingMinOrderByAggregateInput
+    _sum?: BookingSumOrderByAggregateInput
+  }
+
+  export type BookingScalarWhereWithAggregatesInput = {
+    AND?: BookingScalarWhereWithAggregatesInput | BookingScalarWhereWithAggregatesInput[]
+    OR?: BookingScalarWhereWithAggregatesInput[]
+    NOT?: BookingScalarWhereWithAggregatesInput | BookingScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Booking"> | number
+    bookingNumber?: StringWithAggregatesFilter<"Booking"> | string
+    guestId?: IntWithAggregatesFilter<"Booking"> | number
+    checkInDate?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
+    checkOutDate?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
+    adults?: IntWithAggregatesFilter<"Booking"> | number
+    additionalRequests?: StringNullableWithAggregatesFilter<"Booking"> | string | null
+    totalAmount?: DecimalWithAggregatesFilter<"Booking"> | Decimal | DecimalJsLike | number | string
+    bookingStatus?: EnumBookingStatusWithAggregatesFilter<"Booking"> | $Enums.BookingStatus
+    createdAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
+  }
+
+  export type BookingRoomWhereInput = {
+    AND?: BookingRoomWhereInput | BookingRoomWhereInput[]
+    OR?: BookingRoomWhereInput[]
+    NOT?: BookingRoomWhereInput | BookingRoomWhereInput[]
+    id?: IntFilter<"BookingRoom"> | number
+    bookingId?: IntFilter<"BookingRoom"> | number
+    roomId?: IntFilter<"BookingRoom"> | number
+    roomTypeId?: IntFilter<"BookingRoom"> | number
+    pricePerNight?: DecimalFilter<"BookingRoom"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"BookingRoom"> | Date | string
+    updatedAt?: DateTimeFilter<"BookingRoom"> | Date | string
+    booking?: XOR<BookingScalarRelationFilter, BookingWhereInput>
+    room?: XOR<RoomScalarRelationFilter, RoomWhereInput>
+    roomType?: XOR<RoomTypeScalarRelationFilter, RoomTypeWhereInput>
+  }
+
+  export type BookingRoomOrderByWithRelationInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    roomId?: SortOrder
+    roomTypeId?: SortOrder
+    pricePerNight?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    booking?: BookingOrderByWithRelationInput
+    room?: RoomOrderByWithRelationInput
+    roomType?: RoomTypeOrderByWithRelationInput
+  }
+
+  export type BookingRoomWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: BookingRoomWhereInput | BookingRoomWhereInput[]
+    OR?: BookingRoomWhereInput[]
+    NOT?: BookingRoomWhereInput | BookingRoomWhereInput[]
+    bookingId?: IntFilter<"BookingRoom"> | number
+    roomId?: IntFilter<"BookingRoom"> | number
+    roomTypeId?: IntFilter<"BookingRoom"> | number
+    pricePerNight?: DecimalFilter<"BookingRoom"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"BookingRoom"> | Date | string
+    updatedAt?: DateTimeFilter<"BookingRoom"> | Date | string
+    booking?: XOR<BookingScalarRelationFilter, BookingWhereInput>
+    room?: XOR<RoomScalarRelationFilter, RoomWhereInput>
+    roomType?: XOR<RoomTypeScalarRelationFilter, RoomTypeWhereInput>
+  }, "id">
+
+  export type BookingRoomOrderByWithAggregationInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    roomId?: SortOrder
+    roomTypeId?: SortOrder
+    pricePerNight?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: BookingRoomCountOrderByAggregateInput
+    _avg?: BookingRoomAvgOrderByAggregateInput
+    _max?: BookingRoomMaxOrderByAggregateInput
+    _min?: BookingRoomMinOrderByAggregateInput
+    _sum?: BookingRoomSumOrderByAggregateInput
+  }
+
+  export type BookingRoomScalarWhereWithAggregatesInput = {
+    AND?: BookingRoomScalarWhereWithAggregatesInput | BookingRoomScalarWhereWithAggregatesInput[]
+    OR?: BookingRoomScalarWhereWithAggregatesInput[]
+    NOT?: BookingRoomScalarWhereWithAggregatesInput | BookingRoomScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"BookingRoom"> | number
+    bookingId?: IntWithAggregatesFilter<"BookingRoom"> | number
+    roomId?: IntWithAggregatesFilter<"BookingRoom"> | number
+    roomTypeId?: IntWithAggregatesFilter<"BookingRoom"> | number
+    pricePerNight?: DecimalWithAggregatesFilter<"BookingRoom"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeWithAggregatesFilter<"BookingRoom"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"BookingRoom"> | Date | string
+  }
+
+  export type PaymentWhereInput = {
+    AND?: PaymentWhereInput | PaymentWhereInput[]
+    OR?: PaymentWhereInput[]
+    NOT?: PaymentWhereInput | PaymentWhereInput[]
+    id?: IntFilter<"Payment"> | number
+    bookingId?: IntFilter<"Payment"> | number
+    amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
+    paymentMethod?: EnumPaymentMethodFilter<"Payment"> | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
+    transactionId?: StringNullableFilter<"Payment"> | string | null
+    omiseChargeId?: StringNullableFilter<"Payment"> | string | null
+    paymentDate?: DateTimeNullableFilter<"Payment"> | Date | string | null
+    notes?: StringNullableFilter<"Payment"> | string | null
+    createdAt?: DateTimeFilter<"Payment"> | Date | string
+    updatedAt?: DateTimeFilter<"Payment"> | Date | string
+    booking?: XOR<BookingScalarRelationFilter, BookingWhereInput>
+  }
+
+  export type PaymentOrderByWithRelationInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    amount?: SortOrder
+    paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
+    transactionId?: SortOrderInput | SortOrder
+    omiseChargeId?: SortOrderInput | SortOrder
+    paymentDate?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    booking?: BookingOrderByWithRelationInput
+  }
+
+  export type PaymentWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: PaymentWhereInput | PaymentWhereInput[]
+    OR?: PaymentWhereInput[]
+    NOT?: PaymentWhereInput | PaymentWhereInput[]
+    bookingId?: IntFilter<"Payment"> | number
+    amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
+    paymentMethod?: EnumPaymentMethodFilter<"Payment"> | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
+    transactionId?: StringNullableFilter<"Payment"> | string | null
+    omiseChargeId?: StringNullableFilter<"Payment"> | string | null
+    paymentDate?: DateTimeNullableFilter<"Payment"> | Date | string | null
+    notes?: StringNullableFilter<"Payment"> | string | null
+    createdAt?: DateTimeFilter<"Payment"> | Date | string
+    updatedAt?: DateTimeFilter<"Payment"> | Date | string
+    booking?: XOR<BookingScalarRelationFilter, BookingWhereInput>
+  }, "id">
+
+  export type PaymentOrderByWithAggregationInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    amount?: SortOrder
+    paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
+    transactionId?: SortOrderInput | SortOrder
+    omiseChargeId?: SortOrderInput | SortOrder
+    paymentDate?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PaymentCountOrderByAggregateInput
+    _avg?: PaymentAvgOrderByAggregateInput
+    _max?: PaymentMaxOrderByAggregateInput
+    _min?: PaymentMinOrderByAggregateInput
+    _sum?: PaymentSumOrderByAggregateInput
+  }
+
+  export type PaymentScalarWhereWithAggregatesInput = {
+    AND?: PaymentScalarWhereWithAggregatesInput | PaymentScalarWhereWithAggregatesInput[]
+    OR?: PaymentScalarWhereWithAggregatesInput[]
+    NOT?: PaymentScalarWhereWithAggregatesInput | PaymentScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Payment"> | number
+    bookingId?: IntWithAggregatesFilter<"Payment"> | number
+    amount?: DecimalWithAggregatesFilter<"Payment"> | Decimal | DecimalJsLike | number | string
+    paymentMethod?: EnumPaymentMethodWithAggregatesFilter<"Payment"> | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusWithAggregatesFilter<"Payment"> | $Enums.PaymentStatus
+    transactionId?: StringNullableWithAggregatesFilter<"Payment"> | string | null
+    omiseChargeId?: StringNullableWithAggregatesFilter<"Payment"> | string | null
+    paymentDate?: DateTimeNullableWithAggregatesFilter<"Payment"> | Date | string | null
+    notes?: StringNullableWithAggregatesFilter<"Payment"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Payment"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Payment"> | Date | string
+  }
+
+  export type BookingAddonWhereInput = {
+    AND?: BookingAddonWhereInput | BookingAddonWhereInput[]
+    OR?: BookingAddonWhereInput[]
+    NOT?: BookingAddonWhereInput | BookingAddonWhereInput[]
+    id?: IntFilter<"BookingAddon"> | number
+    bookingId?: IntFilter<"BookingAddon"> | number
+    addonName?: StringFilter<"BookingAddon"> | string
+    quantity?: IntFilter<"BookingAddon"> | number
+    price?: DecimalFilter<"BookingAddon"> | Decimal | DecimalJsLike | number | string
+    notes?: StringNullableFilter<"BookingAddon"> | string | null
+    createdAt?: DateTimeFilter<"BookingAddon"> | Date | string
+    updatedAt?: DateTimeFilter<"BookingAddon"> | Date | string
+    booking?: XOR<BookingScalarRelationFilter, BookingWhereInput>
+  }
+
+  export type BookingAddonOrderByWithRelationInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    addonName?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    booking?: BookingOrderByWithRelationInput
+  }
+
+  export type BookingAddonWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: BookingAddonWhereInput | BookingAddonWhereInput[]
+    OR?: BookingAddonWhereInput[]
+    NOT?: BookingAddonWhereInput | BookingAddonWhereInput[]
+    bookingId?: IntFilter<"BookingAddon"> | number
+    addonName?: StringFilter<"BookingAddon"> | string
+    quantity?: IntFilter<"BookingAddon"> | number
+    price?: DecimalFilter<"BookingAddon"> | Decimal | DecimalJsLike | number | string
+    notes?: StringNullableFilter<"BookingAddon"> | string | null
+    createdAt?: DateTimeFilter<"BookingAddon"> | Date | string
+    updatedAt?: DateTimeFilter<"BookingAddon"> | Date | string
+    booking?: XOR<BookingScalarRelationFilter, BookingWhereInput>
+  }, "id">
+
+  export type BookingAddonOrderByWithAggregationInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    addonName?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: BookingAddonCountOrderByAggregateInput
+    _avg?: BookingAddonAvgOrderByAggregateInput
+    _max?: BookingAddonMaxOrderByAggregateInput
+    _min?: BookingAddonMinOrderByAggregateInput
+    _sum?: BookingAddonSumOrderByAggregateInput
+  }
+
+  export type BookingAddonScalarWhereWithAggregatesInput = {
+    AND?: BookingAddonScalarWhereWithAggregatesInput | BookingAddonScalarWhereWithAggregatesInput[]
+    OR?: BookingAddonScalarWhereWithAggregatesInput[]
+    NOT?: BookingAddonScalarWhereWithAggregatesInput | BookingAddonScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"BookingAddon"> | number
+    bookingId?: IntWithAggregatesFilter<"BookingAddon"> | number
+    addonName?: StringWithAggregatesFilter<"BookingAddon"> | string
+    quantity?: IntWithAggregatesFilter<"BookingAddon"> | number
+    price?: DecimalWithAggregatesFilter<"BookingAddon"> | Decimal | DecimalJsLike | number | string
+    notes?: StringNullableWithAggregatesFilter<"BookingAddon"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"BookingAddon"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"BookingAddon"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -13040,6 +18879,7 @@ export namespace Prisma {
     rooms?: RoomCreateNestedManyWithoutRoomTypeInput
     roomImages?: RoomImageCreateNestedManyWithoutRoomTypeInput
     roomAmniety?: RoomAmnietyCreateNestedManyWithoutRoomTypeInput
+    bookingRooms?: BookingRoomCreateNestedManyWithoutRoomTypeInput
   }
 
   export type RoomTypeUncheckedCreateInput = {
@@ -13058,6 +18898,7 @@ export namespace Prisma {
     rooms?: RoomUncheckedCreateNestedManyWithoutRoomTypeInput
     roomImages?: RoomImageUncheckedCreateNestedManyWithoutRoomTypeInput
     roomAmniety?: RoomAmnietyUncheckedCreateNestedManyWithoutRoomTypeInput
+    bookingRooms?: BookingRoomUncheckedCreateNestedManyWithoutRoomTypeInput
   }
 
   export type RoomTypeUpdateInput = {
@@ -13075,6 +18916,7 @@ export namespace Prisma {
     rooms?: RoomUpdateManyWithoutRoomTypeNestedInput
     roomImages?: RoomImageUpdateManyWithoutRoomTypeNestedInput
     roomAmniety?: RoomAmnietyUpdateManyWithoutRoomTypeNestedInput
+    bookingRooms?: BookingRoomUpdateManyWithoutRoomTypeNestedInput
   }
 
   export type RoomTypeUncheckedUpdateInput = {
@@ -13093,6 +18935,7 @@ export namespace Prisma {
     rooms?: RoomUncheckedUpdateManyWithoutRoomTypeNestedInput
     roomImages?: RoomImageUncheckedUpdateManyWithoutRoomTypeNestedInput
     roomAmniety?: RoomAmnietyUncheckedUpdateManyWithoutRoomTypeNestedInput
+    bookingRooms?: BookingRoomUncheckedUpdateManyWithoutRoomTypeNestedInput
   }
 
   export type RoomTypeCreateManyInput = {
@@ -13145,6 +18988,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     roomType?: RoomTypeCreateNestedOneWithoutRoomsInput
     roomStatus?: RoomStatusCreateNestedOneWithoutRoomsInput
+    bookingRooms?: BookingRoomCreateNestedManyWithoutRoomInput
   }
 
   export type RoomUncheckedCreateInput = {
@@ -13155,6 +18999,7 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    bookingRooms?: BookingRoomUncheckedCreateNestedManyWithoutRoomInput
   }
 
   export type RoomUpdateInput = {
@@ -13164,6 +19009,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     roomType?: RoomTypeUpdateOneWithoutRoomsNestedInput
     roomStatus?: RoomStatusUpdateOneWithoutRoomsNestedInput
+    bookingRooms?: BookingRoomUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomUncheckedUpdateInput = {
@@ -13174,6 +19020,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bookingRooms?: BookingRoomUncheckedUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomCreateManyInput = {
@@ -13271,6 +19118,7 @@ export namespace Prisma {
     dateOfBirth?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    bookings?: BookingCreateNestedManyWithoutGuestInput
   }
 
   export type GuestUncheckedCreateInput = {
@@ -13283,6 +19131,7 @@ export namespace Prisma {
     dateOfBirth?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    bookings?: BookingUncheckedCreateNestedManyWithoutGuestInput
   }
 
   export type GuestUpdateInput = {
@@ -13294,6 +19143,7 @@ export namespace Prisma {
     dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bookings?: BookingUpdateManyWithoutGuestNestedInput
   }
 
   export type GuestUncheckedUpdateInput = {
@@ -13306,6 +19156,7 @@ export namespace Prisma {
     dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bookings?: BookingUncheckedUpdateManyWithoutGuestNestedInput
   }
 
   export type GuestCreateManyInput = {
@@ -13460,6 +19311,343 @@ export namespace Prisma {
     imagePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     imageOrder?: NullableIntFieldUpdateOperationsInput | number | null
     imageDefault?: NullableBoolFieldUpdateOperationsInput | boolean | null
+  }
+
+  export type BookingCreateInput = {
+    bookingNumber: string
+    checkInDate: Date | string
+    checkOutDate: Date | string
+    adults?: number
+    additionalRequests?: string | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    bookingStatus?: $Enums.BookingStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    guest: GuestCreateNestedOneWithoutBookingsInput
+    bookingRooms?: BookingRoomCreateNestedManyWithoutBookingInput
+    payments?: PaymentCreateNestedManyWithoutBookingInput
+    bookingAddons?: BookingAddonCreateNestedManyWithoutBookingInput
+  }
+
+  export type BookingUncheckedCreateInput = {
+    id?: number
+    bookingNumber: string
+    guestId: number
+    checkInDate: Date | string
+    checkOutDate: Date | string
+    adults?: number
+    additionalRequests?: string | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    bookingStatus?: $Enums.BookingStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bookingRooms?: BookingRoomUncheckedCreateNestedManyWithoutBookingInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutBookingInput
+    bookingAddons?: BookingAddonUncheckedCreateNestedManyWithoutBookingInput
+  }
+
+  export type BookingUpdateInput = {
+    bookingNumber?: StringFieldUpdateOperationsInput | string
+    checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    adults?: IntFieldUpdateOperationsInput | number
+    additionalRequests?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    guest?: GuestUpdateOneRequiredWithoutBookingsNestedInput
+    bookingRooms?: BookingRoomUpdateManyWithoutBookingNestedInput
+    payments?: PaymentUpdateManyWithoutBookingNestedInput
+    bookingAddons?: BookingAddonUpdateManyWithoutBookingNestedInput
+  }
+
+  export type BookingUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingNumber?: StringFieldUpdateOperationsInput | string
+    guestId?: IntFieldUpdateOperationsInput | number
+    checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    adults?: IntFieldUpdateOperationsInput | number
+    additionalRequests?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bookingRooms?: BookingRoomUncheckedUpdateManyWithoutBookingNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutBookingNestedInput
+    bookingAddons?: BookingAddonUncheckedUpdateManyWithoutBookingNestedInput
+  }
+
+  export type BookingCreateManyInput = {
+    id?: number
+    bookingNumber: string
+    guestId: number
+    checkInDate: Date | string
+    checkOutDate: Date | string
+    adults?: number
+    additionalRequests?: string | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    bookingStatus?: $Enums.BookingStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BookingUpdateManyMutationInput = {
+    bookingNumber?: StringFieldUpdateOperationsInput | string
+    checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    adults?: IntFieldUpdateOperationsInput | number
+    additionalRequests?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingNumber?: StringFieldUpdateOperationsInput | string
+    guestId?: IntFieldUpdateOperationsInput | number
+    checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    adults?: IntFieldUpdateOperationsInput | number
+    additionalRequests?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingRoomCreateInput = {
+    pricePerNight: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    booking: BookingCreateNestedOneWithoutBookingRoomsInput
+    room: RoomCreateNestedOneWithoutBookingRoomsInput
+    roomType: RoomTypeCreateNestedOneWithoutBookingRoomsInput
+  }
+
+  export type BookingRoomUncheckedCreateInput = {
+    id?: number
+    bookingId: number
+    roomId: number
+    roomTypeId: number
+    pricePerNight: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BookingRoomUpdateInput = {
+    pricePerNight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    booking?: BookingUpdateOneRequiredWithoutBookingRoomsNestedInput
+    room?: RoomUpdateOneRequiredWithoutBookingRoomsNestedInput
+    roomType?: RoomTypeUpdateOneRequiredWithoutBookingRoomsNestedInput
+  }
+
+  export type BookingRoomUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingId?: IntFieldUpdateOperationsInput | number
+    roomId?: IntFieldUpdateOperationsInput | number
+    roomTypeId?: IntFieldUpdateOperationsInput | number
+    pricePerNight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingRoomCreateManyInput = {
+    id?: number
+    bookingId: number
+    roomId: number
+    roomTypeId: number
+    pricePerNight: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BookingRoomUpdateManyMutationInput = {
+    pricePerNight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingRoomUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingId?: IntFieldUpdateOperationsInput | number
+    roomId?: IntFieldUpdateOperationsInput | number
+    roomTypeId?: IntFieldUpdateOperationsInput | number
+    pricePerNight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentCreateInput = {
+    amount: Decimal | DecimalJsLike | number | string
+    paymentMethod: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
+    transactionId?: string | null
+    omiseChargeId?: string | null
+    paymentDate?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    booking: BookingCreateNestedOneWithoutPaymentsInput
+  }
+
+  export type PaymentUncheckedCreateInput = {
+    id?: number
+    bookingId: number
+    amount: Decimal | DecimalJsLike | number | string
+    paymentMethod: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
+    transactionId?: string | null
+    omiseChargeId?: string | null
+    paymentDate?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentUpdateInput = {
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    omiseChargeId?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    booking?: BookingUpdateOneRequiredWithoutPaymentsNestedInput
+  }
+
+  export type PaymentUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingId?: IntFieldUpdateOperationsInput | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    omiseChargeId?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentCreateManyInput = {
+    id?: number
+    bookingId: number
+    amount: Decimal | DecimalJsLike | number | string
+    paymentMethod: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
+    transactionId?: string | null
+    omiseChargeId?: string | null
+    paymentDate?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentUpdateManyMutationInput = {
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    omiseChargeId?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingId?: IntFieldUpdateOperationsInput | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    omiseChargeId?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingAddonCreateInput = {
+    addonName: string
+    quantity?: number
+    price: Decimal | DecimalJsLike | number | string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    booking: BookingCreateNestedOneWithoutBookingAddonsInput
+  }
+
+  export type BookingAddonUncheckedCreateInput = {
+    id?: number
+    bookingId: number
+    addonName: string
+    quantity?: number
+    price: Decimal | DecimalJsLike | number | string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BookingAddonUpdateInput = {
+    addonName?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    booking?: BookingUpdateOneRequiredWithoutBookingAddonsNestedInput
+  }
+
+  export type BookingAddonUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingId?: IntFieldUpdateOperationsInput | number
+    addonName?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingAddonCreateManyInput = {
+    id?: number
+    bookingId: number
+    addonName: string
+    quantity?: number
+    price: Decimal | DecimalJsLike | number | string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BookingAddonUpdateManyMutationInput = {
+    addonName?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingAddonUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingId?: IntFieldUpdateOperationsInput | number
+    addonName?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -13808,11 +19996,21 @@ export namespace Prisma {
     none?: RoomAmnietyWhereInput
   }
 
+  export type BookingRoomListRelationFilter = {
+    every?: BookingRoomWhereInput
+    some?: BookingRoomWhereInput
+    none?: BookingRoomWhereInput
+  }
+
   export type RoomImageOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type RoomAmnietyOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type BookingRoomOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -14010,6 +20208,16 @@ export namespace Prisma {
     order?: SortOrder
   }
 
+  export type BookingListRelationFilter = {
+    every?: BookingWhereInput
+    some?: BookingWhereInput
+    none?: BookingWhereInput
+  }
+
+  export type BookingOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type GuestCountOrderByAggregateInput = {
     id?: SortOrder
     firstName?: SortOrder
@@ -14126,6 +20334,327 @@ export namespace Prisma {
     id?: SortOrder
     roomTypeId?: SortOrder
     imageOrder?: SortOrder
+  }
+
+  export type DecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type EnumBookingStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.BookingStatus | EnumBookingStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBookingStatusFilter<$PrismaModel> | $Enums.BookingStatus
+  }
+
+  export type GuestScalarRelationFilter = {
+    is?: GuestWhereInput
+    isNot?: GuestWhereInput
+  }
+
+  export type PaymentListRelationFilter = {
+    every?: PaymentWhereInput
+    some?: PaymentWhereInput
+    none?: PaymentWhereInput
+  }
+
+  export type BookingAddonListRelationFilter = {
+    every?: BookingAddonWhereInput
+    some?: BookingAddonWhereInput
+    none?: BookingAddonWhereInput
+  }
+
+  export type PaymentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type BookingAddonOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type BookingCountOrderByAggregateInput = {
+    id?: SortOrder
+    bookingNumber?: SortOrder
+    guestId?: SortOrder
+    checkInDate?: SortOrder
+    checkOutDate?: SortOrder
+    adults?: SortOrder
+    additionalRequests?: SortOrder
+    totalAmount?: SortOrder
+    bookingStatus?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BookingAvgOrderByAggregateInput = {
+    id?: SortOrder
+    guestId?: SortOrder
+    adults?: SortOrder
+    totalAmount?: SortOrder
+  }
+
+  export type BookingMaxOrderByAggregateInput = {
+    id?: SortOrder
+    bookingNumber?: SortOrder
+    guestId?: SortOrder
+    checkInDate?: SortOrder
+    checkOutDate?: SortOrder
+    adults?: SortOrder
+    additionalRequests?: SortOrder
+    totalAmount?: SortOrder
+    bookingStatus?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BookingMinOrderByAggregateInput = {
+    id?: SortOrder
+    bookingNumber?: SortOrder
+    guestId?: SortOrder
+    checkInDate?: SortOrder
+    checkOutDate?: SortOrder
+    adults?: SortOrder
+    additionalRequests?: SortOrder
+    totalAmount?: SortOrder
+    bookingStatus?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BookingSumOrderByAggregateInput = {
+    id?: SortOrder
+    guestId?: SortOrder
+    adults?: SortOrder
+    totalAmount?: SortOrder
+  }
+
+  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
+  export type EnumBookingStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BookingStatus | EnumBookingStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBookingStatusWithAggregatesFilter<$PrismaModel> | $Enums.BookingStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBookingStatusFilter<$PrismaModel>
+    _max?: NestedEnumBookingStatusFilter<$PrismaModel>
+  }
+
+  export type BookingScalarRelationFilter = {
+    is?: BookingWhereInput
+    isNot?: BookingWhereInput
+  }
+
+  export type RoomScalarRelationFilter = {
+    is?: RoomWhereInput
+    isNot?: RoomWhereInput
+  }
+
+  export type RoomTypeScalarRelationFilter = {
+    is?: RoomTypeWhereInput
+    isNot?: RoomTypeWhereInput
+  }
+
+  export type BookingRoomCountOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    roomId?: SortOrder
+    roomTypeId?: SortOrder
+    pricePerNight?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BookingRoomAvgOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    roomId?: SortOrder
+    roomTypeId?: SortOrder
+    pricePerNight?: SortOrder
+  }
+
+  export type BookingRoomMaxOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    roomId?: SortOrder
+    roomTypeId?: SortOrder
+    pricePerNight?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BookingRoomMinOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    roomId?: SortOrder
+    roomTypeId?: SortOrder
+    pricePerNight?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BookingRoomSumOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    roomId?: SortOrder
+    roomTypeId?: SortOrder
+    pricePerNight?: SortOrder
+  }
+
+  export type EnumPaymentMethodFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentMethod | EnumPaymentMethodFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentMethod[] | ListEnumPaymentMethodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentMethod[] | ListEnumPaymentMethodFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentMethodFilter<$PrismaModel> | $Enums.PaymentMethod
+  }
+
+  export type EnumPaymentStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentStatus | EnumPaymentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentStatusFilter<$PrismaModel> | $Enums.PaymentStatus
+  }
+
+  export type PaymentCountOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    amount?: SortOrder
+    paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
+    transactionId?: SortOrder
+    omiseChargeId?: SortOrder
+    paymentDate?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PaymentAvgOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type PaymentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    amount?: SortOrder
+    paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
+    transactionId?: SortOrder
+    omiseChargeId?: SortOrder
+    paymentDate?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PaymentMinOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    amount?: SortOrder
+    paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
+    transactionId?: SortOrder
+    omiseChargeId?: SortOrder
+    paymentDate?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PaymentSumOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type EnumPaymentMethodWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentMethod | EnumPaymentMethodFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentMethod[] | ListEnumPaymentMethodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentMethod[] | ListEnumPaymentMethodFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentMethodWithAggregatesFilter<$PrismaModel> | $Enums.PaymentMethod
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentMethodFilter<$PrismaModel>
+    _max?: NestedEnumPaymentMethodFilter<$PrismaModel>
+  }
+
+  export type EnumPaymentStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentStatus | EnumPaymentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentStatusWithAggregatesFilter<$PrismaModel> | $Enums.PaymentStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentStatusFilter<$PrismaModel>
+    _max?: NestedEnumPaymentStatusFilter<$PrismaModel>
+  }
+
+  export type BookingAddonCountOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    addonName?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BookingAddonAvgOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+  }
+
+  export type BookingAddonMaxOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    addonName?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BookingAddonMinOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    addonName?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BookingAddonSumOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -14267,6 +20796,13 @@ export namespace Prisma {
     connect?: RoomAmnietyWhereUniqueInput | RoomAmnietyWhereUniqueInput[]
   }
 
+  export type BookingRoomCreateNestedManyWithoutRoomTypeInput = {
+    create?: XOR<BookingRoomCreateWithoutRoomTypeInput, BookingRoomUncheckedCreateWithoutRoomTypeInput> | BookingRoomCreateWithoutRoomTypeInput[] | BookingRoomUncheckedCreateWithoutRoomTypeInput[]
+    connectOrCreate?: BookingRoomCreateOrConnectWithoutRoomTypeInput | BookingRoomCreateOrConnectWithoutRoomTypeInput[]
+    createMany?: BookingRoomCreateManyRoomTypeInputEnvelope
+    connect?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+  }
+
   export type RoomUncheckedCreateNestedManyWithoutRoomTypeInput = {
     create?: XOR<RoomCreateWithoutRoomTypeInput, RoomUncheckedCreateWithoutRoomTypeInput> | RoomCreateWithoutRoomTypeInput[] | RoomUncheckedCreateWithoutRoomTypeInput[]
     connectOrCreate?: RoomCreateOrConnectWithoutRoomTypeInput | RoomCreateOrConnectWithoutRoomTypeInput[]
@@ -14286,6 +20822,13 @@ export namespace Prisma {
     connectOrCreate?: RoomAmnietyCreateOrConnectWithoutRoomTypeInput | RoomAmnietyCreateOrConnectWithoutRoomTypeInput[]
     createMany?: RoomAmnietyCreateManyRoomTypeInputEnvelope
     connect?: RoomAmnietyWhereUniqueInput | RoomAmnietyWhereUniqueInput[]
+  }
+
+  export type BookingRoomUncheckedCreateNestedManyWithoutRoomTypeInput = {
+    create?: XOR<BookingRoomCreateWithoutRoomTypeInput, BookingRoomUncheckedCreateWithoutRoomTypeInput> | BookingRoomCreateWithoutRoomTypeInput[] | BookingRoomUncheckedCreateWithoutRoomTypeInput[]
+    connectOrCreate?: BookingRoomCreateOrConnectWithoutRoomTypeInput | BookingRoomCreateOrConnectWithoutRoomTypeInput[]
+    createMany?: BookingRoomCreateManyRoomTypeInputEnvelope
+    connect?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
   }
 
   export type NullableIntFieldUpdateOperationsInput = {
@@ -14360,6 +20903,20 @@ export namespace Prisma {
     deleteMany?: RoomAmnietyScalarWhereInput | RoomAmnietyScalarWhereInput[]
   }
 
+  export type BookingRoomUpdateManyWithoutRoomTypeNestedInput = {
+    create?: XOR<BookingRoomCreateWithoutRoomTypeInput, BookingRoomUncheckedCreateWithoutRoomTypeInput> | BookingRoomCreateWithoutRoomTypeInput[] | BookingRoomUncheckedCreateWithoutRoomTypeInput[]
+    connectOrCreate?: BookingRoomCreateOrConnectWithoutRoomTypeInput | BookingRoomCreateOrConnectWithoutRoomTypeInput[]
+    upsert?: BookingRoomUpsertWithWhereUniqueWithoutRoomTypeInput | BookingRoomUpsertWithWhereUniqueWithoutRoomTypeInput[]
+    createMany?: BookingRoomCreateManyRoomTypeInputEnvelope
+    set?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    disconnect?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    delete?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    connect?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    update?: BookingRoomUpdateWithWhereUniqueWithoutRoomTypeInput | BookingRoomUpdateWithWhereUniqueWithoutRoomTypeInput[]
+    updateMany?: BookingRoomUpdateManyWithWhereWithoutRoomTypeInput | BookingRoomUpdateManyWithWhereWithoutRoomTypeInput[]
+    deleteMany?: BookingRoomScalarWhereInput | BookingRoomScalarWhereInput[]
+  }
+
   export type RoomUncheckedUpdateManyWithoutRoomTypeNestedInput = {
     create?: XOR<RoomCreateWithoutRoomTypeInput, RoomUncheckedCreateWithoutRoomTypeInput> | RoomCreateWithoutRoomTypeInput[] | RoomUncheckedCreateWithoutRoomTypeInput[]
     connectOrCreate?: RoomCreateOrConnectWithoutRoomTypeInput | RoomCreateOrConnectWithoutRoomTypeInput[]
@@ -14402,6 +20959,20 @@ export namespace Prisma {
     deleteMany?: RoomAmnietyScalarWhereInput | RoomAmnietyScalarWhereInput[]
   }
 
+  export type BookingRoomUncheckedUpdateManyWithoutRoomTypeNestedInput = {
+    create?: XOR<BookingRoomCreateWithoutRoomTypeInput, BookingRoomUncheckedCreateWithoutRoomTypeInput> | BookingRoomCreateWithoutRoomTypeInput[] | BookingRoomUncheckedCreateWithoutRoomTypeInput[]
+    connectOrCreate?: BookingRoomCreateOrConnectWithoutRoomTypeInput | BookingRoomCreateOrConnectWithoutRoomTypeInput[]
+    upsert?: BookingRoomUpsertWithWhereUniqueWithoutRoomTypeInput | BookingRoomUpsertWithWhereUniqueWithoutRoomTypeInput[]
+    createMany?: BookingRoomCreateManyRoomTypeInputEnvelope
+    set?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    disconnect?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    delete?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    connect?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    update?: BookingRoomUpdateWithWhereUniqueWithoutRoomTypeInput | BookingRoomUpdateWithWhereUniqueWithoutRoomTypeInput[]
+    updateMany?: BookingRoomUpdateManyWithWhereWithoutRoomTypeInput | BookingRoomUpdateManyWithWhereWithoutRoomTypeInput[]
+    deleteMany?: BookingRoomScalarWhereInput | BookingRoomScalarWhereInput[]
+  }
+
   export type RoomTypeCreateNestedOneWithoutRoomsInput = {
     create?: XOR<RoomTypeCreateWithoutRoomsInput, RoomTypeUncheckedCreateWithoutRoomsInput>
     connectOrCreate?: RoomTypeCreateOrConnectWithoutRoomsInput
@@ -14412,6 +20983,20 @@ export namespace Prisma {
     create?: XOR<RoomStatusCreateWithoutRoomsInput, RoomStatusUncheckedCreateWithoutRoomsInput>
     connectOrCreate?: RoomStatusCreateOrConnectWithoutRoomsInput
     connect?: RoomStatusWhereUniqueInput
+  }
+
+  export type BookingRoomCreateNestedManyWithoutRoomInput = {
+    create?: XOR<BookingRoomCreateWithoutRoomInput, BookingRoomUncheckedCreateWithoutRoomInput> | BookingRoomCreateWithoutRoomInput[] | BookingRoomUncheckedCreateWithoutRoomInput[]
+    connectOrCreate?: BookingRoomCreateOrConnectWithoutRoomInput | BookingRoomCreateOrConnectWithoutRoomInput[]
+    createMany?: BookingRoomCreateManyRoomInputEnvelope
+    connect?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+  }
+
+  export type BookingRoomUncheckedCreateNestedManyWithoutRoomInput = {
+    create?: XOR<BookingRoomCreateWithoutRoomInput, BookingRoomUncheckedCreateWithoutRoomInput> | BookingRoomCreateWithoutRoomInput[] | BookingRoomUncheckedCreateWithoutRoomInput[]
+    connectOrCreate?: BookingRoomCreateOrConnectWithoutRoomInput | BookingRoomCreateOrConnectWithoutRoomInput[]
+    createMany?: BookingRoomCreateManyRoomInputEnvelope
+    connect?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
   }
 
   export type RoomTypeUpdateOneWithoutRoomsNestedInput = {
@@ -14434,6 +21019,34 @@ export namespace Prisma {
     update?: XOR<XOR<RoomStatusUpdateToOneWithWhereWithoutRoomsInput, RoomStatusUpdateWithoutRoomsInput>, RoomStatusUncheckedUpdateWithoutRoomsInput>
   }
 
+  export type BookingRoomUpdateManyWithoutRoomNestedInput = {
+    create?: XOR<BookingRoomCreateWithoutRoomInput, BookingRoomUncheckedCreateWithoutRoomInput> | BookingRoomCreateWithoutRoomInput[] | BookingRoomUncheckedCreateWithoutRoomInput[]
+    connectOrCreate?: BookingRoomCreateOrConnectWithoutRoomInput | BookingRoomCreateOrConnectWithoutRoomInput[]
+    upsert?: BookingRoomUpsertWithWhereUniqueWithoutRoomInput | BookingRoomUpsertWithWhereUniqueWithoutRoomInput[]
+    createMany?: BookingRoomCreateManyRoomInputEnvelope
+    set?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    disconnect?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    delete?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    connect?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    update?: BookingRoomUpdateWithWhereUniqueWithoutRoomInput | BookingRoomUpdateWithWhereUniqueWithoutRoomInput[]
+    updateMany?: BookingRoomUpdateManyWithWhereWithoutRoomInput | BookingRoomUpdateManyWithWhereWithoutRoomInput[]
+    deleteMany?: BookingRoomScalarWhereInput | BookingRoomScalarWhereInput[]
+  }
+
+  export type BookingRoomUncheckedUpdateManyWithoutRoomNestedInput = {
+    create?: XOR<BookingRoomCreateWithoutRoomInput, BookingRoomUncheckedCreateWithoutRoomInput> | BookingRoomCreateWithoutRoomInput[] | BookingRoomUncheckedCreateWithoutRoomInput[]
+    connectOrCreate?: BookingRoomCreateOrConnectWithoutRoomInput | BookingRoomCreateOrConnectWithoutRoomInput[]
+    upsert?: BookingRoomUpsertWithWhereUniqueWithoutRoomInput | BookingRoomUpsertWithWhereUniqueWithoutRoomInput[]
+    createMany?: BookingRoomCreateManyRoomInputEnvelope
+    set?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    disconnect?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    delete?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    connect?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    update?: BookingRoomUpdateWithWhereUniqueWithoutRoomInput | BookingRoomUpdateWithWhereUniqueWithoutRoomInput[]
+    updateMany?: BookingRoomUpdateManyWithWhereWithoutRoomInput | BookingRoomUpdateManyWithWhereWithoutRoomInput[]
+    deleteMany?: BookingRoomScalarWhereInput | BookingRoomScalarWhereInput[]
+  }
+
   export type RoomTypeCreateNestedOneWithoutRoomAmnietyInput = {
     create?: XOR<RoomTypeCreateWithoutRoomAmnietyInput, RoomTypeUncheckedCreateWithoutRoomAmnietyInput>
     connectOrCreate?: RoomTypeCreateOrConnectWithoutRoomAmnietyInput
@@ -14450,6 +21063,48 @@ export namespace Prisma {
     update?: XOR<XOR<RoomTypeUpdateToOneWithWhereWithoutRoomAmnietyInput, RoomTypeUpdateWithoutRoomAmnietyInput>, RoomTypeUncheckedUpdateWithoutRoomAmnietyInput>
   }
 
+  export type BookingCreateNestedManyWithoutGuestInput = {
+    create?: XOR<BookingCreateWithoutGuestInput, BookingUncheckedCreateWithoutGuestInput> | BookingCreateWithoutGuestInput[] | BookingUncheckedCreateWithoutGuestInput[]
+    connectOrCreate?: BookingCreateOrConnectWithoutGuestInput | BookingCreateOrConnectWithoutGuestInput[]
+    createMany?: BookingCreateManyGuestInputEnvelope
+    connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+  }
+
+  export type BookingUncheckedCreateNestedManyWithoutGuestInput = {
+    create?: XOR<BookingCreateWithoutGuestInput, BookingUncheckedCreateWithoutGuestInput> | BookingCreateWithoutGuestInput[] | BookingUncheckedCreateWithoutGuestInput[]
+    connectOrCreate?: BookingCreateOrConnectWithoutGuestInput | BookingCreateOrConnectWithoutGuestInput[]
+    createMany?: BookingCreateManyGuestInputEnvelope
+    connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+  }
+
+  export type BookingUpdateManyWithoutGuestNestedInput = {
+    create?: XOR<BookingCreateWithoutGuestInput, BookingUncheckedCreateWithoutGuestInput> | BookingCreateWithoutGuestInput[] | BookingUncheckedCreateWithoutGuestInput[]
+    connectOrCreate?: BookingCreateOrConnectWithoutGuestInput | BookingCreateOrConnectWithoutGuestInput[]
+    upsert?: BookingUpsertWithWhereUniqueWithoutGuestInput | BookingUpsertWithWhereUniqueWithoutGuestInput[]
+    createMany?: BookingCreateManyGuestInputEnvelope
+    set?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    disconnect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    delete?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    update?: BookingUpdateWithWhereUniqueWithoutGuestInput | BookingUpdateWithWhereUniqueWithoutGuestInput[]
+    updateMany?: BookingUpdateManyWithWhereWithoutGuestInput | BookingUpdateManyWithWhereWithoutGuestInput[]
+    deleteMany?: BookingScalarWhereInput | BookingScalarWhereInput[]
+  }
+
+  export type BookingUncheckedUpdateManyWithoutGuestNestedInput = {
+    create?: XOR<BookingCreateWithoutGuestInput, BookingUncheckedCreateWithoutGuestInput> | BookingCreateWithoutGuestInput[] | BookingUncheckedCreateWithoutGuestInput[]
+    connectOrCreate?: BookingCreateOrConnectWithoutGuestInput | BookingCreateOrConnectWithoutGuestInput[]
+    upsert?: BookingUpsertWithWhereUniqueWithoutGuestInput | BookingUpsertWithWhereUniqueWithoutGuestInput[]
+    createMany?: BookingCreateManyGuestInputEnvelope
+    set?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    disconnect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    delete?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    update?: BookingUpdateWithWhereUniqueWithoutGuestInput | BookingUpdateWithWhereUniqueWithoutGuestInput[]
+    updateMany?: BookingUpdateManyWithWhereWithoutGuestInput | BookingUpdateManyWithWhereWithoutGuestInput[]
+    deleteMany?: BookingScalarWhereInput | BookingScalarWhereInput[]
+  }
+
   export type RoomTypeCreateNestedOneWithoutRoomImagesInput = {
     create?: XOR<RoomTypeCreateWithoutRoomImagesInput, RoomTypeUncheckedCreateWithoutRoomImagesInput>
     connectOrCreate?: RoomTypeCreateOrConnectWithoutRoomImagesInput
@@ -14464,6 +21119,236 @@ export namespace Prisma {
     delete?: RoomTypeWhereInput | boolean
     connect?: RoomTypeWhereUniqueInput
     update?: XOR<XOR<RoomTypeUpdateToOneWithWhereWithoutRoomImagesInput, RoomTypeUpdateWithoutRoomImagesInput>, RoomTypeUncheckedUpdateWithoutRoomImagesInput>
+  }
+
+  export type GuestCreateNestedOneWithoutBookingsInput = {
+    create?: XOR<GuestCreateWithoutBookingsInput, GuestUncheckedCreateWithoutBookingsInput>
+    connectOrCreate?: GuestCreateOrConnectWithoutBookingsInput
+    connect?: GuestWhereUniqueInput
+  }
+
+  export type BookingRoomCreateNestedManyWithoutBookingInput = {
+    create?: XOR<BookingRoomCreateWithoutBookingInput, BookingRoomUncheckedCreateWithoutBookingInput> | BookingRoomCreateWithoutBookingInput[] | BookingRoomUncheckedCreateWithoutBookingInput[]
+    connectOrCreate?: BookingRoomCreateOrConnectWithoutBookingInput | BookingRoomCreateOrConnectWithoutBookingInput[]
+    createMany?: BookingRoomCreateManyBookingInputEnvelope
+    connect?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+  }
+
+  export type PaymentCreateNestedManyWithoutBookingInput = {
+    create?: XOR<PaymentCreateWithoutBookingInput, PaymentUncheckedCreateWithoutBookingInput> | PaymentCreateWithoutBookingInput[] | PaymentUncheckedCreateWithoutBookingInput[]
+    connectOrCreate?: PaymentCreateOrConnectWithoutBookingInput | PaymentCreateOrConnectWithoutBookingInput[]
+    createMany?: PaymentCreateManyBookingInputEnvelope
+    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+  }
+
+  export type BookingAddonCreateNestedManyWithoutBookingInput = {
+    create?: XOR<BookingAddonCreateWithoutBookingInput, BookingAddonUncheckedCreateWithoutBookingInput> | BookingAddonCreateWithoutBookingInput[] | BookingAddonUncheckedCreateWithoutBookingInput[]
+    connectOrCreate?: BookingAddonCreateOrConnectWithoutBookingInput | BookingAddonCreateOrConnectWithoutBookingInput[]
+    createMany?: BookingAddonCreateManyBookingInputEnvelope
+    connect?: BookingAddonWhereUniqueInput | BookingAddonWhereUniqueInput[]
+  }
+
+  export type BookingRoomUncheckedCreateNestedManyWithoutBookingInput = {
+    create?: XOR<BookingRoomCreateWithoutBookingInput, BookingRoomUncheckedCreateWithoutBookingInput> | BookingRoomCreateWithoutBookingInput[] | BookingRoomUncheckedCreateWithoutBookingInput[]
+    connectOrCreate?: BookingRoomCreateOrConnectWithoutBookingInput | BookingRoomCreateOrConnectWithoutBookingInput[]
+    createMany?: BookingRoomCreateManyBookingInputEnvelope
+    connect?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+  }
+
+  export type PaymentUncheckedCreateNestedManyWithoutBookingInput = {
+    create?: XOR<PaymentCreateWithoutBookingInput, PaymentUncheckedCreateWithoutBookingInput> | PaymentCreateWithoutBookingInput[] | PaymentUncheckedCreateWithoutBookingInput[]
+    connectOrCreate?: PaymentCreateOrConnectWithoutBookingInput | PaymentCreateOrConnectWithoutBookingInput[]
+    createMany?: PaymentCreateManyBookingInputEnvelope
+    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+  }
+
+  export type BookingAddonUncheckedCreateNestedManyWithoutBookingInput = {
+    create?: XOR<BookingAddonCreateWithoutBookingInput, BookingAddonUncheckedCreateWithoutBookingInput> | BookingAddonCreateWithoutBookingInput[] | BookingAddonUncheckedCreateWithoutBookingInput[]
+    connectOrCreate?: BookingAddonCreateOrConnectWithoutBookingInput | BookingAddonCreateOrConnectWithoutBookingInput[]
+    createMany?: BookingAddonCreateManyBookingInputEnvelope
+    connect?: BookingAddonWhereUniqueInput | BookingAddonWhereUniqueInput[]
+  }
+
+  export type DecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type EnumBookingStatusFieldUpdateOperationsInput = {
+    set?: $Enums.BookingStatus
+  }
+
+  export type GuestUpdateOneRequiredWithoutBookingsNestedInput = {
+    create?: XOR<GuestCreateWithoutBookingsInput, GuestUncheckedCreateWithoutBookingsInput>
+    connectOrCreate?: GuestCreateOrConnectWithoutBookingsInput
+    upsert?: GuestUpsertWithoutBookingsInput
+    connect?: GuestWhereUniqueInput
+    update?: XOR<XOR<GuestUpdateToOneWithWhereWithoutBookingsInput, GuestUpdateWithoutBookingsInput>, GuestUncheckedUpdateWithoutBookingsInput>
+  }
+
+  export type BookingRoomUpdateManyWithoutBookingNestedInput = {
+    create?: XOR<BookingRoomCreateWithoutBookingInput, BookingRoomUncheckedCreateWithoutBookingInput> | BookingRoomCreateWithoutBookingInput[] | BookingRoomUncheckedCreateWithoutBookingInput[]
+    connectOrCreate?: BookingRoomCreateOrConnectWithoutBookingInput | BookingRoomCreateOrConnectWithoutBookingInput[]
+    upsert?: BookingRoomUpsertWithWhereUniqueWithoutBookingInput | BookingRoomUpsertWithWhereUniqueWithoutBookingInput[]
+    createMany?: BookingRoomCreateManyBookingInputEnvelope
+    set?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    disconnect?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    delete?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    connect?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    update?: BookingRoomUpdateWithWhereUniqueWithoutBookingInput | BookingRoomUpdateWithWhereUniqueWithoutBookingInput[]
+    updateMany?: BookingRoomUpdateManyWithWhereWithoutBookingInput | BookingRoomUpdateManyWithWhereWithoutBookingInput[]
+    deleteMany?: BookingRoomScalarWhereInput | BookingRoomScalarWhereInput[]
+  }
+
+  export type PaymentUpdateManyWithoutBookingNestedInput = {
+    create?: XOR<PaymentCreateWithoutBookingInput, PaymentUncheckedCreateWithoutBookingInput> | PaymentCreateWithoutBookingInput[] | PaymentUncheckedCreateWithoutBookingInput[]
+    connectOrCreate?: PaymentCreateOrConnectWithoutBookingInput | PaymentCreateOrConnectWithoutBookingInput[]
+    upsert?: PaymentUpsertWithWhereUniqueWithoutBookingInput | PaymentUpsertWithWhereUniqueWithoutBookingInput[]
+    createMany?: PaymentCreateManyBookingInputEnvelope
+    set?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    disconnect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    delete?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    update?: PaymentUpdateWithWhereUniqueWithoutBookingInput | PaymentUpdateWithWhereUniqueWithoutBookingInput[]
+    updateMany?: PaymentUpdateManyWithWhereWithoutBookingInput | PaymentUpdateManyWithWhereWithoutBookingInput[]
+    deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
+  }
+
+  export type BookingAddonUpdateManyWithoutBookingNestedInput = {
+    create?: XOR<BookingAddonCreateWithoutBookingInput, BookingAddonUncheckedCreateWithoutBookingInput> | BookingAddonCreateWithoutBookingInput[] | BookingAddonUncheckedCreateWithoutBookingInput[]
+    connectOrCreate?: BookingAddonCreateOrConnectWithoutBookingInput | BookingAddonCreateOrConnectWithoutBookingInput[]
+    upsert?: BookingAddonUpsertWithWhereUniqueWithoutBookingInput | BookingAddonUpsertWithWhereUniqueWithoutBookingInput[]
+    createMany?: BookingAddonCreateManyBookingInputEnvelope
+    set?: BookingAddonWhereUniqueInput | BookingAddonWhereUniqueInput[]
+    disconnect?: BookingAddonWhereUniqueInput | BookingAddonWhereUniqueInput[]
+    delete?: BookingAddonWhereUniqueInput | BookingAddonWhereUniqueInput[]
+    connect?: BookingAddonWhereUniqueInput | BookingAddonWhereUniqueInput[]
+    update?: BookingAddonUpdateWithWhereUniqueWithoutBookingInput | BookingAddonUpdateWithWhereUniqueWithoutBookingInput[]
+    updateMany?: BookingAddonUpdateManyWithWhereWithoutBookingInput | BookingAddonUpdateManyWithWhereWithoutBookingInput[]
+    deleteMany?: BookingAddonScalarWhereInput | BookingAddonScalarWhereInput[]
+  }
+
+  export type BookingRoomUncheckedUpdateManyWithoutBookingNestedInput = {
+    create?: XOR<BookingRoomCreateWithoutBookingInput, BookingRoomUncheckedCreateWithoutBookingInput> | BookingRoomCreateWithoutBookingInput[] | BookingRoomUncheckedCreateWithoutBookingInput[]
+    connectOrCreate?: BookingRoomCreateOrConnectWithoutBookingInput | BookingRoomCreateOrConnectWithoutBookingInput[]
+    upsert?: BookingRoomUpsertWithWhereUniqueWithoutBookingInput | BookingRoomUpsertWithWhereUniqueWithoutBookingInput[]
+    createMany?: BookingRoomCreateManyBookingInputEnvelope
+    set?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    disconnect?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    delete?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    connect?: BookingRoomWhereUniqueInput | BookingRoomWhereUniqueInput[]
+    update?: BookingRoomUpdateWithWhereUniqueWithoutBookingInput | BookingRoomUpdateWithWhereUniqueWithoutBookingInput[]
+    updateMany?: BookingRoomUpdateManyWithWhereWithoutBookingInput | BookingRoomUpdateManyWithWhereWithoutBookingInput[]
+    deleteMany?: BookingRoomScalarWhereInput | BookingRoomScalarWhereInput[]
+  }
+
+  export type PaymentUncheckedUpdateManyWithoutBookingNestedInput = {
+    create?: XOR<PaymentCreateWithoutBookingInput, PaymentUncheckedCreateWithoutBookingInput> | PaymentCreateWithoutBookingInput[] | PaymentUncheckedCreateWithoutBookingInput[]
+    connectOrCreate?: PaymentCreateOrConnectWithoutBookingInput | PaymentCreateOrConnectWithoutBookingInput[]
+    upsert?: PaymentUpsertWithWhereUniqueWithoutBookingInput | PaymentUpsertWithWhereUniqueWithoutBookingInput[]
+    createMany?: PaymentCreateManyBookingInputEnvelope
+    set?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    disconnect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    delete?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+    update?: PaymentUpdateWithWhereUniqueWithoutBookingInput | PaymentUpdateWithWhereUniqueWithoutBookingInput[]
+    updateMany?: PaymentUpdateManyWithWhereWithoutBookingInput | PaymentUpdateManyWithWhereWithoutBookingInput[]
+    deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
+  }
+
+  export type BookingAddonUncheckedUpdateManyWithoutBookingNestedInput = {
+    create?: XOR<BookingAddonCreateWithoutBookingInput, BookingAddonUncheckedCreateWithoutBookingInput> | BookingAddonCreateWithoutBookingInput[] | BookingAddonUncheckedCreateWithoutBookingInput[]
+    connectOrCreate?: BookingAddonCreateOrConnectWithoutBookingInput | BookingAddonCreateOrConnectWithoutBookingInput[]
+    upsert?: BookingAddonUpsertWithWhereUniqueWithoutBookingInput | BookingAddonUpsertWithWhereUniqueWithoutBookingInput[]
+    createMany?: BookingAddonCreateManyBookingInputEnvelope
+    set?: BookingAddonWhereUniqueInput | BookingAddonWhereUniqueInput[]
+    disconnect?: BookingAddonWhereUniqueInput | BookingAddonWhereUniqueInput[]
+    delete?: BookingAddonWhereUniqueInput | BookingAddonWhereUniqueInput[]
+    connect?: BookingAddonWhereUniqueInput | BookingAddonWhereUniqueInput[]
+    update?: BookingAddonUpdateWithWhereUniqueWithoutBookingInput | BookingAddonUpdateWithWhereUniqueWithoutBookingInput[]
+    updateMany?: BookingAddonUpdateManyWithWhereWithoutBookingInput | BookingAddonUpdateManyWithWhereWithoutBookingInput[]
+    deleteMany?: BookingAddonScalarWhereInput | BookingAddonScalarWhereInput[]
+  }
+
+  export type BookingCreateNestedOneWithoutBookingRoomsInput = {
+    create?: XOR<BookingCreateWithoutBookingRoomsInput, BookingUncheckedCreateWithoutBookingRoomsInput>
+    connectOrCreate?: BookingCreateOrConnectWithoutBookingRoomsInput
+    connect?: BookingWhereUniqueInput
+  }
+
+  export type RoomCreateNestedOneWithoutBookingRoomsInput = {
+    create?: XOR<RoomCreateWithoutBookingRoomsInput, RoomUncheckedCreateWithoutBookingRoomsInput>
+    connectOrCreate?: RoomCreateOrConnectWithoutBookingRoomsInput
+    connect?: RoomWhereUniqueInput
+  }
+
+  export type RoomTypeCreateNestedOneWithoutBookingRoomsInput = {
+    create?: XOR<RoomTypeCreateWithoutBookingRoomsInput, RoomTypeUncheckedCreateWithoutBookingRoomsInput>
+    connectOrCreate?: RoomTypeCreateOrConnectWithoutBookingRoomsInput
+    connect?: RoomTypeWhereUniqueInput
+  }
+
+  export type BookingUpdateOneRequiredWithoutBookingRoomsNestedInput = {
+    create?: XOR<BookingCreateWithoutBookingRoomsInput, BookingUncheckedCreateWithoutBookingRoomsInput>
+    connectOrCreate?: BookingCreateOrConnectWithoutBookingRoomsInput
+    upsert?: BookingUpsertWithoutBookingRoomsInput
+    connect?: BookingWhereUniqueInput
+    update?: XOR<XOR<BookingUpdateToOneWithWhereWithoutBookingRoomsInput, BookingUpdateWithoutBookingRoomsInput>, BookingUncheckedUpdateWithoutBookingRoomsInput>
+  }
+
+  export type RoomUpdateOneRequiredWithoutBookingRoomsNestedInput = {
+    create?: XOR<RoomCreateWithoutBookingRoomsInput, RoomUncheckedCreateWithoutBookingRoomsInput>
+    connectOrCreate?: RoomCreateOrConnectWithoutBookingRoomsInput
+    upsert?: RoomUpsertWithoutBookingRoomsInput
+    connect?: RoomWhereUniqueInput
+    update?: XOR<XOR<RoomUpdateToOneWithWhereWithoutBookingRoomsInput, RoomUpdateWithoutBookingRoomsInput>, RoomUncheckedUpdateWithoutBookingRoomsInput>
+  }
+
+  export type RoomTypeUpdateOneRequiredWithoutBookingRoomsNestedInput = {
+    create?: XOR<RoomTypeCreateWithoutBookingRoomsInput, RoomTypeUncheckedCreateWithoutBookingRoomsInput>
+    connectOrCreate?: RoomTypeCreateOrConnectWithoutBookingRoomsInput
+    upsert?: RoomTypeUpsertWithoutBookingRoomsInput
+    connect?: RoomTypeWhereUniqueInput
+    update?: XOR<XOR<RoomTypeUpdateToOneWithWhereWithoutBookingRoomsInput, RoomTypeUpdateWithoutBookingRoomsInput>, RoomTypeUncheckedUpdateWithoutBookingRoomsInput>
+  }
+
+  export type BookingCreateNestedOneWithoutPaymentsInput = {
+    create?: XOR<BookingCreateWithoutPaymentsInput, BookingUncheckedCreateWithoutPaymentsInput>
+    connectOrCreate?: BookingCreateOrConnectWithoutPaymentsInput
+    connect?: BookingWhereUniqueInput
+  }
+
+  export type EnumPaymentMethodFieldUpdateOperationsInput = {
+    set?: $Enums.PaymentMethod
+  }
+
+  export type EnumPaymentStatusFieldUpdateOperationsInput = {
+    set?: $Enums.PaymentStatus
+  }
+
+  export type BookingUpdateOneRequiredWithoutPaymentsNestedInput = {
+    create?: XOR<BookingCreateWithoutPaymentsInput, BookingUncheckedCreateWithoutPaymentsInput>
+    connectOrCreate?: BookingCreateOrConnectWithoutPaymentsInput
+    upsert?: BookingUpsertWithoutPaymentsInput
+    connect?: BookingWhereUniqueInput
+    update?: XOR<XOR<BookingUpdateToOneWithWhereWithoutPaymentsInput, BookingUpdateWithoutPaymentsInput>, BookingUncheckedUpdateWithoutPaymentsInput>
+  }
+
+  export type BookingCreateNestedOneWithoutBookingAddonsInput = {
+    create?: XOR<BookingCreateWithoutBookingAddonsInput, BookingUncheckedCreateWithoutBookingAddonsInput>
+    connectOrCreate?: BookingCreateOrConnectWithoutBookingAddonsInput
+    connect?: BookingWhereUniqueInput
+  }
+
+  export type BookingUpdateOneRequiredWithoutBookingAddonsNestedInput = {
+    create?: XOR<BookingCreateWithoutBookingAddonsInput, BookingUncheckedCreateWithoutBookingAddonsInput>
+    connectOrCreate?: BookingCreateOrConnectWithoutBookingAddonsInput
+    upsert?: BookingUpsertWithoutBookingAddonsInput
+    connect?: BookingWhereUniqueInput
+    update?: XOR<XOR<BookingUpdateToOneWithWhereWithoutBookingAddonsInput, BookingUpdateWithoutBookingAddonsInput>, BookingUncheckedUpdateWithoutBookingAddonsInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -14711,6 +21596,84 @@ export namespace Prisma {
     _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
+  export type NestedDecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type NestedEnumBookingStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.BookingStatus | EnumBookingStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBookingStatusFilter<$PrismaModel> | $Enums.BookingStatus
+  }
+
+  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
+  export type NestedEnumBookingStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BookingStatus | EnumBookingStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BookingStatus[] | ListEnumBookingStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBookingStatusWithAggregatesFilter<$PrismaModel> | $Enums.BookingStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBookingStatusFilter<$PrismaModel>
+    _max?: NestedEnumBookingStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPaymentMethodFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentMethod | EnumPaymentMethodFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentMethod[] | ListEnumPaymentMethodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentMethod[] | ListEnumPaymentMethodFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentMethodFilter<$PrismaModel> | $Enums.PaymentMethod
+  }
+
+  export type NestedEnumPaymentStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentStatus | EnumPaymentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentStatusFilter<$PrismaModel> | $Enums.PaymentStatus
+  }
+
+  export type NestedEnumPaymentMethodWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentMethod | EnumPaymentMethodFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentMethod[] | ListEnumPaymentMethodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentMethod[] | ListEnumPaymentMethodFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentMethodWithAggregatesFilter<$PrismaModel> | $Enums.PaymentMethod
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentMethodFilter<$PrismaModel>
+    _max?: NestedEnumPaymentMethodFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPaymentStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentStatus | EnumPaymentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentStatusWithAggregatesFilter<$PrismaModel> | $Enums.PaymentStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentStatusFilter<$PrismaModel>
+    _max?: NestedEnumPaymentStatusFilter<$PrismaModel>
+  }
+
   export type RoomTypeCreateWithoutBedTypeInput = {
     name?: string | null
     description?: string | null
@@ -14725,6 +21688,7 @@ export namespace Prisma {
     rooms?: RoomCreateNestedManyWithoutRoomTypeInput
     roomImages?: RoomImageCreateNestedManyWithoutRoomTypeInput
     roomAmniety?: RoomAmnietyCreateNestedManyWithoutRoomTypeInput
+    bookingRooms?: BookingRoomCreateNestedManyWithoutRoomTypeInput
   }
 
   export type RoomTypeUncheckedCreateWithoutBedTypeInput = {
@@ -14742,6 +21706,7 @@ export namespace Prisma {
     rooms?: RoomUncheckedCreateNestedManyWithoutRoomTypeInput
     roomImages?: RoomImageUncheckedCreateNestedManyWithoutRoomTypeInput
     roomAmniety?: RoomAmnietyUncheckedCreateNestedManyWithoutRoomTypeInput
+    bookingRooms?: BookingRoomUncheckedCreateNestedManyWithoutRoomTypeInput
   }
 
   export type RoomTypeCreateOrConnectWithoutBedTypeInput = {
@@ -14794,6 +21759,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     roomType?: RoomTypeCreateNestedOneWithoutRoomsInput
+    bookingRooms?: BookingRoomCreateNestedManyWithoutRoomInput
   }
 
   export type RoomUncheckedCreateWithoutRoomStatusInput = {
@@ -14803,6 +21769,7 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    bookingRooms?: BookingRoomUncheckedCreateNestedManyWithoutRoomInput
   }
 
   export type RoomCreateOrConnectWithoutRoomStatusInput = {
@@ -14868,6 +21835,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     roomStatus?: RoomStatusCreateNestedOneWithoutRoomsInput
+    bookingRooms?: BookingRoomCreateNestedManyWithoutRoomInput
   }
 
   export type RoomUncheckedCreateWithoutRoomTypeInput = {
@@ -14877,6 +21845,7 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    bookingRooms?: BookingRoomUncheckedCreateNestedManyWithoutRoomInput
   }
 
   export type RoomCreateOrConnectWithoutRoomTypeInput = {
@@ -14936,6 +21905,33 @@ export namespace Prisma {
 
   export type RoomAmnietyCreateManyRoomTypeInputEnvelope = {
     data: RoomAmnietyCreateManyRoomTypeInput | RoomAmnietyCreateManyRoomTypeInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type BookingRoomCreateWithoutRoomTypeInput = {
+    pricePerNight: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    booking: BookingCreateNestedOneWithoutBookingRoomsInput
+    room: RoomCreateNestedOneWithoutBookingRoomsInput
+  }
+
+  export type BookingRoomUncheckedCreateWithoutRoomTypeInput = {
+    id?: number
+    bookingId: number
+    roomId: number
+    pricePerNight: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BookingRoomCreateOrConnectWithoutRoomTypeInput = {
+    where: BookingRoomWhereUniqueInput
+    create: XOR<BookingRoomCreateWithoutRoomTypeInput, BookingRoomUncheckedCreateWithoutRoomTypeInput>
+  }
+
+  export type BookingRoomCreateManyRoomTypeInputEnvelope = {
+    data: BookingRoomCreateManyRoomTypeInput | BookingRoomCreateManyRoomTypeInput[]
     skipDuplicates?: boolean
   }
 
@@ -15035,6 +22031,35 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"RoomAmniety"> | Date | string
   }
 
+  export type BookingRoomUpsertWithWhereUniqueWithoutRoomTypeInput = {
+    where: BookingRoomWhereUniqueInput
+    update: XOR<BookingRoomUpdateWithoutRoomTypeInput, BookingRoomUncheckedUpdateWithoutRoomTypeInput>
+    create: XOR<BookingRoomCreateWithoutRoomTypeInput, BookingRoomUncheckedCreateWithoutRoomTypeInput>
+  }
+
+  export type BookingRoomUpdateWithWhereUniqueWithoutRoomTypeInput = {
+    where: BookingRoomWhereUniqueInput
+    data: XOR<BookingRoomUpdateWithoutRoomTypeInput, BookingRoomUncheckedUpdateWithoutRoomTypeInput>
+  }
+
+  export type BookingRoomUpdateManyWithWhereWithoutRoomTypeInput = {
+    where: BookingRoomScalarWhereInput
+    data: XOR<BookingRoomUpdateManyMutationInput, BookingRoomUncheckedUpdateManyWithoutRoomTypeInput>
+  }
+
+  export type BookingRoomScalarWhereInput = {
+    AND?: BookingRoomScalarWhereInput | BookingRoomScalarWhereInput[]
+    OR?: BookingRoomScalarWhereInput[]
+    NOT?: BookingRoomScalarWhereInput | BookingRoomScalarWhereInput[]
+    id?: IntFilter<"BookingRoom"> | number
+    bookingId?: IntFilter<"BookingRoom"> | number
+    roomId?: IntFilter<"BookingRoom"> | number
+    roomTypeId?: IntFilter<"BookingRoom"> | number
+    pricePerNight?: DecimalFilter<"BookingRoom"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"BookingRoom"> | Date | string
+    updatedAt?: DateTimeFilter<"BookingRoom"> | Date | string
+  }
+
   export type RoomTypeCreateWithoutRoomsInput = {
     name?: string | null
     description?: string | null
@@ -15049,6 +22074,7 @@ export namespace Prisma {
     bedType?: BedTypeCreateNestedOneWithoutRoomTypesInput
     roomImages?: RoomImageCreateNestedManyWithoutRoomTypeInput
     roomAmniety?: RoomAmnietyCreateNestedManyWithoutRoomTypeInput
+    bookingRooms?: BookingRoomCreateNestedManyWithoutRoomTypeInput
   }
 
   export type RoomTypeUncheckedCreateWithoutRoomsInput = {
@@ -15066,6 +22092,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     roomImages?: RoomImageUncheckedCreateNestedManyWithoutRoomTypeInput
     roomAmniety?: RoomAmnietyUncheckedCreateNestedManyWithoutRoomTypeInput
+    bookingRooms?: BookingRoomUncheckedCreateNestedManyWithoutRoomTypeInput
   }
 
   export type RoomTypeCreateOrConnectWithoutRoomsInput = {
@@ -15089,6 +22116,33 @@ export namespace Prisma {
   export type RoomStatusCreateOrConnectWithoutRoomsInput = {
     where: RoomStatusWhereUniqueInput
     create: XOR<RoomStatusCreateWithoutRoomsInput, RoomStatusUncheckedCreateWithoutRoomsInput>
+  }
+
+  export type BookingRoomCreateWithoutRoomInput = {
+    pricePerNight: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    booking: BookingCreateNestedOneWithoutBookingRoomsInput
+    roomType: RoomTypeCreateNestedOneWithoutBookingRoomsInput
+  }
+
+  export type BookingRoomUncheckedCreateWithoutRoomInput = {
+    id?: number
+    bookingId: number
+    roomTypeId: number
+    pricePerNight: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BookingRoomCreateOrConnectWithoutRoomInput = {
+    where: BookingRoomWhereUniqueInput
+    create: XOR<BookingRoomCreateWithoutRoomInput, BookingRoomUncheckedCreateWithoutRoomInput>
+  }
+
+  export type BookingRoomCreateManyRoomInputEnvelope = {
+    data: BookingRoomCreateManyRoomInput | BookingRoomCreateManyRoomInput[]
+    skipDuplicates?: boolean
   }
 
   export type RoomTypeUpsertWithoutRoomsInput = {
@@ -15116,6 +22170,7 @@ export namespace Prisma {
     bedType?: BedTypeUpdateOneWithoutRoomTypesNestedInput
     roomImages?: RoomImageUpdateManyWithoutRoomTypeNestedInput
     roomAmniety?: RoomAmnietyUpdateManyWithoutRoomTypeNestedInput
+    bookingRooms?: BookingRoomUpdateManyWithoutRoomTypeNestedInput
   }
 
   export type RoomTypeUncheckedUpdateWithoutRoomsInput = {
@@ -15133,6 +22188,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     roomImages?: RoomImageUncheckedUpdateManyWithoutRoomTypeNestedInput
     roomAmniety?: RoomAmnietyUncheckedUpdateManyWithoutRoomTypeNestedInput
+    bookingRooms?: BookingRoomUncheckedUpdateManyWithoutRoomTypeNestedInput
   }
 
   export type RoomStatusUpsertWithoutRoomsInput = {
@@ -15159,6 +22215,22 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type BookingRoomUpsertWithWhereUniqueWithoutRoomInput = {
+    where: BookingRoomWhereUniqueInput
+    update: XOR<BookingRoomUpdateWithoutRoomInput, BookingRoomUncheckedUpdateWithoutRoomInput>
+    create: XOR<BookingRoomCreateWithoutRoomInput, BookingRoomUncheckedCreateWithoutRoomInput>
+  }
+
+  export type BookingRoomUpdateWithWhereUniqueWithoutRoomInput = {
+    where: BookingRoomWhereUniqueInput
+    data: XOR<BookingRoomUpdateWithoutRoomInput, BookingRoomUncheckedUpdateWithoutRoomInput>
+  }
+
+  export type BookingRoomUpdateManyWithWhereWithoutRoomInput = {
+    where: BookingRoomScalarWhereInput
+    data: XOR<BookingRoomUpdateManyMutationInput, BookingRoomUncheckedUpdateManyWithoutRoomInput>
+  }
+
   export type RoomTypeCreateWithoutRoomAmnietyInput = {
     name?: string | null
     description?: string | null
@@ -15173,6 +22245,7 @@ export namespace Prisma {
     bedType?: BedTypeCreateNestedOneWithoutRoomTypesInput
     rooms?: RoomCreateNestedManyWithoutRoomTypeInput
     roomImages?: RoomImageCreateNestedManyWithoutRoomTypeInput
+    bookingRooms?: BookingRoomCreateNestedManyWithoutRoomTypeInput
   }
 
   export type RoomTypeUncheckedCreateWithoutRoomAmnietyInput = {
@@ -15190,6 +22263,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     rooms?: RoomUncheckedCreateNestedManyWithoutRoomTypeInput
     roomImages?: RoomImageUncheckedCreateNestedManyWithoutRoomTypeInput
+    bookingRooms?: BookingRoomUncheckedCreateNestedManyWithoutRoomTypeInput
   }
 
   export type RoomTypeCreateOrConnectWithoutRoomAmnietyInput = {
@@ -15222,6 +22296,7 @@ export namespace Prisma {
     bedType?: BedTypeUpdateOneWithoutRoomTypesNestedInput
     rooms?: RoomUpdateManyWithoutRoomTypeNestedInput
     roomImages?: RoomImageUpdateManyWithoutRoomTypeNestedInput
+    bookingRooms?: BookingRoomUpdateManyWithoutRoomTypeNestedInput
   }
 
   export type RoomTypeUncheckedUpdateWithoutRoomAmnietyInput = {
@@ -15239,6 +22314,81 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rooms?: RoomUncheckedUpdateManyWithoutRoomTypeNestedInput
     roomImages?: RoomImageUncheckedUpdateManyWithoutRoomTypeNestedInput
+    bookingRooms?: BookingRoomUncheckedUpdateManyWithoutRoomTypeNestedInput
+  }
+
+  export type BookingCreateWithoutGuestInput = {
+    bookingNumber: string
+    checkInDate: Date | string
+    checkOutDate: Date | string
+    adults?: number
+    additionalRequests?: string | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    bookingStatus?: $Enums.BookingStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bookingRooms?: BookingRoomCreateNestedManyWithoutBookingInput
+    payments?: PaymentCreateNestedManyWithoutBookingInput
+    bookingAddons?: BookingAddonCreateNestedManyWithoutBookingInput
+  }
+
+  export type BookingUncheckedCreateWithoutGuestInput = {
+    id?: number
+    bookingNumber: string
+    checkInDate: Date | string
+    checkOutDate: Date | string
+    adults?: number
+    additionalRequests?: string | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    bookingStatus?: $Enums.BookingStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bookingRooms?: BookingRoomUncheckedCreateNestedManyWithoutBookingInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutBookingInput
+    bookingAddons?: BookingAddonUncheckedCreateNestedManyWithoutBookingInput
+  }
+
+  export type BookingCreateOrConnectWithoutGuestInput = {
+    where: BookingWhereUniqueInput
+    create: XOR<BookingCreateWithoutGuestInput, BookingUncheckedCreateWithoutGuestInput>
+  }
+
+  export type BookingCreateManyGuestInputEnvelope = {
+    data: BookingCreateManyGuestInput | BookingCreateManyGuestInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type BookingUpsertWithWhereUniqueWithoutGuestInput = {
+    where: BookingWhereUniqueInput
+    update: XOR<BookingUpdateWithoutGuestInput, BookingUncheckedUpdateWithoutGuestInput>
+    create: XOR<BookingCreateWithoutGuestInput, BookingUncheckedCreateWithoutGuestInput>
+  }
+
+  export type BookingUpdateWithWhereUniqueWithoutGuestInput = {
+    where: BookingWhereUniqueInput
+    data: XOR<BookingUpdateWithoutGuestInput, BookingUncheckedUpdateWithoutGuestInput>
+  }
+
+  export type BookingUpdateManyWithWhereWithoutGuestInput = {
+    where: BookingScalarWhereInput
+    data: XOR<BookingUpdateManyMutationInput, BookingUncheckedUpdateManyWithoutGuestInput>
+  }
+
+  export type BookingScalarWhereInput = {
+    AND?: BookingScalarWhereInput | BookingScalarWhereInput[]
+    OR?: BookingScalarWhereInput[]
+    NOT?: BookingScalarWhereInput | BookingScalarWhereInput[]
+    id?: IntFilter<"Booking"> | number
+    bookingNumber?: StringFilter<"Booking"> | string
+    guestId?: IntFilter<"Booking"> | number
+    checkInDate?: DateTimeFilter<"Booking"> | Date | string
+    checkOutDate?: DateTimeFilter<"Booking"> | Date | string
+    adults?: IntFilter<"Booking"> | number
+    additionalRequests?: StringNullableFilter<"Booking"> | string | null
+    totalAmount?: DecimalFilter<"Booking"> | Decimal | DecimalJsLike | number | string
+    bookingStatus?: EnumBookingStatusFilter<"Booking"> | $Enums.BookingStatus
+    createdAt?: DateTimeFilter<"Booking"> | Date | string
+    updatedAt?: DateTimeFilter<"Booking"> | Date | string
   }
 
   export type RoomTypeCreateWithoutRoomImagesInput = {
@@ -15255,6 +22405,7 @@ export namespace Prisma {
     bedType?: BedTypeCreateNestedOneWithoutRoomTypesInput
     rooms?: RoomCreateNestedManyWithoutRoomTypeInput
     roomAmniety?: RoomAmnietyCreateNestedManyWithoutRoomTypeInput
+    bookingRooms?: BookingRoomCreateNestedManyWithoutRoomTypeInput
   }
 
   export type RoomTypeUncheckedCreateWithoutRoomImagesInput = {
@@ -15272,6 +22423,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     rooms?: RoomUncheckedCreateNestedManyWithoutRoomTypeInput
     roomAmniety?: RoomAmnietyUncheckedCreateNestedManyWithoutRoomTypeInput
+    bookingRooms?: BookingRoomUncheckedCreateNestedManyWithoutRoomTypeInput
   }
 
   export type RoomTypeCreateOrConnectWithoutRoomImagesInput = {
@@ -15304,6 +22456,7 @@ export namespace Prisma {
     bedType?: BedTypeUpdateOneWithoutRoomTypesNestedInput
     rooms?: RoomUpdateManyWithoutRoomTypeNestedInput
     roomAmniety?: RoomAmnietyUpdateManyWithoutRoomTypeNestedInput
+    bookingRooms?: BookingRoomUpdateManyWithoutRoomTypeNestedInput
   }
 
   export type RoomTypeUncheckedUpdateWithoutRoomImagesInput = {
@@ -15321,6 +22474,613 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rooms?: RoomUncheckedUpdateManyWithoutRoomTypeNestedInput
     roomAmniety?: RoomAmnietyUncheckedUpdateManyWithoutRoomTypeNestedInput
+    bookingRooms?: BookingRoomUncheckedUpdateManyWithoutRoomTypeNestedInput
+  }
+
+  export type GuestCreateWithoutBookingsInput = {
+    firstName?: string | null
+    lastName?: string | null
+    email?: string | null
+    phone?: string | null
+    country?: string | null
+    dateOfBirth?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GuestUncheckedCreateWithoutBookingsInput = {
+    id?: number
+    firstName?: string | null
+    lastName?: string | null
+    email?: string | null
+    phone?: string | null
+    country?: string | null
+    dateOfBirth?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GuestCreateOrConnectWithoutBookingsInput = {
+    where: GuestWhereUniqueInput
+    create: XOR<GuestCreateWithoutBookingsInput, GuestUncheckedCreateWithoutBookingsInput>
+  }
+
+  export type BookingRoomCreateWithoutBookingInput = {
+    pricePerNight: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    room: RoomCreateNestedOneWithoutBookingRoomsInput
+    roomType: RoomTypeCreateNestedOneWithoutBookingRoomsInput
+  }
+
+  export type BookingRoomUncheckedCreateWithoutBookingInput = {
+    id?: number
+    roomId: number
+    roomTypeId: number
+    pricePerNight: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BookingRoomCreateOrConnectWithoutBookingInput = {
+    where: BookingRoomWhereUniqueInput
+    create: XOR<BookingRoomCreateWithoutBookingInput, BookingRoomUncheckedCreateWithoutBookingInput>
+  }
+
+  export type BookingRoomCreateManyBookingInputEnvelope = {
+    data: BookingRoomCreateManyBookingInput | BookingRoomCreateManyBookingInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PaymentCreateWithoutBookingInput = {
+    amount: Decimal | DecimalJsLike | number | string
+    paymentMethod: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
+    transactionId?: string | null
+    omiseChargeId?: string | null
+    paymentDate?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentUncheckedCreateWithoutBookingInput = {
+    id?: number
+    amount: Decimal | DecimalJsLike | number | string
+    paymentMethod: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
+    transactionId?: string | null
+    omiseChargeId?: string | null
+    paymentDate?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentCreateOrConnectWithoutBookingInput = {
+    where: PaymentWhereUniqueInput
+    create: XOR<PaymentCreateWithoutBookingInput, PaymentUncheckedCreateWithoutBookingInput>
+  }
+
+  export type PaymentCreateManyBookingInputEnvelope = {
+    data: PaymentCreateManyBookingInput | PaymentCreateManyBookingInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type BookingAddonCreateWithoutBookingInput = {
+    addonName: string
+    quantity?: number
+    price: Decimal | DecimalJsLike | number | string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BookingAddonUncheckedCreateWithoutBookingInput = {
+    id?: number
+    addonName: string
+    quantity?: number
+    price: Decimal | DecimalJsLike | number | string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BookingAddonCreateOrConnectWithoutBookingInput = {
+    where: BookingAddonWhereUniqueInput
+    create: XOR<BookingAddonCreateWithoutBookingInput, BookingAddonUncheckedCreateWithoutBookingInput>
+  }
+
+  export type BookingAddonCreateManyBookingInputEnvelope = {
+    data: BookingAddonCreateManyBookingInput | BookingAddonCreateManyBookingInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type GuestUpsertWithoutBookingsInput = {
+    update: XOR<GuestUpdateWithoutBookingsInput, GuestUncheckedUpdateWithoutBookingsInput>
+    create: XOR<GuestCreateWithoutBookingsInput, GuestUncheckedCreateWithoutBookingsInput>
+    where?: GuestWhereInput
+  }
+
+  export type GuestUpdateToOneWithWhereWithoutBookingsInput = {
+    where?: GuestWhereInput
+    data: XOR<GuestUpdateWithoutBookingsInput, GuestUncheckedUpdateWithoutBookingsInput>
+  }
+
+  export type GuestUpdateWithoutBookingsInput = {
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GuestUncheckedUpdateWithoutBookingsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingRoomUpsertWithWhereUniqueWithoutBookingInput = {
+    where: BookingRoomWhereUniqueInput
+    update: XOR<BookingRoomUpdateWithoutBookingInput, BookingRoomUncheckedUpdateWithoutBookingInput>
+    create: XOR<BookingRoomCreateWithoutBookingInput, BookingRoomUncheckedCreateWithoutBookingInput>
+  }
+
+  export type BookingRoomUpdateWithWhereUniqueWithoutBookingInput = {
+    where: BookingRoomWhereUniqueInput
+    data: XOR<BookingRoomUpdateWithoutBookingInput, BookingRoomUncheckedUpdateWithoutBookingInput>
+  }
+
+  export type BookingRoomUpdateManyWithWhereWithoutBookingInput = {
+    where: BookingRoomScalarWhereInput
+    data: XOR<BookingRoomUpdateManyMutationInput, BookingRoomUncheckedUpdateManyWithoutBookingInput>
+  }
+
+  export type PaymentUpsertWithWhereUniqueWithoutBookingInput = {
+    where: PaymentWhereUniqueInput
+    update: XOR<PaymentUpdateWithoutBookingInput, PaymentUncheckedUpdateWithoutBookingInput>
+    create: XOR<PaymentCreateWithoutBookingInput, PaymentUncheckedCreateWithoutBookingInput>
+  }
+
+  export type PaymentUpdateWithWhereUniqueWithoutBookingInput = {
+    where: PaymentWhereUniqueInput
+    data: XOR<PaymentUpdateWithoutBookingInput, PaymentUncheckedUpdateWithoutBookingInput>
+  }
+
+  export type PaymentUpdateManyWithWhereWithoutBookingInput = {
+    where: PaymentScalarWhereInput
+    data: XOR<PaymentUpdateManyMutationInput, PaymentUncheckedUpdateManyWithoutBookingInput>
+  }
+
+  export type PaymentScalarWhereInput = {
+    AND?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
+    OR?: PaymentScalarWhereInput[]
+    NOT?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
+    id?: IntFilter<"Payment"> | number
+    bookingId?: IntFilter<"Payment"> | number
+    amount?: DecimalFilter<"Payment"> | Decimal | DecimalJsLike | number | string
+    paymentMethod?: EnumPaymentMethodFilter<"Payment"> | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
+    transactionId?: StringNullableFilter<"Payment"> | string | null
+    omiseChargeId?: StringNullableFilter<"Payment"> | string | null
+    paymentDate?: DateTimeNullableFilter<"Payment"> | Date | string | null
+    notes?: StringNullableFilter<"Payment"> | string | null
+    createdAt?: DateTimeFilter<"Payment"> | Date | string
+    updatedAt?: DateTimeFilter<"Payment"> | Date | string
+  }
+
+  export type BookingAddonUpsertWithWhereUniqueWithoutBookingInput = {
+    where: BookingAddonWhereUniqueInput
+    update: XOR<BookingAddonUpdateWithoutBookingInput, BookingAddonUncheckedUpdateWithoutBookingInput>
+    create: XOR<BookingAddonCreateWithoutBookingInput, BookingAddonUncheckedCreateWithoutBookingInput>
+  }
+
+  export type BookingAddonUpdateWithWhereUniqueWithoutBookingInput = {
+    where: BookingAddonWhereUniqueInput
+    data: XOR<BookingAddonUpdateWithoutBookingInput, BookingAddonUncheckedUpdateWithoutBookingInput>
+  }
+
+  export type BookingAddonUpdateManyWithWhereWithoutBookingInput = {
+    where: BookingAddonScalarWhereInput
+    data: XOR<BookingAddonUpdateManyMutationInput, BookingAddonUncheckedUpdateManyWithoutBookingInput>
+  }
+
+  export type BookingAddonScalarWhereInput = {
+    AND?: BookingAddonScalarWhereInput | BookingAddonScalarWhereInput[]
+    OR?: BookingAddonScalarWhereInput[]
+    NOT?: BookingAddonScalarWhereInput | BookingAddonScalarWhereInput[]
+    id?: IntFilter<"BookingAddon"> | number
+    bookingId?: IntFilter<"BookingAddon"> | number
+    addonName?: StringFilter<"BookingAddon"> | string
+    quantity?: IntFilter<"BookingAddon"> | number
+    price?: DecimalFilter<"BookingAddon"> | Decimal | DecimalJsLike | number | string
+    notes?: StringNullableFilter<"BookingAddon"> | string | null
+    createdAt?: DateTimeFilter<"BookingAddon"> | Date | string
+    updatedAt?: DateTimeFilter<"BookingAddon"> | Date | string
+  }
+
+  export type BookingCreateWithoutBookingRoomsInput = {
+    bookingNumber: string
+    checkInDate: Date | string
+    checkOutDate: Date | string
+    adults?: number
+    additionalRequests?: string | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    bookingStatus?: $Enums.BookingStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    guest: GuestCreateNestedOneWithoutBookingsInput
+    payments?: PaymentCreateNestedManyWithoutBookingInput
+    bookingAddons?: BookingAddonCreateNestedManyWithoutBookingInput
+  }
+
+  export type BookingUncheckedCreateWithoutBookingRoomsInput = {
+    id?: number
+    bookingNumber: string
+    guestId: number
+    checkInDate: Date | string
+    checkOutDate: Date | string
+    adults?: number
+    additionalRequests?: string | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    bookingStatus?: $Enums.BookingStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    payments?: PaymentUncheckedCreateNestedManyWithoutBookingInput
+    bookingAddons?: BookingAddonUncheckedCreateNestedManyWithoutBookingInput
+  }
+
+  export type BookingCreateOrConnectWithoutBookingRoomsInput = {
+    where: BookingWhereUniqueInput
+    create: XOR<BookingCreateWithoutBookingRoomsInput, BookingUncheckedCreateWithoutBookingRoomsInput>
+  }
+
+  export type RoomCreateWithoutBookingRoomsInput = {
+    roomNumber?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    roomType?: RoomTypeCreateNestedOneWithoutRoomsInput
+    roomStatus?: RoomStatusCreateNestedOneWithoutRoomsInput
+  }
+
+  export type RoomUncheckedCreateWithoutBookingRoomsInput = {
+    id?: number
+    roomNumber?: string | null
+    roomTypeId?: number | null
+    roomStatusId?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RoomCreateOrConnectWithoutBookingRoomsInput = {
+    where: RoomWhereUniqueInput
+    create: XOR<RoomCreateWithoutBookingRoomsInput, RoomUncheckedCreateWithoutBookingRoomsInput>
+  }
+
+  export type RoomTypeCreateWithoutBookingRoomsInput = {
+    name?: string | null
+    description?: string | null
+    capacity?: number | null
+    roomSize?: number | null
+    pricePerNight?: Decimal | DecimalJsLike | number | string | null
+    promotionPrice?: Decimal | DecimalJsLike | number | string | null
+    isPromotion?: boolean | null
+    imageUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bedType?: BedTypeCreateNestedOneWithoutRoomTypesInput
+    rooms?: RoomCreateNestedManyWithoutRoomTypeInput
+    roomImages?: RoomImageCreateNestedManyWithoutRoomTypeInput
+    roomAmniety?: RoomAmnietyCreateNestedManyWithoutRoomTypeInput
+  }
+
+  export type RoomTypeUncheckedCreateWithoutBookingRoomsInput = {
+    id?: number
+    bedTypeId?: number | null
+    name?: string | null
+    description?: string | null
+    capacity?: number | null
+    roomSize?: number | null
+    pricePerNight?: Decimal | DecimalJsLike | number | string | null
+    promotionPrice?: Decimal | DecimalJsLike | number | string | null
+    isPromotion?: boolean | null
+    imageUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rooms?: RoomUncheckedCreateNestedManyWithoutRoomTypeInput
+    roomImages?: RoomImageUncheckedCreateNestedManyWithoutRoomTypeInput
+    roomAmniety?: RoomAmnietyUncheckedCreateNestedManyWithoutRoomTypeInput
+  }
+
+  export type RoomTypeCreateOrConnectWithoutBookingRoomsInput = {
+    where: RoomTypeWhereUniqueInput
+    create: XOR<RoomTypeCreateWithoutBookingRoomsInput, RoomTypeUncheckedCreateWithoutBookingRoomsInput>
+  }
+
+  export type BookingUpsertWithoutBookingRoomsInput = {
+    update: XOR<BookingUpdateWithoutBookingRoomsInput, BookingUncheckedUpdateWithoutBookingRoomsInput>
+    create: XOR<BookingCreateWithoutBookingRoomsInput, BookingUncheckedCreateWithoutBookingRoomsInput>
+    where?: BookingWhereInput
+  }
+
+  export type BookingUpdateToOneWithWhereWithoutBookingRoomsInput = {
+    where?: BookingWhereInput
+    data: XOR<BookingUpdateWithoutBookingRoomsInput, BookingUncheckedUpdateWithoutBookingRoomsInput>
+  }
+
+  export type BookingUpdateWithoutBookingRoomsInput = {
+    bookingNumber?: StringFieldUpdateOperationsInput | string
+    checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    adults?: IntFieldUpdateOperationsInput | number
+    additionalRequests?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    guest?: GuestUpdateOneRequiredWithoutBookingsNestedInput
+    payments?: PaymentUpdateManyWithoutBookingNestedInput
+    bookingAddons?: BookingAddonUpdateManyWithoutBookingNestedInput
+  }
+
+  export type BookingUncheckedUpdateWithoutBookingRoomsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingNumber?: StringFieldUpdateOperationsInput | string
+    guestId?: IntFieldUpdateOperationsInput | number
+    checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    adults?: IntFieldUpdateOperationsInput | number
+    additionalRequests?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    payments?: PaymentUncheckedUpdateManyWithoutBookingNestedInput
+    bookingAddons?: BookingAddonUncheckedUpdateManyWithoutBookingNestedInput
+  }
+
+  export type RoomUpsertWithoutBookingRoomsInput = {
+    update: XOR<RoomUpdateWithoutBookingRoomsInput, RoomUncheckedUpdateWithoutBookingRoomsInput>
+    create: XOR<RoomCreateWithoutBookingRoomsInput, RoomUncheckedCreateWithoutBookingRoomsInput>
+    where?: RoomWhereInput
+  }
+
+  export type RoomUpdateToOneWithWhereWithoutBookingRoomsInput = {
+    where?: RoomWhereInput
+    data: XOR<RoomUpdateWithoutBookingRoomsInput, RoomUncheckedUpdateWithoutBookingRoomsInput>
+  }
+
+  export type RoomUpdateWithoutBookingRoomsInput = {
+    roomNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    roomType?: RoomTypeUpdateOneWithoutRoomsNestedInput
+    roomStatus?: RoomStatusUpdateOneWithoutRoomsNestedInput
+  }
+
+  export type RoomUncheckedUpdateWithoutBookingRoomsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    roomNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    roomTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    roomStatusId?: NullableIntFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoomTypeUpsertWithoutBookingRoomsInput = {
+    update: XOR<RoomTypeUpdateWithoutBookingRoomsInput, RoomTypeUncheckedUpdateWithoutBookingRoomsInput>
+    create: XOR<RoomTypeCreateWithoutBookingRoomsInput, RoomTypeUncheckedCreateWithoutBookingRoomsInput>
+    where?: RoomTypeWhereInput
+  }
+
+  export type RoomTypeUpdateToOneWithWhereWithoutBookingRoomsInput = {
+    where?: RoomTypeWhereInput
+    data: XOR<RoomTypeUpdateWithoutBookingRoomsInput, RoomTypeUncheckedUpdateWithoutBookingRoomsInput>
+  }
+
+  export type RoomTypeUpdateWithoutBookingRoomsInput = {
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    roomSize?: NullableIntFieldUpdateOperationsInput | number | null
+    pricePerNight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    promotionPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isPromotion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bedType?: BedTypeUpdateOneWithoutRoomTypesNestedInput
+    rooms?: RoomUpdateManyWithoutRoomTypeNestedInput
+    roomImages?: RoomImageUpdateManyWithoutRoomTypeNestedInput
+    roomAmniety?: RoomAmnietyUpdateManyWithoutRoomTypeNestedInput
+  }
+
+  export type RoomTypeUncheckedUpdateWithoutBookingRoomsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bedTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    roomSize?: NullableIntFieldUpdateOperationsInput | number | null
+    pricePerNight?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    promotionPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isPromotion?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rooms?: RoomUncheckedUpdateManyWithoutRoomTypeNestedInput
+    roomImages?: RoomImageUncheckedUpdateManyWithoutRoomTypeNestedInput
+    roomAmniety?: RoomAmnietyUncheckedUpdateManyWithoutRoomTypeNestedInput
+  }
+
+  export type BookingCreateWithoutPaymentsInput = {
+    bookingNumber: string
+    checkInDate: Date | string
+    checkOutDate: Date | string
+    adults?: number
+    additionalRequests?: string | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    bookingStatus?: $Enums.BookingStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    guest: GuestCreateNestedOneWithoutBookingsInput
+    bookingRooms?: BookingRoomCreateNestedManyWithoutBookingInput
+    bookingAddons?: BookingAddonCreateNestedManyWithoutBookingInput
+  }
+
+  export type BookingUncheckedCreateWithoutPaymentsInput = {
+    id?: number
+    bookingNumber: string
+    guestId: number
+    checkInDate: Date | string
+    checkOutDate: Date | string
+    adults?: number
+    additionalRequests?: string | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    bookingStatus?: $Enums.BookingStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bookingRooms?: BookingRoomUncheckedCreateNestedManyWithoutBookingInput
+    bookingAddons?: BookingAddonUncheckedCreateNestedManyWithoutBookingInput
+  }
+
+  export type BookingCreateOrConnectWithoutPaymentsInput = {
+    where: BookingWhereUniqueInput
+    create: XOR<BookingCreateWithoutPaymentsInput, BookingUncheckedCreateWithoutPaymentsInput>
+  }
+
+  export type BookingUpsertWithoutPaymentsInput = {
+    update: XOR<BookingUpdateWithoutPaymentsInput, BookingUncheckedUpdateWithoutPaymentsInput>
+    create: XOR<BookingCreateWithoutPaymentsInput, BookingUncheckedCreateWithoutPaymentsInput>
+    where?: BookingWhereInput
+  }
+
+  export type BookingUpdateToOneWithWhereWithoutPaymentsInput = {
+    where?: BookingWhereInput
+    data: XOR<BookingUpdateWithoutPaymentsInput, BookingUncheckedUpdateWithoutPaymentsInput>
+  }
+
+  export type BookingUpdateWithoutPaymentsInput = {
+    bookingNumber?: StringFieldUpdateOperationsInput | string
+    checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    adults?: IntFieldUpdateOperationsInput | number
+    additionalRequests?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    guest?: GuestUpdateOneRequiredWithoutBookingsNestedInput
+    bookingRooms?: BookingRoomUpdateManyWithoutBookingNestedInput
+    bookingAddons?: BookingAddonUpdateManyWithoutBookingNestedInput
+  }
+
+  export type BookingUncheckedUpdateWithoutPaymentsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingNumber?: StringFieldUpdateOperationsInput | string
+    guestId?: IntFieldUpdateOperationsInput | number
+    checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    adults?: IntFieldUpdateOperationsInput | number
+    additionalRequests?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bookingRooms?: BookingRoomUncheckedUpdateManyWithoutBookingNestedInput
+    bookingAddons?: BookingAddonUncheckedUpdateManyWithoutBookingNestedInput
+  }
+
+  export type BookingCreateWithoutBookingAddonsInput = {
+    bookingNumber: string
+    checkInDate: Date | string
+    checkOutDate: Date | string
+    adults?: number
+    additionalRequests?: string | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    bookingStatus?: $Enums.BookingStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    guest: GuestCreateNestedOneWithoutBookingsInput
+    bookingRooms?: BookingRoomCreateNestedManyWithoutBookingInput
+    payments?: PaymentCreateNestedManyWithoutBookingInput
+  }
+
+  export type BookingUncheckedCreateWithoutBookingAddonsInput = {
+    id?: number
+    bookingNumber: string
+    guestId: number
+    checkInDate: Date | string
+    checkOutDate: Date | string
+    adults?: number
+    additionalRequests?: string | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    bookingStatus?: $Enums.BookingStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bookingRooms?: BookingRoomUncheckedCreateNestedManyWithoutBookingInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutBookingInput
+  }
+
+  export type BookingCreateOrConnectWithoutBookingAddonsInput = {
+    where: BookingWhereUniqueInput
+    create: XOR<BookingCreateWithoutBookingAddonsInput, BookingUncheckedCreateWithoutBookingAddonsInput>
+  }
+
+  export type BookingUpsertWithoutBookingAddonsInput = {
+    update: XOR<BookingUpdateWithoutBookingAddonsInput, BookingUncheckedUpdateWithoutBookingAddonsInput>
+    create: XOR<BookingCreateWithoutBookingAddonsInput, BookingUncheckedCreateWithoutBookingAddonsInput>
+    where?: BookingWhereInput
+  }
+
+  export type BookingUpdateToOneWithWhereWithoutBookingAddonsInput = {
+    where?: BookingWhereInput
+    data: XOR<BookingUpdateWithoutBookingAddonsInput, BookingUncheckedUpdateWithoutBookingAddonsInput>
+  }
+
+  export type BookingUpdateWithoutBookingAddonsInput = {
+    bookingNumber?: StringFieldUpdateOperationsInput | string
+    checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    adults?: IntFieldUpdateOperationsInput | number
+    additionalRequests?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    guest?: GuestUpdateOneRequiredWithoutBookingsNestedInput
+    bookingRooms?: BookingRoomUpdateManyWithoutBookingNestedInput
+    payments?: PaymentUpdateManyWithoutBookingNestedInput
+  }
+
+  export type BookingUncheckedUpdateWithoutBookingAddonsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingNumber?: StringFieldUpdateOperationsInput | string
+    guestId?: IntFieldUpdateOperationsInput | number
+    checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    adults?: IntFieldUpdateOperationsInput | number
+    additionalRequests?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bookingRooms?: BookingRoomUncheckedUpdateManyWithoutBookingNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutBookingNestedInput
   }
 
   export type RoomTypeCreateManyBedTypeInput = {
@@ -15351,6 +23111,7 @@ export namespace Prisma {
     rooms?: RoomUpdateManyWithoutRoomTypeNestedInput
     roomImages?: RoomImageUpdateManyWithoutRoomTypeNestedInput
     roomAmniety?: RoomAmnietyUpdateManyWithoutRoomTypeNestedInput
+    bookingRooms?: BookingRoomUpdateManyWithoutRoomTypeNestedInput
   }
 
   export type RoomTypeUncheckedUpdateWithoutBedTypeInput = {
@@ -15368,6 +23129,7 @@ export namespace Prisma {
     rooms?: RoomUncheckedUpdateManyWithoutRoomTypeNestedInput
     roomImages?: RoomImageUncheckedUpdateManyWithoutRoomTypeNestedInput
     roomAmniety?: RoomAmnietyUncheckedUpdateManyWithoutRoomTypeNestedInput
+    bookingRooms?: BookingRoomUncheckedUpdateManyWithoutRoomTypeNestedInput
   }
 
   export type RoomTypeUncheckedUpdateManyWithoutBedTypeInput = {
@@ -15399,6 +23161,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     roomType?: RoomTypeUpdateOneWithoutRoomsNestedInput
+    bookingRooms?: BookingRoomUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomUncheckedUpdateWithoutRoomStatusInput = {
@@ -15408,6 +23171,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bookingRooms?: BookingRoomUncheckedUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomUncheckedUpdateManyWithoutRoomStatusInput = {
@@ -15444,12 +23208,22 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type BookingRoomCreateManyRoomTypeInput = {
+    id?: number
+    bookingId: number
+    roomId: number
+    pricePerNight: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type RoomUpdateWithoutRoomTypeInput = {
     roomNumber?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     roomStatus?: RoomStatusUpdateOneWithoutRoomsNestedInput
+    bookingRooms?: BookingRoomUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomUncheckedUpdateWithoutRoomTypeInput = {
@@ -15459,6 +23233,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bookingRooms?: BookingRoomUncheckedUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomUncheckedUpdateManyWithoutRoomTypeInput = {
@@ -15512,6 +23287,249 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingRoomUpdateWithoutRoomTypeInput = {
+    pricePerNight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    booking?: BookingUpdateOneRequiredWithoutBookingRoomsNestedInput
+    room?: RoomUpdateOneRequiredWithoutBookingRoomsNestedInput
+  }
+
+  export type BookingRoomUncheckedUpdateWithoutRoomTypeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingId?: IntFieldUpdateOperationsInput | number
+    roomId?: IntFieldUpdateOperationsInput | number
+    pricePerNight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingRoomUncheckedUpdateManyWithoutRoomTypeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingId?: IntFieldUpdateOperationsInput | number
+    roomId?: IntFieldUpdateOperationsInput | number
+    pricePerNight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingRoomCreateManyRoomInput = {
+    id?: number
+    bookingId: number
+    roomTypeId: number
+    pricePerNight: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BookingRoomUpdateWithoutRoomInput = {
+    pricePerNight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    booking?: BookingUpdateOneRequiredWithoutBookingRoomsNestedInput
+    roomType?: RoomTypeUpdateOneRequiredWithoutBookingRoomsNestedInput
+  }
+
+  export type BookingRoomUncheckedUpdateWithoutRoomInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingId?: IntFieldUpdateOperationsInput | number
+    roomTypeId?: IntFieldUpdateOperationsInput | number
+    pricePerNight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingRoomUncheckedUpdateManyWithoutRoomInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingId?: IntFieldUpdateOperationsInput | number
+    roomTypeId?: IntFieldUpdateOperationsInput | number
+    pricePerNight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingCreateManyGuestInput = {
+    id?: number
+    bookingNumber: string
+    checkInDate: Date | string
+    checkOutDate: Date | string
+    adults?: number
+    additionalRequests?: string | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    bookingStatus?: $Enums.BookingStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BookingUpdateWithoutGuestInput = {
+    bookingNumber?: StringFieldUpdateOperationsInput | string
+    checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    adults?: IntFieldUpdateOperationsInput | number
+    additionalRequests?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bookingRooms?: BookingRoomUpdateManyWithoutBookingNestedInput
+    payments?: PaymentUpdateManyWithoutBookingNestedInput
+    bookingAddons?: BookingAddonUpdateManyWithoutBookingNestedInput
+  }
+
+  export type BookingUncheckedUpdateWithoutGuestInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingNumber?: StringFieldUpdateOperationsInput | string
+    checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    adults?: IntFieldUpdateOperationsInput | number
+    additionalRequests?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bookingRooms?: BookingRoomUncheckedUpdateManyWithoutBookingNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutBookingNestedInput
+    bookingAddons?: BookingAddonUncheckedUpdateManyWithoutBookingNestedInput
+  }
+
+  export type BookingUncheckedUpdateManyWithoutGuestInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingNumber?: StringFieldUpdateOperationsInput | string
+    checkInDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    checkOutDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    adults?: IntFieldUpdateOperationsInput | number
+    additionalRequests?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bookingStatus?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingRoomCreateManyBookingInput = {
+    id?: number
+    roomId: number
+    roomTypeId: number
+    pricePerNight: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentCreateManyBookingInput = {
+    id?: number
+    amount: Decimal | DecimalJsLike | number | string
+    paymentMethod: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
+    transactionId?: string | null
+    omiseChargeId?: string | null
+    paymentDate?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BookingAddonCreateManyBookingInput = {
+    id?: number
+    addonName: string
+    quantity?: number
+    price: Decimal | DecimalJsLike | number | string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BookingRoomUpdateWithoutBookingInput = {
+    pricePerNight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    room?: RoomUpdateOneRequiredWithoutBookingRoomsNestedInput
+    roomType?: RoomTypeUpdateOneRequiredWithoutBookingRoomsNestedInput
+  }
+
+  export type BookingRoomUncheckedUpdateWithoutBookingInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    roomId?: IntFieldUpdateOperationsInput | number
+    roomTypeId?: IntFieldUpdateOperationsInput | number
+    pricePerNight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingRoomUncheckedUpdateManyWithoutBookingInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    roomId?: IntFieldUpdateOperationsInput | number
+    roomTypeId?: IntFieldUpdateOperationsInput | number
+    pricePerNight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentUpdateWithoutBookingInput = {
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    omiseChargeId?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentUncheckedUpdateWithoutBookingInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    omiseChargeId?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentUncheckedUpdateManyWithoutBookingInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    omiseChargeId?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingAddonUpdateWithoutBookingInput = {
+    addonName?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingAddonUncheckedUpdateWithoutBookingInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    addonName?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BookingAddonUncheckedUpdateManyWithoutBookingInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    addonName?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
