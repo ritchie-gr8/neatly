@@ -2,13 +2,13 @@ import { useState, useEffect} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import DefaultLayout from "@/layouts/default.layout";
 import ImageSlider from "@/components/global/image-slider";
+import CircleArrowButton from "@/components/global/circle-arrow-button";
 import api from "@/lib/axios";
 import testimonials from "@/constants/testimonials";
 import services from "@/constants/services";
 import sliderImages from "@/constants/slider-home";
 //icons
 import { FaArrowRight } from "react-icons/fa6";
-import { PiArrowCircleLeftThin, PiArrowCircleRightThin } from "react-icons/pi";
 
 export const metadata = {
   title: "Neatly",
@@ -18,7 +18,6 @@ export const metadata = {
 
 export default function Home() {
   const [testimonialIndex, setTestimonialIndex] = useState(0);
-  const [isForward, setIsForward] = useState(true);
   const [roomTypes, setRoomTypes] = useState([]);
 
   useEffect(() => {
@@ -210,44 +209,40 @@ export default function Home() {
           </h1>
           <div className="relative">
             <div className="flex items-center justify-between">
-              <button 
-                className="md:block hidden"
+              <CircleArrowButton
+                direction="left"
                 onClick={() => {
-                  setIsForward(false);
                   setTestimonialIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
                 }}
-              >
-                <PiArrowCircleLeftThin size="60" className="text-orange-500 hover:text-orange-300 transition duration-300 flex-shrink-0 cursor-pointer"/>
-              </button>
+              />
+              {/* Quote */}
               <AnimatePresence mode="wait">
                 <motion.p
                   key={testimonialIndex}
-                  initial={{ opacity: 0, x: isForward ? 100 : -100 }}
+                  initial={{ opacity: 0, x: 100 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: isForward ? -100 : 100 }}
+                  exit={{ opacity: 0, x: -100 }}
                   transition={{ duration: 0.5 }}
                   className="text-green-700 max-w-4xl text-center md:font-normal font-bold"
                 >
                   {testimonials[testimonialIndex].quote}
                 </motion.p>
               </AnimatePresence>
-              <button 
-                className="md:block hidden"
+              <CircleArrowButton
+                direction="right"
                 onClick={() => {
-                  setIsForward(true);
                   setTestimonialIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
                 }}
-              >
-                <PiArrowCircleRightThin size="60" className="text-orange-500 hover:text-orange-300 transition duration-300 flex-shrink-0 cursor-pointer"/>
-              </button>
+              />
             </div>
           </div>
+          {/* Customer */}
           <AnimatePresence mode="wait">
             <motion.div
               key={testimonialIndex}
-              initial={{ opacity: 0, x: isForward ? 20 : -20 }}
+              initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: isForward ? -20 : 20 }}
+              exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.5 }}
               className="flex items-center justify-center md:pt-12 pt-6 gap-4"
             >
@@ -266,6 +261,7 @@ export default function Home() {
               </motion.p>
             </motion.div>
           </AnimatePresence>
+          {/* Pagination dots */}
           <div className="flex justify-center gap-3 mt-8">
             {testimonials.map((_, index) => (
               <button
@@ -277,23 +273,21 @@ export default function Home() {
               />
             ))}
           </div>
-          <div className="flex items-center justify-center gap-6 md:hidden pt-6">
-          <button 
-                onClick={() => {
-                  setIsForward(false);
-                  setTestimonialIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
-                }}
-              >
-                <PiArrowCircleLeftThin size="60" className="text-orange-500 hover:text-orange-300 transition duration-300 flex-shrink-0 cursor-pointer"/>
-              </button>
-              <button 
-                onClick={() => {
-                  setIsForward(true);
-                  setTestimonialIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
-                }}
-              >
-                <PiArrowCircleRightThin size="60" className="text-orange-500 hover:text-orange-300 transition duration-300 flex-shrink-0 cursor-pointer"/>
-              </button>
+          <div className="flex items-center justify-center gap-6 pt-6">
+            <CircleArrowButton
+              direction="left"
+              onClick={() => {
+                setTestimonialIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
+              }}
+              hiddenOnDesktop={true}
+            />
+            <CircleArrowButton
+               direction="right"
+               onClick={() => {
+                 setTestimonialIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
+               }}
+               hiddenOnDesktop={true}
+             />
           </div>
         </section>
       </div>
