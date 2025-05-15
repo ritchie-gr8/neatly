@@ -592,7 +592,7 @@ const RoomManagement = () => {
 
               <Button
                 onClick={() => setMode("create")}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
+                className="bg-orange-600 hover:bg-orange-500 text-white"
                 disabled={roomTypesLoading || statusLoading}
               >
                 {roomTypesLoading || statusLoading ? (
