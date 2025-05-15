@@ -5,15 +5,21 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const secretKey = new TextEncoder().encode(JWT_SECRET);
 
 const publicRoutes = [
+  // pages
   "/",
   "/sign-in",
   "/sign-up",
+  "/search-result",
+
+  // api
   "/api/auth/login",
   "/api/auth/signup",
   "/api/images/upload",
   "/api/images/delete",
   "/api/rooms/search-rooms",
   "/api/rooms/get-rooms",
+  "/api/room-type",
+  "/api/intents",
 ];
 
 const isPublicPath = (path) => {
@@ -24,12 +30,15 @@ const isPublicPath = (path) => {
 
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
+  const token = req.cookies.get("auth_token")?.value;
+
+  if ((pathname === "/sign-in" || pathname === "/sign-up") && token) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
 
   if (isPublicPath(pathname)) {
     return NextResponse.next();
   }
-
-  const token = req.cookies.get("auth_token")?.value;
 
   if (!token) {
     return NextResponse.redirect(new URL("/sign-in", req.url));

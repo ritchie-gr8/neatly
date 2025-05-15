@@ -24,8 +24,8 @@ export default function Home() {
   useEffect(() => {
     const fetchRoomTypes = async () => {
       try {
-        const response = await api.get('/admin/room-type/list');
-        const data = response.data.data.items;
+        const response = await api.get('/room-type');
+        const data = response.data.data;
         setRoomTypes(data);
       } catch (error) {
         console.error('Error fetching room types:', error);
@@ -106,7 +106,7 @@ export default function Home() {
     const interval = setInterval(() => {
       setTestimonialIndex(prev => (prev === testimonials.length - 1 ? 0 : prev + 1));
     }, 6000);
-  
+
     return () => clearInterval(interval);
   }, [testimonialIndex]);
 
@@ -203,6 +203,7 @@ export default function Home() {
                       src={room.image}
                       alt={room.name}
                       className="absolute inset-0 w-full h-full object-cover"
+                      loading="lazy"
                     />
                     <div className="absolute inset-0 bg-black/30 hover:bg-black/10 transition duration-300" />
                     <div className="flex flex-col absolute md:left-18 md:bottom-18 left-6 bottom-6 z-10 md:gap-6 gap-3 text-white">

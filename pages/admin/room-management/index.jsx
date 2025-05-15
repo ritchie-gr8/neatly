@@ -8,6 +8,7 @@ import api from "@/lib/axios";
 import { toast } from "sonner";
 import CustomPagination from "@/components/ui/custom-pagination";
 import { useDebouce } from "@/hooks/useDebounce";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Improved component for room status dropdown with outside click detection
 const StatusDropdown = ({
@@ -129,20 +130,6 @@ const CreateRoomForm = ({ onCancel, onSubmit, roomTypes, roomStatus }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Set default status when roomStatus is loaded
-  useEffect(() => {
-    if (
-      Array.isArray(roomStatus) &&
-      roomStatus.length > 0 &&
-      !roomData.status
-    ) {
-      setRoomData((prev) => ({
-        ...prev,
-        status: roomStatus[0]?.statusName || "",
-      }));
-    }
-  }, [roomStatus]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -177,6 +164,7 @@ const CreateRoomForm = ({ onCancel, onSubmit, roomTypes, roomStatus }) => {
     if (!validateForm()) {
       return;
     }
+    console.log('pass validation', roomData)
 
     setLoading(true);
     setError(null);
@@ -408,7 +396,13 @@ const RoomManagement = () => {
     if (isInitialLoad && !statusLoading && !roomTypesLoading) {
       setIsInitialLoad(false);
     }
-  }, [currentPage, debouncedSearchTerm, isInitialLoad, statusLoading, roomTypesLoading]);
+  }, [
+    currentPage,
+    debouncedSearchTerm,
+    isInitialLoad,
+    statusLoading,
+    roomTypesLoading,
+  ]);
 
   const fetchRooms = async () => {
     try {
@@ -627,21 +621,25 @@ const RoomManagement = () => {
                 </thead>
                 <tbody className="text-util-black">
                   {loading ? (
-                    <tr>
-                      <td colSpan={5} className="text-center py-4">
-                        <div className="flex items-center justify-center py-6">
-                          <Loader2 className="animate-spin mr-2" />
-                          <span>Loading rooms...</span>
-                        </div>
-                      </td>
-                    </tr>
+                    <>
+                      {Array.from({ length: 3 }).map((_, index) => (
+                        <tr
+                          key={index}
+                          className="py-6 h-[60px] border-b border-gray-300"
+                        >
+                          {Array.from({ length: 5 }).map((_, index, arr) => (
+                            <td key={index} className={`${index === 0 ? "pl-4" : ""}`}>
+                              <Skeleton className={`h-4 rounded-xl ${index === arr.length - 1 ? "w-6 h-6 rounded-sm ml-12" : "w-20"}`} />
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </>
                   ) : !Array.isArray(rooms) || rooms.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="text-center py-6">
                         {searchTerm ? (
-                          <>
-                            No rooms found matching "{searchTerm}"
-                          </>
+                          <>No rooms found matching "{searchTerm}"</>
                         ) : (
                           "No rooms found."
                         )}

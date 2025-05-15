@@ -6,7 +6,7 @@ import EditorMode from "@/components/admin/room-property/editor-mode";
 import { useDebouce } from "@/hooks/useDebounce";
 
 const RoomPropertyPage = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [roomTypes, setRoomTypes] = useState({
     items: [],
     total: 0,
