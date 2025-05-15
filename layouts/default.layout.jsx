@@ -11,7 +11,7 @@ const DefaultLayout = ({ title, children, showFooter = false }) => {
       </Head>
       <main className="min-h-screen flex flex-col">
         <Navbar />
-        <div className="pt-16">{children}</div>
+        <div className="md:pt-16 pt-12">{children}</div>
         {showFooter && <Footer />}
       </main>
     </>

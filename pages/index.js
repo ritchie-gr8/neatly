@@ -38,10 +38,17 @@ export default function Home() {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      if(window.innerWidth <= 768) {
+        setIsMobile(true);
+      } else {
+        setIsMobile(false);
+      }
     };
-
     handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   const rooms = [
@@ -194,7 +201,6 @@ export default function Home() {
                     <img
                       src={room.image}
                       alt={room.name}
-                      loading="lazy"
                       className="absolute inset-0 w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-black/30 hover:bg-black/10 transition duration-300" />
@@ -229,7 +235,7 @@ export default function Home() {
               <AnimatePresence mode="wait">
                 <motion.p
                   key={testimonialIndex}
-                  initial={{ opacity: 0, x: isMobile ? 10 : 100 }}
+                  initial={{ opacity: 0, x: isMobile ? 10 : 100  }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: isMobile ? -10 : -100 }}
                   transition={{ duration: 0.5 }}
