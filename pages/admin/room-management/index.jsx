@@ -38,9 +38,6 @@ const StatusDropdown = ({
       return;
     }
 
-    console.log("this is new status", newStatus);
-    console.log("room id", roomId);
-
     setLoading(true);
     try {
       // API call to update the room status
@@ -147,6 +144,7 @@ const CreateRoomForm = ({ onCancel, onSubmit, roomTypes, roomStatus }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setRoomData({
       ...roomData,
       [name]: value,
@@ -289,10 +287,10 @@ const CreateRoomForm = ({ onCancel, onSubmit, roomTypes, roomStatus }) => {
                   validation.status ? "status-error" : undefined
                 }
               >
-                <option value="">Select status</option>
+                <option value=""> status</option>
                 {Array.isArray(roomStatus) &&
                   roomStatus.map((status) => (
-                    <option key={status.id} value={status.statusName}>
+                    <option key={status.id} value={status.id}>
                       {status.statusName}
                     </option>
                   ))}
@@ -359,7 +357,7 @@ const RoomManagement = () => {
   // Define the page size (items per page)
   const pageSize = 10;
 
-  // Improved room status fetching with proper error handling
+  // Improved room status fetching with error handling
   useEffect(() => {
     const fetchRoomStatus = async () => {
       try {
@@ -382,13 +380,13 @@ const RoomManagement = () => {
     fetchRoomStatus();
   }, []);
 
-  // Improved room types fetching with proper error handling
+  // Improved room types fetching with error handling
   useEffect(() => {
     const fetchRoomTypes = async () => {
       try {
         setRoomTypesLoading(true);
         const response = await api.get("/admin/room-type/list");
-
+        // console.log(response);
         if (response.data.data?.items) {
           setRoomTypes(response.data.data.items);
         } else {
@@ -431,22 +429,14 @@ const RoomManagement = () => {
         },
       });
       const roomsData = response.data?.data;
-      console.log(roomsData);
+      // console.log(roomsData);
       const { totalPages, rooms, page } = response.data?.data;
-      // if (roomsData) {
-      console.log(rooms);
+      
+      // console.log(rooms);
       setRooms(rooms || []);
       setTotalPages(totalPages || 0);
-
-      // If current page is greater than total pages and total pages > 0, go to last page
-      // if (currentPage > roomsData?.totalPages && roomsData?.totalPages > 0) {
       setCurrentPage(page);
-      // }
-      // } else {
-      //   console.error("Invalid rooms response format:", response.data);
-      //   setRooms([]);
-      //   setTotalPages(0);
-      // }
+      
     } catch (err) {
       console.error("Error fetching rooms:", err);
       setError("Failed to load rooms. Please try again.");
@@ -467,7 +457,7 @@ const RoomManagement = () => {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    setCurrentPage(1); // Reset to first page on search submit
+    setCurrentPage(1); 
     fetchRooms();
   };
 
@@ -489,17 +479,18 @@ const RoomManagement = () => {
       )
     );
   };
-
+// Create a new room via API call
   const handleCreateRoom = async (roomData) => {
     try {
-      // Create a new room via API call
-      const response = await api.post("/admin/rooms/create", roomData);
-      console.log(response)
+      const response = await api.post("/admin/rooms/create", {
+        roomNumber: roomData.roomNumber,
+        roomStatusId: Number(roomData.status),
+        roomTypeId: Number(roomData.roomTypeId),
+      });
 
       if (!response.data?.success) {
-        // throw new Error(response.data?.message || "Failed to create room");
+        throw new Error(response.data?.message || "Failed to create room");
       }
-
       // Switch back to view mode and refresh the rooms list
       setMode("view");
       setCurrentPage(1);
@@ -530,10 +521,10 @@ const RoomManagement = () => {
     try {
       // Delete room API call
       const response = await api.delete(`/admin/rooms/${roomToDelete.id}`);
-      console.log(response)
+      console.log(response);
 
       if (!response.data?.success) {
-        // throw new Error(response.data?.message || "Failed to delete room");
+         throw new Error(response.data?.message || "Failed to delete room");
       }
 
       // Close dialog
@@ -750,7 +741,7 @@ const RoomManagement = () => {
                   <Button
                     onClick={() => setDeleteDialogOpen(false)}
                     disabled={deleteLoading}
-                    className='btn-primary'
+                    className="btn-primary"
                   >
                     Cancel
                   </Button>

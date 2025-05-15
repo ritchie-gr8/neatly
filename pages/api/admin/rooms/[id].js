@@ -25,14 +25,14 @@ const PATCH = async (req, res) => {
 
     if (!existingRoom) {
       return res.status(404).json({
-        message: 'Room not found.'
-      })
+        message: "Room not found.",
+      });
     }
 
     const updatedRoom = await db.room.update({
       where: { id: roomId },
       data: {
-        roomStatusId: req.body.id
+        roomStatusId: req.body.id,
       },
     });
 
@@ -44,13 +44,41 @@ const PATCH = async (req, res) => {
     console.error("Error updating room type:", error.message);
     return res.status(500).json({
       success: false,
-      message: 'Failed to update room status'
-    })
+      message: "Failed to update room status",
+    });
   }
 };
 
 const DELETE = async (req, res) => {
-  return res.status(200).json({
-    message: 'delete lawe'
-  })
-}
+  try {
+    const { id } = req.query;
+    const roomId = Number(id);
+
+    // Check if room exists
+    const existingRoom = await db.room.findUnique({
+      where: { id: roomId },
+    });
+
+    if (!existingRoom) {
+      return res.status(404).json({
+        message: "Room not found.",
+      });
+    }
+
+    // Delete the room itself
+    const deletedRoom = await db.room.delete({
+      where: { id: roomId },
+    });
+
+    return res.status(200).json({
+      success: true,
+      deletedRoom,
+    });
+  } catch (error) {
+    console.error("Error deleting room type:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to delete room",
+    });
+  }
+};
