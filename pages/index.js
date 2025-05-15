@@ -7,8 +7,7 @@ import api from "@/lib/axios";
 import testimonials from "@/constants/testimonials";
 import services from "@/constants/services";
 import sliderImages from "@/constants/slider-home";
-import LoadingOverlay from "@/components/global/loading-overlay";
-//icons
+import SearchRoom from "@/components/search-result/search-room";
 import { FaArrowRight } from "react-icons/fa6";
 
 export const metadata = {
@@ -132,7 +131,9 @@ export default function Home() {
               Neatly Experience
             </span>
           </h1>
-          <div>Search Box</div>
+          <div>
+            <SearchRoom/>
+          </div>
         </div>
         </section>
 

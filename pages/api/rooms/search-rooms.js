@@ -44,7 +44,7 @@ export default async function handler(req, res) {
         if (roomTypes.length === 0) {
             return successResponse({
                 res,
-                message: "ไม่พบห้องพักที่ตรงตามเงื่อนไขการค้นหา",
+                message: "There are no rooms that fit your search parameters.",
                 data: [],
                 maxCapacity: maxCapacity
             });
@@ -63,7 +63,7 @@ export default async function handler(req, res) {
         
         return successResponse({
             res,
-            message: "ค้นหาห้องพักสำเร็จ",
+            message: "The room search has successfully finished.",
             data: formattedRooms,
             maxCapacity: maxCapacity,
             searchParams: { rooms: roomsCount, guests: guestsCount }
@@ -72,7 +72,7 @@ export default async function handler(req, res) {
     catch(error){
         return errorResponse({
             res,
-            message: "เกิดข้อผิดพลาดภายในระบบ",
+            message: "There was a mistake in the system.",
             error: error.message
         });
     }

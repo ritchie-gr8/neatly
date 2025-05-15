@@ -53,7 +53,7 @@ const RoomLists = () => {
         }
         setLoading(false);
       } catch (err) {
-        setError("ไม่สามารถโหลดข้อมูลได้ กรุณาลองใหม่อีกครั้ง");
+        setError("Unable to load data. Please try again.");
         setLoading(false);
       }
     };
@@ -85,7 +85,7 @@ const RoomLists = () => {
   }, [rooms, roomCount, guestCount, maxCapacity]);
 
   if (loading) {
-    return <div className="text-center py-10">กำลังโหลดข้อมูล...</div>;
+    return <div className="text-center py-10">Loading data...</div>;
   }
 
   if (error) {
@@ -96,20 +96,22 @@ const RoomLists = () => {
     return (
       <div className="text-center py-10">
         <h2 className="text-xl font-semibold mb-2">
-          ไม่พบห้องพักที่ตรงกับเงื่อนไขการค้นหา
+          No rooms found that match your search criteria.
         </h2>
         <p className="text-gray-600 mb-4">
-          กรุณาปรับเปลี่ยนจำนวนห้องหรือจำนวนผู้เข้าพัก
+          Please change the number of rooms or number of guests.
         </p>
         <Link href="/" className="text-orange-500 hover:underline">
-          กลับไปยังหน้าค้นหา
+          Return to search page
         </Link>
       </div>
     );
   }
 
   if (filteredRooms.length === 0) {
-    return <div className="text-center py-10">ไม่พบข้อมูลห้องพัก</div>;
+    return (
+      <div className="text-center py-10">Can not find room information.</div>
+    );
   }
 
   return (
@@ -192,10 +194,10 @@ const RoomLists = () => {
 
                   {checkIn && checkOut && (
                     <p className="mt-2 text-sm text-gray-700">
-                      {`รวม ${calculateNights(
+                      {`Total ${calculateNights(
                         checkIn,
                         checkOut
-                      )} คืน: THB ${calculateTotalPrice(
+                      )} night(s) : THB ${calculateTotalPrice(
                         promotionPrice || pricePerNight,
                         checkIn,
                         checkOut
