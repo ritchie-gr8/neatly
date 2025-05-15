@@ -12,6 +12,8 @@ const publicRoutes = [
   "/api/auth/signup",
   "/api/images/upload",
   "/api/images/delete",
+  "/api/rooms/search-rooms",
+  "/api/rooms/get-rooms",
 ];
 
 const isPublicPath = (path) => {
