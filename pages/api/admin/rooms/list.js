@@ -27,7 +27,7 @@ const GET = async (req, res) => {
     // Define the where condition for search
     const whereCondition = search
       ? {
-          name: {
+          roomNumber: {
             contains: search,
             mode: "insensitive",
           },

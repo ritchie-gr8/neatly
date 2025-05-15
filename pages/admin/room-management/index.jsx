@@ -7,6 +7,7 @@ import AdminLayout from "@/layouts/admin.layout";
 import api from "@/lib/axios";
 import { toast } from "sonner";
 import CustomPagination from "@/components/ui/custom-pagination";
+import { useDebouce } from "@/hooks/useDebounce";
 
 // Improved component for room status dropdown with outside click detection
 const StatusDropdown = ({
@@ -195,13 +196,13 @@ const CreateRoomForm = ({ onCancel, onSubmit, roomTypes, roomStatus }) => {
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
-            className="p-0"
+            className="text-gray-900 hover:text-gray-600 cursor-pointer"
             onClick={onCancel}
             aria-label="Go back"
           >
             <ArrowLeft size={20} />
           </Button>
-          <h5 className="text-h5 font-semibold text-gray-900">
+          <h5 className="text-h5 font-semibold text-gray-900 cursor-pointer">
             Create New Room
           </h5>
         </div>
@@ -287,7 +288,7 @@ const CreateRoomForm = ({ onCancel, onSubmit, roomTypes, roomStatus }) => {
                   validation.status ? "status-error" : undefined
                 }
               >
-                <option value=""> status</option>
+                <option value="">Please select status</option>
                 {Array.isArray(roomStatus) &&
                   roomStatus.map((status) => (
                     <option key={status.id} value={status.id}>
@@ -307,17 +308,9 @@ const CreateRoomForm = ({ onCancel, onSubmit, roomTypes, roomStatus }) => {
 
           <div className="flex justify-end mt-6 gap-4">
             <Button
-              type="button"
-              variant="outline"
-              onClick={onCancel}
-              disabled={loading}
-            >
-              Cancel
-            </Button>
-            <Button
               type="submit"
               disabled={loading}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              className="btn-primary font-open-sans text-base font-semibold text-util-white"
             >
               {loading ? (
                 <>
@@ -353,6 +346,7 @@ const RoomManagement = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [statusLoading, setStatusLoading] = useState(true);
   const [roomTypesLoading, setRoomTypesLoading] = useState(true);
+  const debouncedSearchTerm = useDebouce(searchTerm, 500);
 
   // Define the page size (items per page)
   const pageSize = 10;
@@ -414,7 +408,7 @@ const RoomManagement = () => {
     if (isInitialLoad && !statusLoading && !roomTypesLoading) {
       setIsInitialLoad(false);
     }
-  }, [currentPage, searchTerm, isInitialLoad, statusLoading, roomTypesLoading]);
+  }, [currentPage, debouncedSearchTerm, isInitialLoad, statusLoading, roomTypesLoading]);
 
   const fetchRooms = async () => {
     try {
@@ -425,18 +419,17 @@ const RoomManagement = () => {
         params: {
           page: currentPage,
           pageSize: pageSize,
-          search: searchTerm.trim(),
+          search: debouncedSearchTerm.trim(),
         },
       });
       const roomsData = response.data?.data;
       // console.log(roomsData);
       const { totalPages, rooms, page } = response.data?.data;
-      
+
       // console.log(rooms);
       setRooms(rooms || []);
       setTotalPages(totalPages || 0);
       setCurrentPage(page);
-      
     } catch (err) {
       console.error("Error fetching rooms:", err);
       setError("Failed to load rooms. Please try again.");
@@ -452,14 +445,15 @@ const RoomManagement = () => {
   };
 
   const handleSearch = (e) => {
+    setCurrentPage(1);
     setSearchTerm(e.target.value);
   };
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    setCurrentPage(1); 
-    fetchRooms();
-  };
+  // const handleSearchSubmit = (e) => {
+  //   console.log('search submit')
+  //   e.preventDefault();
+  //   fetchRooms();
+  // };
 
   const handleClearSearch = () => {
     setSearchTerm("");
@@ -479,7 +473,7 @@ const RoomManagement = () => {
       )
     );
   };
-// Create a new room via API call
+  // Create a new room via API call
   const handleCreateRoom = async (roomData) => {
     try {
       const response = await api.post("/admin/rooms/create", {
@@ -521,10 +515,10 @@ const RoomManagement = () => {
     try {
       // Delete room API call
       const response = await api.delete(`/admin/rooms/${roomToDelete.id}`);
-      console.log(response);
+      // console.log(response);
 
       if (!response.data?.success) {
-         throw new Error(response.data?.message || "Failed to delete room");
+        throw new Error(response.data?.message || "Failed to delete room");
       }
 
       // Close dialog
@@ -563,10 +557,7 @@ const RoomManagement = () => {
               Room Management
             </h5>
             <div className="flex items-center gap-4">
-              <form
-                onSubmit={handleSearchSubmit}
-                className="relative w-[320px] text-gray-900 text-b1"
-              >
+              <form className="relative w-[320px] text-gray-900 text-b1">
                 <Search
                   className="absolute left-3 top-1/2 transform -translate-y-1/2"
                   size={16}
@@ -582,7 +573,7 @@ const RoomManagement = () => {
                   <button
                     type="button"
                     onClick={handleClearSearch}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
                     aria-label="Clear search"
                   >
                     <X size={16} />
@@ -592,7 +583,7 @@ const RoomManagement = () => {
 
               <Button
                 onClick={() => setMode("create")}
-                className="bg-orange-600 hover:bg-orange-500 text-white"
+                className="btn-primary font-open-sans text-base font-semibold text-util-white"
                 disabled={roomTypesLoading || statusLoading}
               >
                 {roomTypesLoading || statusLoading ? (
@@ -650,18 +641,9 @@ const RoomManagement = () => {
                         {searchTerm ? (
                           <>
                             No rooms found matching "{searchTerm}"
-                            <div className="mt-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={handleClearSearch}
-                              >
-                                Clear Search
-                              </Button>
-                            </div>
                           </>
                         ) : (
-                          "No rooms found. Create your first room using the button above."
+                          "No rooms found."
                         )}
                       </td>
                     </tr>
@@ -686,7 +668,7 @@ const RoomManagement = () => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="text-red-600 hover:text-red-800 hover:bg-red-100"
+                            className="text-red-600 hover:text-red-800 hover:bg-red-100 cursor-pointer"
                             onClick={() => openDeleteDialog(room)}
                             aria-label={`Delete room ${room.roomNumber}`}
                           >
@@ -715,18 +697,21 @@ const RoomManagement = () => {
                 tabIndex={-1}
               >
                 <div className="flex justify-between items-center mb-4">
-                  <h3 id="delete-dialog-title" className="text-lg font-medium">
+                  <h3
+                    id="delete-dialog-title"
+                    className="text-lg text-black font-medium"
+                  >
                     Delete Room
                   </h3>
                   <button
                     onClick={() => setDeleteDialogOpen(false)}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-gray-500 hover:text-gray-700 cursor-pointer"
                     aria-label="Close dialog"
                   >
                     <X size={20} />
                   </button>
                 </div>
-                <div id="delete-dialog-description" className="mb-6">
+                <div id="delete-dialog-description" className="mb-6 text-black">
                   Are you sure you want to delete room{" "}
                   {roomToDelete?.roomNumber}? This action cannot be undone.
                 </div>
