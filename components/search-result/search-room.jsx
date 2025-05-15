@@ -47,53 +47,6 @@ const SearchRoom = ({ initialRoomTypeId = null }) => {
   };
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobileView(window.innerWidth < 768);
-    };
-
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-    window.addEventListener("scroll", handleScroll);
-    
-    getMaxCapacityFromRoomTypes();
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
-  useEffect(() => {
-    const fetchRoomTypeData = async () => {
-      if (!initialRoomTypeId) return;
-      
-      try {
-        const response = await fetch(`/api/room-types/${initialRoomTypeId}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch room type');
-        }
-        
-        const data = await response.json();
-        
-        if (data && data.data && data.data.capacity) {
-          const capacity = parseInt(data.data.capacity);
-          if (!isNaN(capacity) && capacity > 0) {
-            setMaxCapacity(capacity);
-          }
-        }
-      } catch (error) {
-      }
-    };
-    
-    fetchRoomTypeData();
-  }, [initialRoomTypeId]);
-
-  useEffect(() => {
     if (router.isReady) {
       const { checkIn, checkOut, rooms, guests } = router.query;
       
