@@ -27,7 +27,7 @@ export default function App({ Component, pageProps }) {
       >
         <Component {...pageProps} />
       </main>
-      <Toaster richColors />
+      <Toaster richColors position="top-right" />
     </AuthProvider>
   );
 }
