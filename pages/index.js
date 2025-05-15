@@ -146,7 +146,7 @@ export default function Home() {
             <div className="text-gray-700 space-y-4 md:space-y-6 pb-12 md:pb-30 px-6 md:px-60">
               <p>
                 Set in Bangkok, Thailand. Neatly Hotel offers 5-star
-                accommodation with an outdoor pool, kids' club, sports
+                accommodation with an outdoor pool, kids&apos; club, sports
                 facilities and a fitness centre. There is also a spa, an indoor
                 pool and saunas.
               </p>
