@@ -1,6 +1,7 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 import useEmblaCarousel from "embla-carousel-react";
+import useClickOutside from "@/hooks/useClickOutside";
 //icons
 import { SlArrowLeftCircle, SlArrowRightCircle } from "react-icons/sl";
 import { IoClose } from "react-icons/io5";
@@ -13,6 +14,8 @@ export default function ImageSlider({
 }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, speed: 5 });
   const [selectedImage, setSelectedImage] = useState(null);
+  const ref = useRef(null)
+  useClickOutside(ref, () => setSelectedImage(null))
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -71,7 +74,7 @@ export default function ImageSlider({
         onClick={scrollPrev}
         aria-label="Scroll previous"
         className={cn(
-          "hidden md:flex absolute left-36 top-1/2 -translate-y-1/2",
+          "hidden lg:flex absolute left-36 top-1/2 -translate-y-1/2",
           "opacity-80 hover:opacity-100 cursor-pointer"
         )}
       >
@@ -84,7 +87,7 @@ export default function ImageSlider({
         onClick={scrollNext}
         aria-label="Scroll next"
         className={cn(
-          "hidden md:flex absolute right-36 top-1/2 -translate-y-1/2",
+          "hidden lg:flex absolute right-36 top-1/2 -translate-y-1/2",
           "opacity-80 hover:opacity-100 cursor-pointer"
         )}
       >
@@ -101,6 +104,7 @@ export default function ImageSlider({
         >
           <div className="relative">
             <img
+              ref={ref}
               src={selectedImage}
               alt="Preview"
               className={cn("w-full max-h-[80vh] object-contain")}

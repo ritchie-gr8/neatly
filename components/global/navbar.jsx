@@ -31,7 +31,7 @@ const Navbar = () => {
 
   return (
     <div className="w-full md:h-16 h-12 bg-white border-b fixed z-50">
-      <div className="w-full h-full md:px-60 px-3 mx-auto flex items-center justify-between">
+      <div className="w-full h-full px-6 lg:px-12 xl:px-30 2xl:px-60 mx-auto flex items-center justify-between">
         {/* Left bar */}
         <div className="flex items-center gap-12 pl-5">
           <Link
@@ -45,7 +45,7 @@ const Navbar = () => {
             NEATLY
           </Link>
 
-          <div className="hidden md:flex text-gray-900 gap-12 text-base">
+          <div className="hidden lg:flex text-gray-900 gap-12 text-base">
             {navLink.map(({ href, label }) => (
               <Link
                 key={label}
@@ -66,7 +66,7 @@ const Navbar = () => {
         </div>
 
         {/* Right bar --- Desktop */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden lg:flex items-center gap-4">
           {user ? (
             <div className="items-center gap-6 text-gray-900">
               <Popover>
@@ -127,12 +127,12 @@ const Navbar = () => {
         </div>
 
         {/* Right bar --- Mobile */}
-        <div className="md:hidden flex items-center">
+        <div className="lg:hidden flex items-center">
           <Sheet>
             <SheetTrigger asChild>
               <Menu className="w-6 h-6 text-green-600" />
             </SheetTrigger>
-            <SheetContent side="right" className="w-full top-12">
+            <SheetContent side="right" className="w-full top-12 md:top-16 ">
               {user && (
                 <div className="flex items-center gap-3">
                   <Avatar className="w-10 h-10">
