@@ -22,6 +22,8 @@ const publicRoutes = [
   "/api/intents",
 ];
 
+const protectedRoutes = ["/admin", "/api/admin"];
+
 const isPublicPath = (path) => {
   return publicRoutes.some(
     (publicPath) => path === publicPath || path.startsWith("/api/public/")
@@ -49,6 +51,17 @@ export async function middleware(req) {
       algorithms: ["HS256"],
     });
     req.user = payload;
+    const role = payload.role;
+
+    if (
+      protectedRoutes.some((protectedPath) =>
+        pathname.startsWith(protectedPath)
+      ) &&
+      role !== "admin"
+    ) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+
     return NextResponse.next();
   } catch (error) {
     return NextResponse.redirect(new URL("/sign-in", req.url));
