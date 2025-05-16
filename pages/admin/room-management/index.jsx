@@ -90,11 +90,11 @@ const StatusDropdown = ({
           </button>
 
           {isOpen && Array.isArray(roomStatus) && roomStatus.length > 0 && (
-            <div className="absolute z-50 mt-1 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+            <div className="absolute z-[9999] mt-1 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
               <div className="py-1 max-h-64 overflow-auto" role="menu">
                 {roomStatus.map((status) => (
                   <button
-                    key={status.id}
+                    key={status.id} 
                     onClick={() => handleStatusChange(status)}
                     className={`block w-full text-left px-4 py-2 text-sm ${
                       status.statusName === currentStatus ? "bg-gray-100" : ""
@@ -592,7 +592,7 @@ const RoomManagement = () => {
             </div>
           </div>
 
-          <Card className="mx-16 p-0 overflow-hidden rounded-none">
+          <Card className="mx-16 p-0 overflow-visible rounded-none">
             <CardContent className="p-0">
               {error && (
                 <div className="p-4 text-red-500 text-center bg-red-50">
@@ -654,7 +654,7 @@ const RoomManagement = () => {
                         <td className="pl-4">{room.roomNumber}</td>
                         <td>{room.roomType?.name || "-"}</td>
                         <td>{room.roomType?.bedType?.bedDescription || "-"}</td>
-                        <td>
+                        <td >
                           <StatusDropdown
                             currentStatus={room.roomStatus.statusName}
                             roomId={room.id}
