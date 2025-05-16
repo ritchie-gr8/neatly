@@ -57,7 +57,7 @@ export async function middleware(req) {
       protectedRoutes.some((protectedPath) =>
         pathname.startsWith(protectedPath)
       ) &&
-      role !== "admin"
+      role.toLowerCase() !== "admin"
     ) {
       return NextResponse.redirect(new URL("/", req.url));
     }
