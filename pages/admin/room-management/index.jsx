@@ -9,8 +9,9 @@ import { toast } from "sonner";
 import CustomPagination from "@/components/ui/custom-pagination";
 import { useDebouce } from "@/hooks/useDebounce";
 import { Skeleton } from "@/components/ui/skeleton";
-
+import SearchBox from "@/components/admin/room-management/SearchBox";
 // Improved component for room status dropdown with outside click detection
+// Replace the current StatusDropdown component with this updated version
 const StatusDropdown = ({
   currentStatus,
   roomId,
@@ -19,12 +20,15 @@ const StatusDropdown = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const dropdownRef = useRef(null);
-  // Handle clicks outside the dropdown
+
+  // Handle clicks outside the dropdown to close it
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
+        setSearchTerm("");
       }
     };
 
@@ -34,9 +38,11 @@ const StatusDropdown = ({
     };
   }, []);
 
+  // Handle status change
   const handleStatusChange = async (newStatus) => {
     if (newStatus.statusName === currentStatus) {
       setIsOpen(false);
+      setSearchTerm("");
       return;
     }
 
@@ -59,18 +65,34 @@ const StatusDropdown = ({
     } finally {
       setLoading(false);
       setIsOpen(false);
+      setSearchTerm("");
     }
   };
 
   const getStatusClass = (status) => {
     if (!status) return "bg-gray-100";
-    if (status.includes("Vacant")) return "bg-green-100 text-green-800";
+    if (status.includes("Vacant") && !status.includes("Clean")) return "bg-green-100 text-green-800";
+    if (status.includes("Vacant Clean")) return "bg-emerald-100 text-emerald-800";
     if (status.includes("Occupied")) return "bg-blue-100 text-blue-800";
     if (status.includes("Assign Clean")) return "bg-green-100 text-green-800";
     if (status.includes("Assign Dirty")) return "bg-red-100 text-red-800";
-    if (status.includes("Out of")) return "bg-gray-100 text-gray-800";
     return "bg-gray-100";
   };
+  // const getStatusClass = (status) => {
+  //    const baseClasses = "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium";
+  //   if (!status) return `${baseClasses} bg-gray-100 text-gray-800`;
+  //   if (status.includes("Vacant") && !status.includes("Clean")) return `${baseClasses} bg-green-100 text-green-800`;
+  //   if (status.includes("Vacant Clean")) return `${baseClasses} bg-emerald-100 text-emerald-800`;
+  //   if (status.includes("Occupied")) return `${baseClasses} bg-blue-100 text-blue-800`;
+  //   if (status.includes("Assign Clean")) return `${baseClasses} bg-green-100 text-green-800`;
+  //   if (status.includes("Assign Dirty")) return `${baseClasses} bg-red-100 text-red-800`;
+  //   return `${baseClasses} bg-gray-100 text-gray-800`;
+  // };
+
+  // Filter statuses based on search term
+  const filteredStatuses = roomStatus.filter(status => 
+    status.statusName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -89,21 +111,38 @@ const StatusDropdown = ({
             {currentStatus || "Select Status"}
           </button>
 
-          {isOpen && Array.isArray(roomStatus) && roomStatus.length > 0 && (
-            <div className="absolute z-[9999] mt-1 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-              <div className="py-1 max-h-64 overflow-auto" role="menu">
-                {roomStatus.map((status) => (
-                  <button
-                    key={status.id} 
-                    onClick={() => handleStatusChange(status)}
-                    className={`block w-full text-left px-4 py-2 text-sm ${
-                      status.statusName === currentStatus ? "bg-gray-100" : ""
-                    } hover:bg-gray-50`}
-                    role="menuitem"
-                  >
-                    {status.statusName}
-                  </button>
-                ))}
+          {isOpen && (
+            <div className="absolute z-[9999] mt-1 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
+              <div className="p-2 border-b">
+                <div className="relative">
+                  <Input
+                    placeholder="Search status..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pr-8 text-gray-600"
+                  />
+                  <Search 
+                    size={16} 
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500" 
+                  />
+                </div>
+              </div>
+              <div className="max-h-60 overflow-auto">
+                {filteredStatuses.length === 0 ? (
+                  <div className="px-4 py-2 text-sm text-gray-500">No status found</div>
+                ) : (
+                  filteredStatuses.map((status) => (
+                    <button
+                      key={status.id}
+                      onClick={() => handleStatusChange(status)}
+                      className={`block w-full text-left px-4 py-2 text-sm font-medium ${
+                        getStatusClass(status.statusName)
+                      } ${status.statusName === currentStatus ? "border-l-4 border-gray-500" : ""}`}
+                    >
+                      {status.statusName}
+                    </button>
+                  ))
+                )}
               </div>
             </div>
           )}
@@ -112,7 +151,6 @@ const StatusDropdown = ({
     </div>
   );
 };
-
 // Improved component for creating a new room with validation
 const CreateRoomForm = ({ onCancel, onSubmit, roomTypes, roomStatus }) => {
   const [roomData, setRoomData] = useState({
