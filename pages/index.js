@@ -1,13 +1,16 @@
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import DefaultLayout from "@/layouts/default.layout";
 import ImageSlider from "@/components/global/image-slider";
-import CircleArrowButton from "@/components/global/circle-arrow-button";
+import CircleArrowButton from "@/components/ui/circle-arrow-button";
 import api from "@/lib/axios";
 import testimonials from "@/constants/testimonials";
 import services from "@/constants/services";
 import sliderImages from "@/constants/slider-home";
 import SearchRoom from "@/components/search-result/search-room";
+import Loading from "@/components/global/loading";
+import Aos from "aos";
+import "aos/dist/aos.css";
 import { FaArrowRight } from "react-icons/fa6";
 
 export const metadata = {
@@ -20,40 +23,43 @@ export default function Home() {
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [roomTypes, setRoomTypes] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchRoomTypes = async () => {
+      setIsLoading(true);
       try {
-        const response = await api.get('/room-type');
+        const response = await api.get("/room-type");
         const data = response.data.data;
         setRoomTypes(data);
       } catch (error) {
-        console.error('Error fetching room types:', error);
+        console.error("Error fetching room types:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
-
     fetchRoomTypes();
   }, []);
 
   useEffect(() => {
     const handleResize = () => {
-      if(window.innerWidth <= 1024) {
+      if (window.innerWidth <= 1024) {
         setIsMobile(true);
       } else {
         setIsMobile(false);
       }
     };
     handleResize();
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   const rooms = [
     {
       id: 1,
-      name: roomTypes[0]?.name || "Error Loading Room",
+      name: roomTypes[0]?.name || "",
       image: roomTypes[0]?.defaultImage || "",
       colSpan: "lg:col-span-3",
       height: "lg:h-132 h-66",
@@ -61,7 +67,7 @@ export default function Home() {
     },
     {
       id: 2,
-      name: roomTypes[1]?.name || "Error Loading Room",
+      name: roomTypes[1]?.name || "",
       image: roomTypes[1]?.defaultImage || "",
       colSpan: "lg:col-span-2",
       height: "lg:h-96 h-66",
@@ -69,7 +75,7 @@ export default function Home() {
     },
     {
       id: 3,
-      name: roomTypes[2]?.name || "Error Loading Room",
+      name: roomTypes[2]?.name || "",
       image: roomTypes[2]?.defaultImage || "",
       colSpan: "lg:col-span-1",
       height: "lg:h-96 h-66",
@@ -77,7 +83,7 @@ export default function Home() {
     },
     {
       id: 4,
-      name: roomTypes[3]?.name || "Error Loading Room",
+      name: roomTypes[3]?.name || "",
       image: roomTypes[3]?.defaultImage || "",
       colSpan: "lg:col-span-1",
       height: "lg:h-196 h-66",
@@ -85,7 +91,7 @@ export default function Home() {
     },
     {
       id: 5,
-      name: roomTypes[4]?.name || "Error Loading Room",
+      name: roomTypes[4]?.name || "",
       image: roomTypes[4]?.defaultImage || "",
       colSpan: "lg:col-span-2",
       height: "lg:h-96 h-66",
@@ -93,7 +99,7 @@ export default function Home() {
     },
     {
       id: 6,
-      name: roomTypes[5]?.name || "Error Loading Room",
+      name: roomTypes[5]?.name || "",
       image: roomTypes[5]?.defaultImage || "",
       colSpan: "lg:col-span-2",
       height: "lg:h-96 h-66",
@@ -101,19 +107,23 @@ export default function Home() {
     },
   ];
 
-
   useEffect(() => {
     const interval = setInterval(() => {
-      setTestimonialIndex(prev => (prev === testimonials.length - 1 ? 0 : prev + 1));
+      setTestimonialIndex((prev) =>
+        prev === testimonials.length - 1 ? 0 : prev + 1
+      );
     }, 6000);
 
     return () => clearInterval(interval);
   }, [testimonialIndex]);
 
+  useEffect(() => {
+    Aos.init();
+  }, []);
+
   return (
     <DefaultLayout showFooter>
-      <div className="bg-util-bg">
-
+      <div className="bg-util-bg overflow-x-hidden">
         {/* First Box --- Hero Section */}
         <section className="md:aspect-[2/1] aspect-[1/2] relative overflow-hidden">
           <img
@@ -122,28 +132,44 @@ export default function Home() {
             className="w-full h-full object-cover object-[center_65%] scale-100"
           />
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-black/80 via-black/40 to-transparent">
-          <h1 className="text-white text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light text-center leading-tight md:leading-[1.1] pb-12 lg:pb-30">
-            <span className="md:hidden block text-center">
-              A Best Place <br /> for Your Neatly <br />Experience
-            </span>
-            <span className="hidden md:inline">
-              A Best Place for Your<br />
-              Neatly Experience
-            </span>
-          </h1>
-          <div className="z-49">
-            <SearchRoom/>
+            <h1
+              className="text-white text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light text-center leading-tight md:leading-[1.1] pb-12 lg:pb-30"
+              data-aos="fade-up"
+              data-aos-duration="1000"
+              data-aos-easing="ease-in-sine"
+            >
+              <span className="md:hidden block text-center">
+                A Best Place <br /> for Your Neatly <br />
+                Experience
+              </span>
+              <span className="hidden md:inline">
+                A Best Place for Your
+                <br />
+                Neatly Experience
+              </span>
+            </h1>
+            <div className="z-49">
+              <SearchRoom />
+            </div>
           </div>
-        </div>
         </section>
 
         {/* Second Box --- Neatly Hotel */}
         <section className="w-full h-full py-12 md:py-30" id="about">
           <div className="px-6 lg:px-12 xl:px-30 2xl:px-60">
-            <h1 className="text-green-800 text-4xl md:text-6xl lg:text-7xl font-light pb-6 md:pb-12">
+            <h1
+              className="text-green-800 text-4xl md:text-6xl lg:text-7xl font-light pb-6 md:pb-12"
+              data-aos={isMobile ? "fade-up" : "fade-right"}
+              data-aos-duration="1000"
+            >
               Neatly Hotel
             </h1>
-            <div className="text-gray-700 space-y-4 md:space-y-6 pb-12 md:pb-30 px-6 md:px-12 lg:px-18 xl:px-30">
+            <div
+              className="text-gray-700 space-y-4 md:space-y-6 pb-12 md:pb-30 px-6 md:px-12 lg:px-18 xl:px-30"
+              data-aos={isMobile ? "fade-up" : "fade-left"}
+              data-aos-duration="1000"
+              data-aos-delay="150"
+            >
               <p>
                 Set in Bangkok, Thailand. Neatly Hotel offers 5-star
                 accommodation with an outdoor pool, kids&apos; club, sports
@@ -164,19 +190,29 @@ export default function Home() {
             </div>
           </div>
           <div>
-            <ImageSlider images={sliderImages} itemFlex="30%" aspect="3/4" button />
+            <ImageSlider
+              images={sliderImages}
+              itemFlex="30%"
+              aspect="3/4"
+              button
+            />
           </div>
         </section>
 
         {/* Third Box --- Service & Facilities */}
         <section className="w-full bg-green-700 text-white" id="services">
           <div className="flex flex-col items-center justify-center lg:py-30 py-12 gap-12">
-            <h1 className="lg:text-7xl text-5xl lg:pb-12">Service & <br className="lg:hidden block"/> Facilities</h1>
+            <h1 className="lg:text-7xl text-5xl lg:pb-12">
+              Service & <br className="lg:hidden block" /> Facilities
+            </h1>
             <div className="flex gap-18 flex-wrap justify-center">
               {services.map((service, index) => (
                 <div
                   key={index}
                   className="flex flex-col items-center text-center w-30 h-30 gap-6 whitespace-nowrap"
+                  data-aos={isMobile ? "fade-up" : "fade-left"}
+                  data-aos-duration="1000"
+                  data-aos-delay={isMobile ? 0 : index * 100}
                 >
                   <div>{service.icon}</div>
                   <p>{service.label}</p>
@@ -194,27 +230,35 @@ export default function Home() {
             </h1>
             <div className="px-0 lg:px-12 xl:px-30 2xl:px-60">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                {rooms.map((room) => (
-                  <div
-                    key={room.id}
-                    className={`${room.colSpan} ${room.rowSpan} ${room.height} relative overflow-hidden cursor-pointer`}
-                  >
-                    <img
-                      src={room.image}
-                      alt={room.name}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-black/30 hover:bg-black/10 transition duration-300" />
-                    <div className="flex flex-col absolute left-6 bottom-6 md:left-12 md:bottom-12 xl:left-18 xl:bottom-18 z-10 lg:gap-6 gap-3 text-white">
-                      <h1 className="md:text-4xl lg:text-5xl text-3xl">{room.name}</h1>
-                      <span className="flex text-xl items-center justify-start gap-2">
-                        Explore Room
-                        <FaArrowRight size="18" />
-                      </span>
+                {isLoading ? (
+                  <Loading />
+                ) : (
+                  rooms.map((room) => (
+                    <div
+                      key={room.id}
+                      className={`${room.colSpan} ${room.rowSpan} ${room.height} relative overflow-hidden cursor-pointer`}
+                      data-aos="fade-up"
+                      data-aos-duration="1000"
+                    >
+                      <img
+                        src={room.image}
+                        alt={room.name}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-black/30 hover:bg-black/10 transition duration-300" />
+                      <div className="flex flex-col absolute left-6 bottom-6 md:left-12 md:bottom-12 xl:left-18 xl:bottom-18 z-10 lg:gap-6 gap-3 text-white">
+                        <h1 className="md:text-4xl lg:text-5xl text-3xl">
+                          {room.name}
+                        </h1>
+                        <span className="flex text-xl items-center justify-start gap-2">
+                          Explore Room
+                          <FaArrowRight size="18" />
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           </div>
@@ -223,14 +267,16 @@ export default function Home() {
         {/* Fifth Box --- Our Customer Says */}
         <section className="flex flex-col px-6 lg:px-12 xl:px-30 2xl:px-60 lg:py-30 py-12 bg-green-200">
           <h1 className="text-center lg:text-7xl text-4xl lg:pb-24 pb-12 text-green-800">
-            Our Customer <br className="lg:hidden block"/> Says
+            Our Customer <br className="lg:hidden block" /> Says
           </h1>
           <div className="relative">
             <div className="flex items-center justify-between">
               <CircleArrowButton
                 direction="left"
                 onClick={() => {
-                  setTestimonialIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
+                  setTestimonialIndex((prev) =>
+                    prev === 0 ? testimonials.length - 1 : prev - 1
+                  );
                 }}
                 Desktop={true}
               />
@@ -238,7 +284,7 @@ export default function Home() {
               <AnimatePresence mode="wait">
                 <motion.p
                   key={testimonialIndex}
-                  initial={{ opacity: 0, x: isMobile ? 10 : 100  }}
+                  initial={{ opacity: 0, x: isMobile ? 10 : 100 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: isMobile ? -10 : -100 }}
                   transition={{ duration: 0.5 }}
@@ -250,7 +296,9 @@ export default function Home() {
               <CircleArrowButton
                 direction="right"
                 onClick={() => {
-                  setTestimonialIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
+                  setTestimonialIndex((prev) =>
+                    prev === testimonials.length - 1 ? 0 : prev + 1
+                  );
                 }}
                 Desktop={true}
               />
@@ -297,15 +345,19 @@ export default function Home() {
             <CircleArrowButton
               direction="left"
               onClick={() => {
-                setTestimonialIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
+                setTestimonialIndex((prev) =>
+                  prev === 0 ? testimonials.length - 1 : prev - 1
+                );
               }}
             />
             <CircleArrowButton
-               direction="right"
-               onClick={() => {
-                 setTestimonialIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
-               }}
-             />
+              direction="right"
+              onClick={() => {
+                setTestimonialIndex((prev) =>
+                  prev === testimonials.length - 1 ? 0 : prev + 1
+                );
+              }}
+            />
           </div>
         </section>
       </div>
