@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import DefaultLayout from "@/layouts/default.layout";
 import ImageSlider from "@/components/global/image-slider";
 import CircleArrowButton from "@/components/ui/circle-arrow-button";
@@ -118,7 +119,10 @@ export default function Home() {
   }, [testimonialIndex]);
 
   useEffect(() => {
-    Aos.init();
+    Aos.init({
+      mirror: true,
+      duration: 1000,
+    });
   }, []);
 
   return (
@@ -126,17 +130,17 @@ export default function Home() {
       <div className="bg-util-bg overflow-x-hidden">
         {/* First Box --- Hero Section */}
         <section className="md:aspect-[2/1] aspect-[1/2] relative overflow-hidden">
-          <img
-            src="/images/landing-page/hotel-main.jpg"
+          <Image
+            src="https://res.cloudinary.com/dhyyl3snm/image/upload/f_auto,q_auto/v1747641838/hotel1_iuvsl0.jpg"
             alt="hotel-villa"
-            className="w-full h-full object-cover object-[center_65%] scale-100"
+            fill
+            className="object-cover object-[center_65%] scale-100"
+            priority
           />
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-black/80 via-black/40 to-transparent">
             <h1
               className="text-white text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light text-center leading-tight md:leading-[1.1] pb-12 lg:pb-30"
               data-aos="fade-up"
-              data-aos-duration="1000"
-              data-aos-easing="ease-in-sine"
             >
               <span className="md:hidden block text-center">
                 A Best Place <br /> for Your Neatly <br />
@@ -160,14 +164,12 @@ export default function Home() {
             <h1
               className="text-green-800 text-4xl md:text-6xl lg:text-7xl font-light pb-6 md:pb-12"
               data-aos={isMobile ? "fade-up" : "fade-right"}
-              data-aos-duration="1000"
             >
               Neatly Hotel
             </h1>
             <div
               className="text-gray-700 space-y-4 md:space-y-6 pb-12 md:pb-30 px-6 md:px-12 lg:px-18 xl:px-30"
               data-aos={isMobile ? "fade-up" : "fade-left"}
-              data-aos-duration="1000"
               data-aos-delay="150"
             >
               <p>
@@ -202,7 +204,10 @@ export default function Home() {
         {/* Third Box --- Service & Facilities */}
         <section className="w-full bg-green-700 text-white" id="services">
           <div className="flex flex-col items-center justify-center lg:py-30 py-12 gap-12">
-            <h1 className="lg:text-7xl text-5xl lg:pb-12">
+            <h1
+              className="lg:text-7xl text-5xl lg:pb-12"
+              data-aos={isMobile ? "fade-up" : "fade-left"}
+            >
               Service & <br className="lg:hidden block" /> Facilities
             </h1>
             <div className="flex gap-18 flex-wrap justify-center">
@@ -211,7 +216,6 @@ export default function Home() {
                   key={index}
                   className="flex flex-col items-center text-center w-30 h-30 gap-6 whitespace-nowrap"
                   data-aos={isMobile ? "fade-up" : "fade-left"}
-                  data-aos-duration="1000"
                   data-aos-delay={isMobile ? 0 : index * 100}
                 >
                   <div>{service.icon}</div>
@@ -225,7 +229,10 @@ export default function Home() {
         {/* Fourth Box --- Rooms & Suits*/}
         <section className="bg-util-bg" id="rooms">
           <div className="lg:py-30 py-12">
-            <h1 className="text-center text-green-800 lg:text-7xl text-5xl lg:pb-24 pb-12">
+            <h1
+              className="text-center text-green-800 lg:text-7xl text-5xl lg:pb-24 pb-12"
+              data-aos="fade-up"
+            >
               Rooms & Suits
             </h1>
             <div className="px-0 lg:px-12 xl:px-30 2xl:px-60">
@@ -238,7 +245,6 @@ export default function Home() {
                       key={room.id}
                       className={`${room.colSpan} ${room.rowSpan} ${room.height} relative overflow-hidden cursor-pointer`}
                       data-aos="fade-up"
-                      data-aos-duration="1000"
                     >
                       <img
                         src={room.image}
@@ -266,11 +272,86 @@ export default function Home() {
 
         {/* Fifth Box --- Our Customer Says */}
         <section className="flex flex-col px-6 lg:px-12 xl:px-30 2xl:px-60 lg:py-30 py-12 bg-green-200">
-          <h1 className="text-center lg:text-7xl text-4xl lg:pb-24 pb-12 text-green-800">
-            Our Customer <br className="lg:hidden block" /> Says
-          </h1>
-          <div className="relative">
-            <div className="flex items-center justify-between">
+          <div data-aos="fade-up">
+            <h1
+              className="text-center lg:text-7xl text-4xl lg:pb-24 pb-12 text-green-800"
+              
+            >
+              Our Customer <br className="lg:hidden block" /> Says
+            </h1>
+            <div className="relative ">
+              <div className="flex items-center justify-between">
+                <CircleArrowButton
+                  direction="left"
+                  onClick={() => {
+                    setTestimonialIndex((prev) =>
+                      prev === 0 ? testimonials.length - 1 : prev - 1
+                    );
+                  }}
+                  Desktop={true}
+                />
+                {/* Quote */}
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={testimonialIndex}
+                    initial={{ opacity: 0, x: isMobile ? 10 : 100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: isMobile ? -10 : -100 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-green-700 max-w-4xl text-center lg:font-normal font-bold lg:px-12"
+                  >
+                    {testimonials[testimonialIndex].quote}
+                  </motion.p>
+                </AnimatePresence>
+                <CircleArrowButton
+                  direction="right"
+                  onClick={() => {
+                    setTestimonialIndex((prev) =>
+                      prev === testimonials.length - 1 ? 0 : prev + 1
+                    );
+                  }}
+                  Desktop={true}
+                />
+              </div>
+            </div>
+            {/* Customer */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={testimonialIndex}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.5 }}
+                className="flex items-center justify-center lg:pt-12 pt-6 gap-4"
+              >
+                <motion.img
+                  src={testimonials[testimonialIndex].img}
+                  alt={`${testimonials[testimonialIndex].name} image`}
+                  className="w-10 h-10 rounded-full"
+                  transition={{ duration: 0.5 }}
+                  loading="lazy"
+                />
+                <motion.p
+                  className="text-gray-600"
+                  transition={{ duration: 0.5 }}
+                >
+                  {testimonials[testimonialIndex].name}
+                </motion.p>
+              </motion.div>
+            </AnimatePresence>
+            {/* Pagination dots */}
+            <div className="flex justify-center gap-3 mt-8">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setTestimonialIndex(index)}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                    index === testimonialIndex ? "bg-gray-600" : "bg-gray-400"
+                  }`}
+                />
+              ))}
+            </div>
+            <div className="flex items-center justify-center gap-6 pt-6">
               <CircleArrowButton
                 direction="left"
                 onClick={() => {
@@ -278,21 +359,7 @@ export default function Home() {
                     prev === 0 ? testimonials.length - 1 : prev - 1
                   );
                 }}
-                Desktop={true}
               />
-              {/* Quote */}
-              <AnimatePresence mode="wait">
-                <motion.p
-                  key={testimonialIndex}
-                  initial={{ opacity: 0, x: isMobile ? 10 : 100 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: isMobile ? -10 : -100 }}
-                  transition={{ duration: 0.5 }}
-                  className="text-green-700 max-w-4xl text-center lg:font-normal font-bold lg:px-12"
-                >
-                  {testimonials[testimonialIndex].quote}
-                </motion.p>
-              </AnimatePresence>
               <CircleArrowButton
                 direction="right"
                 onClick={() => {
@@ -300,64 +367,8 @@ export default function Home() {
                     prev === testimonials.length - 1 ? 0 : prev + 1
                   );
                 }}
-                Desktop={true}
               />
             </div>
-          </div>
-          {/* Customer */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={testimonialIndex}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.5 }}
-              className="flex items-center justify-center lg:pt-12 pt-6 gap-4"
-            >
-              <motion.img
-                src={testimonials[testimonialIndex].img}
-                alt={`${testimonials[testimonialIndex].name} image`}
-                className="w-10 h-10 rounded-full"
-                transition={{ duration: 0.5 }}
-                loading="lazy"
-              />
-              <motion.p
-                className="text-gray-600"
-                transition={{ duration: 0.5 }}
-              >
-                {testimonials[testimonialIndex].name}
-              </motion.p>
-            </motion.div>
-          </AnimatePresence>
-          {/* Pagination dots */}
-          <div className="flex justify-center gap-3 mt-8">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setTestimonialIndex(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                  index === testimonialIndex ? "bg-gray-600" : "bg-gray-400"
-                }`}
-              />
-            ))}
-          </div>
-          <div className="flex items-center justify-center gap-6 pt-6">
-            <CircleArrowButton
-              direction="left"
-              onClick={() => {
-                setTestimonialIndex((prev) =>
-                  prev === 0 ? testimonials.length - 1 : prev - 1
-                );
-              }}
-            />
-            <CircleArrowButton
-              direction="right"
-              onClick={() => {
-                setTestimonialIndex((prev) =>
-                  prev === testimonials.length - 1 ? 0 : prev + 1
-                );
-              }}
-            />
           </div>
         </section>
       </div>

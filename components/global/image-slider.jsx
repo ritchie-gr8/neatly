@@ -1,4 +1,5 @@
 import { useCallback, useState, useRef } from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import useEmblaCarousel from "embla-carousel-react";
 import useClickOutside from "@/hooks/useClickOutside";
@@ -57,11 +58,11 @@ export default function ImageSlider({
               )}
               onClick={() => setSelectedImage(img)}
             >
-              <img
+              <Image
                 src={img}
                 alt={`slide-${idx}`}
-                loading="lazy"
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover md:px-2 px-1"
               />
             </div>
           ))}
@@ -107,13 +108,13 @@ export default function ImageSlider({
               ref={ref}
               src={selectedImage}
               alt="Preview"
-              className={cn("w-full max-h-[80vh] object-contain")}
+              className={cn("w-full max-h-[80vh] object-contain px-3")}
             />
 
             {/* Close Button */}
             <button
               className={cn(
-                "absolute top-4 right-2",
+                "absolute top-2 right-4",
                 "text-red-400 hover:text-red-200 cursor-pointer z-20"
               )}
               onClick={() => setSelectedImage(null)}
