@@ -116,18 +116,17 @@ const RoomGuestSelector = ({
   return (
     <div className="relative w-full">
       <div 
-        className="flex items-center justify-between p-3 border rounded-sm cursor-pointer hover:border-gray-400 transition-all duration-300 h-10 box-border"
+        className="py-2.5 pl-3 pr-4 flex items-center justify-between p-3 border-2 border-gray-400 rounded-sm cursor-pointer hover:border-gray-400 md:w-60"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex items-center space-x-2">
-          <FiUsers size={18} className={isSelected ? "text-gray-700" : "text-gray-400"} />
-          <span className={`text-sm font-medium ${isSelected ? "text-gray-700" : "text-gray-400"}`}>
+          <span className={`text-gray-600 ${isSelected ? "text-black" : "text-gray-600"}`}>
             {rooms} {rooms === 1 ? 'room' : 'rooms'}, {guests} {guests === 1 ? 'guest' : 'guests'}
           </span>
         </div>
         <FiChevronDown 
           size={16} 
-          className={`transition-transform ${isOpen ? 'rotate-180' : ''} ${isSelected ? "text-gray-700" : "text-gray-400"}`}
+          className={`text-gray-600 transition-transform ${isOpen ? 'rotate-180' : ''} `}
         />
       </div>
       

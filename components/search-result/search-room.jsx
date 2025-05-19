@@ -133,7 +133,7 @@ const SearchRoom = ({
 
   return (
     <div
-      className={`bg-white shadow-lg rounded-sm w-full h-full p-4 text-gray-900 md:flex md:flex-row md:justify-center md:items-center md:p-16 ${
+      className={`bg-white shadow-lg rounded-sm w-full h-full p-4 text-gray-900 md:flex md:flex-row md:justify-center md:items-end md:p-16 ${
         pageType === "search-result" ? "md:px-56 md:py-10" : "md:p-16"
       }`}
     >
@@ -185,8 +185,9 @@ const SearchRoom = ({
         </label>
 
         <button
-          className={`w-full border border-orange-500 text-orange-500 h-10 px-4 rounded-sm cursor-pointer hover:bg-orange-500 hover:text-white transition-all duration-300`}
+          className={`w-full  py-3 md:py-3 md:px-6 rounded-sm cursor-pointer   ${pageType === "landing-page" ? "text-white bg-orange-500 hover:bg-orange-400" : "text-orange-500 hover:text-white hover:bg-orange-500 border border-orange-500"}`}
           onClick={handleSearch}
+          pageType="search-result"
         >
           Search
         </button>

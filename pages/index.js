@@ -153,7 +153,7 @@ export default function Home() {
               </span>
             </h1>
             <div className="w-full px-6 lg:px-12 xl:px-30 2xl:px-60">
-              <SearchRoom />
+              <SearchRoom pageType="landing-page" />
             </div>
           </div>
         </section>

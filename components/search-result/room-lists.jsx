@@ -206,7 +206,7 @@ const RoomLists = () => {
                   )}
                 </div>
 
-                <div className="flex flex-row mt-6 mb-2 md:mt-0 md:mb-0 w-full justify-between sm:justify-end items-center md:space-x-4">
+                <div className="flex flex-row mt-6 mb-2 md:mt-0 md:mb-0 w-full justify-between items-center md:space-x-4">
                   <Link
                     href={`/room-detail/${room.id || index}`}
                     className="text-orange-500 font-semibold whitespace-nowrap text-base sm:text-sm md:text-base"
