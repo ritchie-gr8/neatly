@@ -9,7 +9,6 @@ import { toast } from "sonner";
 import CustomPagination from "@/components/ui/custom-pagination";
 import { useDebouce } from "@/hooks/useDebounce";
 import { Skeleton } from "@/components/ui/skeleton";
-import SearchBox from "@/components/admin/room-management/SearchBox";
 // Improved component for room status dropdown with outside click detection
 // Replace the current StatusDropdown component with this updated version
 const StatusDropdown = ({
@@ -71,29 +70,20 @@ const StatusDropdown = ({
 
   const getStatusClass = (status) => {
     if (!status) return "bg-gray-100";
-    if (status.includes("Vacant") && !status.includes("Clean")) return "bg-green-100 text-green-800";
-    if (status.includes("Vacant Clean")) return "bg-emerald-100 text-emerald-800";
-    if (status.includes("Occupied")) return "bg-blue-100 text-blue-800";
-    if (status.includes("Assign Clean")) return "bg-green-100 text-green-800";
-    if (status.includes("Assign Dirty")) return "bg-red-100 text-red-800";
-    return "bg-gray-100";
+    if (status.includes("Dirty")) return "bg-[#FFE5E5] text-[#A50606]";
+    if (status.includes("Inspected")) return "bg-[#FFF9E5] text-[#766A00]";
+    if (status.includes("Occupied")) return "bg-[#E4ECFF] text-[#084BAF]";
+    if (status.includes("Vacant") && !status.includes("Clean")) return "bg-[#F0F2F8] text-[#006753]";
+    if (status.includes("Clean")) return "bg-[#E5FFFA] text-[#006753]";
+    return "bg-[#F0F1F8] text-[#6E7288]";
   };
-  // const getStatusClass = (status) => {
-  //    const baseClasses = "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium";
-  //   if (!status) return `${baseClasses} bg-gray-100 text-gray-800`;
-  //   if (status.includes("Vacant") && !status.includes("Clean")) return `${baseClasses} bg-green-100 text-green-800`;
-  //   if (status.includes("Vacant Clean")) return `${baseClasses} bg-emerald-100 text-emerald-800`;
-  //   if (status.includes("Occupied")) return `${baseClasses} bg-blue-100 text-blue-800`;
-  //   if (status.includes("Assign Clean")) return `${baseClasses} bg-green-100 text-green-800`;
-  //   if (status.includes("Assign Dirty")) return `${baseClasses} bg-red-100 text-red-800`;
-  //   return `${baseClasses} bg-gray-100 text-gray-800`;
-  // };
-
   // Filter statuses based on search term
   const filteredStatuses = roomStatus.filter(status => 
     status.statusName.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
+  const handleClearStatus = () => {
+    setSearchTerm("");
+  }
   return (
     <div className="relative" ref={dropdownRef}>
       {loading ? (
@@ -104,7 +94,7 @@ const StatusDropdown = ({
         <>
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className={`px-3 py-1 rounded-md ${getStatusClass(currentStatus)}`}
+            className={`px-3 py-1 rounded-md ${getStatusClass(currentStatus)} cursor-pointer hover:brightness-90`}
             aria-haspopup="true"
             aria-expanded={isOpen}
           >
@@ -121,10 +111,18 @@ const StatusDropdown = ({
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full pr-8 text-gray-600"
                   />
-                  <Search 
+                  {/* <Search 
                     size={16} 
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500" 
-                  />
+                  /> */}
+                  <button
+                    type="button"
+                    onClick={handleClearStatus}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
+                    aria-label="Clear search"
+                  >
+                    <X size={16} />
+                  </button>
                 </div>
               </div>
               <div className="max-h-60 overflow-auto">
@@ -135,9 +133,9 @@ const StatusDropdown = ({
                     <button
                       key={status.id}
                       onClick={() => handleStatusChange(status)}
-                      className={`block w-full text-left px-4 py-2 text-sm font-medium ${
+                      className={`block w-full text-left px-4 py-2 text-sm font-medium cursor-pointer hover:brightness-90 ${
                         getStatusClass(status.statusName)
-                      } ${status.statusName === currentStatus ? "border-l-4 border-gray-500" : ""}`}
+                      } ${status.statusName === currentStatus ? "border-l-8 border-green-500" : ""}`}
                     >
                       {status.statusName}
                     </button>
@@ -480,13 +478,7 @@ const RoomManagement = () => {
     setCurrentPage(1);
     setSearchTerm(e.target.value);
   };
-
-  // const handleSearchSubmit = (e) => {
-  //   console.log('search submit')
-  //   e.preventDefault();
-  //   fetchRooms();
-  // };
-
+  
   const handleClearSearch = () => {
     setSearchTerm("");
     setCurrentPage(1);
@@ -505,7 +497,7 @@ const RoomManagement = () => {
       )
     );
   };
-  // Create a new room via API call
+  // Create a new room via API call 
   const handleCreateRoom = async (roomData) => {
     try {
       const response = await api.post("/admin/rooms/create", {
@@ -519,9 +511,12 @@ const RoomManagement = () => {
       }
       // Switch back to view mode and refresh the rooms list
       setMode("view");
-      setCurrentPage(1);
+       // Add a small delay to ensure state updates happen in sequence
+    setTimeout(async () => {
       await fetchRooms();
-
+      toast.success(`Room ${roomData.roomNumber} created successfully`);
+      setLoading(false);
+    }, 100);  
       return true;
     } catch (error) {
       console.error("Error creating room:", error);
@@ -556,9 +551,16 @@ const RoomManagement = () => {
       // Close dialog
       setDeleteDialogOpen(false);
       setRoomToDelete(null);
+      // Get the current rooms count before refreshing
+      const currentRoomsCount = rooms.length;
 
-      // Refresh room list
-      await fetchRooms();
+      // If this is the last room on the page and not on page 1, go back to previous page
+      if (currentRoomsCount === 1 && currentPage > 1) {
+        setCurrentPage(currentPage - 1);
+      } else {
+        // Otherwise, just refresh the current page
+        await fetchRooms();
+      }
     } catch (error) {
       console.error("Error deleting room:", error);
       setDeleteError(
