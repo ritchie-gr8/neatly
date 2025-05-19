@@ -129,7 +129,7 @@ export default function Home() {
     <DefaultLayout showFooter>
       <div className="bg-util-bg overflow-x-hidden">
         {/* First Box --- Hero Section */}
-        <section className="md:aspect-[2/1] aspect-[1/2] relative overflow-hidden">
+        <section className="md:aspect-[2/1] aspect-[1/2] h-[764px] w-full relative">
           <Image
             src="https://res.cloudinary.com/dhyyl3snm/image/upload/f_auto,q_auto/v1747641838/hotel1_iuvsl0.jpg"
             alt="hotel-villa"
@@ -137,7 +137,7 @@ export default function Home() {
             className="object-cover object-[center_65%] scale-100"
             priority
           />
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-black/80 via-black/40 to-transparent">
+          <div className="w-full h-fit pt-24 absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-black/80 via-black/40 to-transparent">
             <h1
               className="text-white text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light text-center leading-tight md:leading-[1.1] pb-12 lg:pb-30"
               data-aos="fade-up"
@@ -152,7 +152,7 @@ export default function Home() {
                 Neatly Experience
               </span>
             </h1>
-            <div className="z-49">
+            <div className="w-full px-6 lg:px-12 xl:px-30 2xl:px-60">
               <SearchRoom />
             </div>
           </div>
@@ -207,7 +207,7 @@ export default function Home() {
             <h1
               className="lg:text-7xl text-5xl lg:pb-12"
               data-aos={isMobile ? "fade-up" : "fade-left"}
-            >
+          >
               Service & <br className="lg:hidden block" /> Facilities
             </h1>
             <div className="flex gap-18 flex-wrap justify-center">
@@ -275,7 +275,7 @@ export default function Home() {
           <div data-aos="fade-up">
             <h1
               className="text-center lg:text-7xl text-4xl lg:pb-24 pb-12 text-green-800"
-              
+
             >
               Our Customer <br className="lg:hidden block" /> Says
             </h1>

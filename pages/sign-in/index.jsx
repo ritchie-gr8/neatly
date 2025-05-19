@@ -44,6 +44,7 @@ const SignInPage = () => {
       }
 
       const user = res?.user;
+console.log('user',user)
 
       if (user) {
         toast.success("Login successful");

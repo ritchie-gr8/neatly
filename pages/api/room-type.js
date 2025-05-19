@@ -16,7 +16,6 @@ export default async function handler(req, res) {
 }
 
 const GET = async (req, res) => {
-  console.log('room type GET endpoint hit')
   try {
     const limit = req.query.limit ? parseInt(req.query.limit) : undefined;
 

@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import CustomDatePicker from "../global/date-picker";
 import RoomGuestSelector from "../search-result/room-guest-selector";
 import { useRouter } from "next/router";
-import { addDays } from "date-fns";
+import { addDays, format } from "date-fns";
 
-const SearchRoom = ({ initialRoomTypeId = null }) => {
+const SearchRoom = ({
+  initialRoomTypeId = null,
+  pageType = "search-result",
+}) => {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileView, setIsMobileView] = useState(false);
@@ -115,8 +118,8 @@ const SearchRoom = ({ initialRoomTypeId = null }) => {
   };
 
   const handleSearch = () => {
-    const checkInStr = checkInDate.toISOString().split("T")[0];
-    const checkOutStr = checkOutDate.toISOString().split("T")[0];
+    const checkInStr = format(checkInDate, "yyyy-MM-dd");
+    const checkOutStr = format(checkOutDate, "yyyy-MM-dd");
 
     const queryParams = new URLSearchParams({
       checkIn: checkInStr,
@@ -129,61 +132,66 @@ const SearchRoom = ({ initialRoomTypeId = null }) => {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-sm w-full h-full p-4 text-gray-900 md:flex md:flex-row md:justify-center md:items-center md:px-56 md:py-10">
-      
-      
-          <div className="w-full mb-4 sm:mb-4 md:mb-0 md:flex-1">
-            <CustomDatePicker
+    <div
+      className={`bg-white shadow-lg rounded-sm w-full h-full p-4 text-gray-900 md:flex md:flex-row md:justify-center md:items-center md:p-16 ${
+        pageType === "search-result" ? "md:px-56 md:py-10" : "md:p-16"
+      }`}
+    >
+      <div className="w-full mb-4 sm:mb-4 md:mb-0 md:flex-1 flex flex-col md:flex-row gap-6">
+        <CustomDatePicker
           title="Check In"
           defaultValue={new Date()}
           onDateChange={setCheckInDate}
+          className="mb-0 h-12"
         />
 
-          <div className="md:inline-block md:px-6 hidden">-</div>
+        <div className="md:inline-block md:px-0 hidden md:mt-8">-</div>
 
-            <CustomDatePicker
+        <CustomDatePicker
           title="Check Out"
           defaultValue={addDays(new Date(), 1)}
           onDateChange={setCheckOutDate}
+          className="mb-0 h-12"
         />
+      </div>
 
-          <div className="flex flex-col w-full mb-4 sm:mb-4 md:mb-0 md:flex-1">
-            <label
-              htmlFor="rooms-guests"
-              className="text-gray-900 mb-2 whitespace-nowrap text-ellipsis overflow-hidden"
-            >
-              Rooms & Guests
-            </label>
-            <RoomGuestSelector
-              rooms={rooms}
-              setRooms={setRooms}
-              guests={guests}
-              setGuests={setGuests}
-              maxCapacity={maxCapacity}
-            />
-          </div>
-        </div>
-
-        <div
-          className={`flex flex-col justify-end w-full ${
-            isScrolled ? "mt-0" : "mt-2"
-          } ${!isMobileView ? "md:w-1/4 md:mt-0" : ""}`}
+      <div className="flex flex-col w-full mb-4 sm:mb-4 md:mb-0 md:flex-1 md:ml-10">
+        <label
+          htmlFor="rooms-guests"
+          className="text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden"
         >
-          <label
-            className={`invisible text-white ${
-              !isMobileView ? "md:block" : ""
-            } mb-2`}
-          >
-            Placeholder
-          </label>
-          <button
-            className={`w-full border border-orange-500 text-orange-500 h-10 px-4 rounded-sm cursor-pointer hover:bg-orange-500 hover:text-white transition-all duration-300`}
-            onClick={handleSearch}
-          >
-            Search
-          </button>
-        </div>
-    </div>  
+          Rooms & Guests
+        </label>
+        <RoomGuestSelector
+          rooms={rooms}
+          setRooms={setRooms}
+          guests={guests}
+          setGuests={setGuests}
+          maxCapacity={maxCapacity}
+        />
+      </div>
+
+      <div
+        className={`flex flex-col justify-end w-full md:ml-10 ${
+          isScrolled ? "mt-0" : "mt-2"
+        } ${!isMobileView ? "md:w-1/4 md:mt-0" : ""}`}
+      >
+        <label
+          className={`invisible text-white ${
+            !isMobileView ? "md:block" : ""
+          } mb-2`}
+        >
+          Placeholder
+        </label>
+
+        <button
+          className={`w-full border border-orange-500 text-orange-500 h-10 px-4 rounded-sm cursor-pointer hover:bg-orange-500 hover:text-white transition-all duration-300`}
+          onClick={handleSearch}
+        >
+          Search
+        </button>
+      </div>
+    </div>
   );
 };
 

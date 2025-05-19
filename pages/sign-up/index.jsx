@@ -19,6 +19,16 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { PATHS } from "@/constants/paths";
+import { COUNTRY } from "@/constants/country";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import CustomDatePicker from "@/components/global/date-picker";
+import { Loader2 } from "lucide-react";
 
 const signUpSchema = z
   .object({
@@ -36,20 +46,19 @@ const signUpSchema = z
       .string()
       .min(10, "Phone number must be at least 10 characters long"),
     dateOfBirth: z
-      .string()
-      .transform((date) => new Date(date))
+      .date({ message: "Invalid date" })
       .refine(
         (date) => {
           const today = new Date();
-          const twentyYearsAgo = new Date(
-            today.getFullYear() - 20,
+          const eighteenYearsAgo = new Date(
+            today.getFullYear() - 18,
             today.getMonth(),
             today.getDate()
           );
-          return date <= twentyYearsAgo;
+          return date <= eighteenYearsAgo;
         },
         {
-          message: "You must be at least 20 years old",
+          message: "You must be at least 18 years old",
         }
       ),
     country: z.string().min(2, "Country must be at least 2 characters long"),
@@ -64,6 +73,8 @@ const signUpSchema = z
 const SignUpPage = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [imageFile, setImageFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [dateOfBirth, setDateOfBirth] = useState(new Date());
   const router = useRouter();
 
   const form = useForm({
@@ -83,12 +94,44 @@ const SignUpPage = () => {
     },
   });
 
+  const disableDateUnder18 = (date) => {
+    const today = new Date();
+    const eighteenYearsAgo = new Date(
+      today.getFullYear() - 18,
+      today.getMonth(),
+      today.getDate()
+    );
+
+    return date > today || date > eighteenYearsAgo;
+  };
+
+  const getMinAndMaxYear = () => {
+    const today = new Date();
+    const eighteenYearsAgo = new Date(
+      today.getFullYear() - 18,
+      today.getMonth(),
+      today.getDate()
+    );
+
+    return {
+      maxYear: eighteenYearsAgo.getFullYear(),
+      minYear: eighteenYearsAgo.getFullYear() - 47,
+      maxDate: eighteenYearsAgo,
+    };
+  };
+
+  const handleDateChange = (date) => {
+    setDateOfBirth(date);
+    form.setValue("dateOfBirth", date);
+  };
+
   const handleImageChange = ({ url, file }) => {
     setPreviewImage(url);
     setImageFile(file);
   };
 
   const onSubmit = async (data) => {
+    setIsLoading(true);
     let public_id = null;
 
     if (imageFile) {
@@ -130,6 +173,8 @@ const SignUpPage = () => {
           console.error("Error deleting image:", deleteError);
         }
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -157,7 +202,8 @@ const SignUpPage = () => {
                         <Input
                           {...field}
                           placeholder="Enter your first name"
-                          className="placeholder:text-gray-600"
+                          className="placeholder:text-gray-600 bg-util-white"
+                          disabled={isLoading}
                         />
                       </FormControl>
                       <FormMessage className="text-xs" />
@@ -174,7 +220,8 @@ const SignUpPage = () => {
                         <Input
                           {...field}
                           placeholder="Enter your last name"
-                          className="placeholder:text-gray-600"
+                          className="placeholder:text-gray-600 bg-util-white"
+                          disabled={isLoading}
                         />
                       </FormControl>
                       <FormMessage className="text-xs" />
@@ -191,7 +238,8 @@ const SignUpPage = () => {
                         <Input
                           {...field}
                           placeholder="Enter your username"
-                          className="placeholder:text-gray-600"
+                          className="placeholder:text-gray-600 bg-util-white"
+                          disabled={isLoading}
                         />
                       </FormControl>
                       <FormMessage className="text-xs" />
@@ -208,7 +256,8 @@ const SignUpPage = () => {
                         <Input
                           {...field}
                           placeholder="Enter your email"
-                          className="placeholder:text-gray-600"
+                          className="placeholder:text-gray-600 bg-util-white"
+                          disabled={isLoading}
                         />
                       </FormControl>
                       <FormMessage className="text-xs" />
@@ -226,7 +275,8 @@ const SignUpPage = () => {
                           {...field}
                           type="password"
                           placeholder="Enter your password"
-                          className="placeholder:text-gray-600"
+                          className="placeholder:text-gray-600 bg-util-white"
+                          disabled={isLoading}
                         />
                       </FormControl>
                       <FormMessage className="text-xs" />
@@ -244,7 +294,8 @@ const SignUpPage = () => {
                           {...field}
                           type="password"
                           placeholder="Confirm your password"
-                          className="placeholder:text-gray-600"
+                          className="placeholder:text-gray-600 bg-util-white"
+                          disabled={isLoading}
                         />
                       </FormControl>
                       <FormMessage className="text-xs" />
@@ -261,7 +312,8 @@ const SignUpPage = () => {
                         <Input
                           {...field}
                           placeholder="Enter your phone number"
-                          className="placeholder:text-gray-600"
+                          className="placeholder:text-gray-600 bg-util-white"
+                          disabled={isLoading}
                         />
                       </FormControl>
                       <FormMessage className="text-xs" />
@@ -276,7 +328,18 @@ const SignUpPage = () => {
                       <FormLabel>Date of Birth</FormLabel>
 
                       <FormControl>
-                        <Input type="date" {...field} />
+                        <CustomDatePicker
+                          className={"mb-0 py-1 px-3 w-full"}
+                          defaultValue={getMinAndMaxYear().maxDate}
+                          disabledDate={disableDateUnder18}
+                          onDateChange={(date) => {
+                            handleDateChange(date);
+                            field.onChange(date);
+                          }}
+                          minYear={getMinAndMaxYear().minYear}
+                          maxYear={getMinAndMaxYear().maxYear}
+                          disabled={isLoading}
+                        />
                       </FormControl>
 
                       <FormMessage />
@@ -288,16 +351,33 @@ const SignUpPage = () => {
                   control={form.control}
                   name="country"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Country</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="Enter your country"
-                          className="placeholder:text-gray-600"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-xs" />
+                    <FormItem className="flex flex-col space-y-2">
+                      <FormLabel className="block text-gray-900">
+                        Country
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        disabled={isLoading}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="text-black w-full border border-gray-300 rounded-sm p-3 h-[50px] cursor-pointer bg-white">
+                            <SelectValue placeholder="Select your country" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-white text-black">
+                          {Object.entries(COUNTRY).map(([code, name]) => (
+                            <SelectItem
+                              key={code}
+                              value={code}
+                              className="text-black hover:bg-gray-100"
+                            >
+                              {name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage className="text-xs mt-1 text-red-500" />
                     </FormItem>
                   )}
                 />
@@ -324,8 +404,13 @@ const SignUpPage = () => {
               <Button
                 type="submit"
                 className="mt-5 btn-primary max-w-[446px] w-full max-h-12"
+                disabled={isLoading}
               >
-                Register
+                {isLoading ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  "Register"
+                )}
               </Button>
             </form>
           </Form>

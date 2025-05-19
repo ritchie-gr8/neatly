@@ -72,9 +72,13 @@ export default async function handler(req, res) {
         id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
-        username: user.username,
         email: user.email,
+        phone: user.phone,
+        dateOfBirth: user.dateOfBirth,
+        username: user.username,
         role: user.role,
+        country: user.country,
+        profilePicture: user.profilePicture,
       },
     });
   } catch (error) {
