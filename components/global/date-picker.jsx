@@ -145,9 +145,6 @@ const CustomDatePicker = ({
     setCurrentYear(year);
   };
 
-  console.log("value", value);
-  console.log("defaultValue", defaultValue);
-
   return (
     <form className="flex flex-col justify-between">
       <label>{title}</label>
@@ -161,8 +158,8 @@ const CustomDatePicker = ({
             className={cn(
               "py-3 pl-3 pr-4 mb-6 w-full cursor-pointer bg-white justify-between flex items-center",
               "text-black",
-              className,
-              "flex-1 text-b2 border border-input shadow-xs rounded-md"
+              "flex-1 text-b2 border border-input shadow-xs rounded-md",
+              className
             )}
           >
             {value && format(value, "EEE, dd MMM yyyy")}

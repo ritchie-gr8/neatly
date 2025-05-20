@@ -46,22 +46,20 @@ const signUpSchema = z
     phone: z
       .string()
       .min(10, "Phone number must be at least 10 characters long"),
-    dateOfBirth: z
-      .date({ message: "Invalid date" })
-      .refine(
-        (date) => {
-          const today = new Date();
-          const eighteenYearsAgo = new Date(
-            today.getFullYear() - 18,
-            today.getMonth(),
-            today.getDate()
-          );
-          return date <= eighteenYearsAgo;
-        },
-        {
-          message: "You must be at least 18 years old",
-        }
-      ),
+    dateOfBirth: z.date({ message: "Invalid date" }).refine(
+      (date) => {
+        const today = new Date();
+        const eighteenYearsAgo = new Date(
+          today.getFullYear() - 18,
+          today.getMonth(),
+          today.getDate()
+        );
+        return date <= eighteenYearsAgo;
+      },
+      {
+        message: "You must be at least 18 years old",
+      }
+    ),
     country: z.string().min(2, "Country must be at least 2 characters long"),
     profilePicture: z.string().optional(),
     profilePicturePublicId: z.string().optional(),
@@ -126,7 +124,7 @@ const SignUpPage = () => {
       maxYear: eighteenYearsAgo.getFullYear(),
       minYear: seventyYearsAgo.getFullYear(),
       maxDate: eighteenYearsAgo,
-      minDate: seventyYearsAgo
+      minDate: seventyYearsAgo,
     };
   };
 
@@ -341,7 +339,8 @@ const SignUpPage = () => {
                         <CustomDatePicker
                           className={cn(
                             "mb-0 py-1 px-3 w-full border-1 border-input shadow-xs h-9 rounded-md",
-                            formState.errors.dateOfBirth && "border-red-500"
+                            formState.errors.dateOfBirth &&
+                              "border border-red-500"
                           )}
                           defaultValue={getMinAndMaxYear().maxDate}
                           value={dateOfBirth}
@@ -356,7 +355,7 @@ const SignUpPage = () => {
                         />
                       </FormControl>
 
-                      <FormMessage className="text-xs"/>
+                      <FormMessage className="text-xs" />
                     </FormItem>
                   )}
                 />
@@ -365,17 +364,21 @@ const SignUpPage = () => {
                   control={form.control}
                   name="country"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col space-y-2">
-                      <FormLabel required>
-                        Country
-                      </FormLabel>
+                    <FormItem className="flex flex-col">
+                      <FormLabel required>Country</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                         disabled={isLoading}
                       >
                         <FormControl>
-                          <SelectTrigger className={cn("w-full border border-gray-300 rounded-sm p-3 h-[36px] cursor-pointer bg-white", field.value ? "text-black" : "text-gray-600")}>
+                          <SelectTrigger
+                            className={cn(
+                              "w-full border border-gray-300 rounded-md p-3 h-[36px] cursor-pointer bg-white shadow-xs",
+                              field.value ? "text-black" : "text-gray-600",
+                              formState.errors.country && "border-red-500"
+                            )}
+                          >
                             <SelectValue placeholder="Select your country" />
                           </SelectTrigger>
                         </FormControl>
