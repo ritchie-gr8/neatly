@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/select";
 import CustomDatePicker from "@/components/global/date-picker";
 import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const signUpSchema = z
   .object({
@@ -74,7 +75,7 @@ const SignUpPage = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [dateOfBirth, setDateOfBirth] = useState(new Date());
+  const [dateOfBirth, setDateOfBirth] = useState(null);
   const router = useRouter();
 
   const form = useForm({
@@ -93,6 +94,8 @@ const SignUpPage = () => {
       profilePicturePublicId: "",
     },
   });
+
+  const formState = form.formState;
 
   const disableDateUnder18 = (date) => {
     const today = new Date();
@@ -113,10 +116,17 @@ const SignUpPage = () => {
       today.getDate()
     );
 
+    const seventyYearsAgo = new Date(
+      today.getFullYear() - 70,
+      today.getMonth(),
+      today.getDate()
+    );
+
     return {
       maxYear: eighteenYearsAgo.getFullYear(),
-      minYear: eighteenYearsAgo.getFullYear() - 47,
+      minYear: seventyYearsAgo.getFullYear(),
       maxDate: eighteenYearsAgo,
+      minDate: seventyYearsAgo
     };
   };
 
@@ -197,7 +207,7 @@ const SignUpPage = () => {
                   name="firstName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>First name</FormLabel>
+                      <FormLabel required>First name</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -215,7 +225,7 @@ const SignUpPage = () => {
                   name="lastName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Last name</FormLabel>
+                      <FormLabel required>Last name</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -233,7 +243,7 @@ const SignUpPage = () => {
                   name="username"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Username</FormLabel>
+                      <FormLabel required>Username</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -251,7 +261,7 @@ const SignUpPage = () => {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel required>Email</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -269,7 +279,7 @@ const SignUpPage = () => {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
+                      <FormLabel required>Password</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -288,7 +298,7 @@ const SignUpPage = () => {
                   name="confirmPassword"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Confirm Password</FormLabel>
+                      <FormLabel required>Confirm Password</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -307,7 +317,7 @@ const SignUpPage = () => {
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Phone</FormLabel>
+                      <FormLabel required>Phone</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -325,12 +335,16 @@ const SignUpPage = () => {
                   name="dateOfBirth"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel>Date of Birth</FormLabel>
+                      <FormLabel required>Date of Birth</FormLabel>
 
                       <FormControl>
                         <CustomDatePicker
-                          className={"mb-0 py-1 px-3 w-full"}
+                          className={cn(
+                            "mb-0 py-1 px-3 w-full border-1 border-input shadow-xs h-9 rounded-md",
+                            formState.errors.dateOfBirth && "border-red-500"
+                          )}
                           defaultValue={getMinAndMaxYear().maxDate}
+                          value={dateOfBirth}
                           disabledDate={disableDateUnder18}
                           onDateChange={(date) => {
                             handleDateChange(date);
@@ -342,7 +356,7 @@ const SignUpPage = () => {
                         />
                       </FormControl>
 
-                      <FormMessage />
+                      <FormMessage className="text-xs"/>
                     </FormItem>
                   )}
                 />
@@ -352,7 +366,7 @@ const SignUpPage = () => {
                   name="country"
                   render={({ field }) => (
                     <FormItem className="flex flex-col space-y-2">
-                      <FormLabel className="block text-gray-900">
+                      <FormLabel required>
                         Country
                       </FormLabel>
                       <Select
@@ -361,7 +375,7 @@ const SignUpPage = () => {
                         disabled={isLoading}
                       >
                         <FormControl>
-                          <SelectTrigger className="text-black w-full border border-gray-300 rounded-sm p-3 h-[50px] cursor-pointer bg-white">
+                          <SelectTrigger className={cn("w-full border border-gray-300 rounded-sm p-3 h-[36px] cursor-pointer bg-white", field.value ? "text-black" : "text-gray-600")}>
                             <SelectValue placeholder="Select your country" />
                           </SelectTrigger>
                         </FormControl>

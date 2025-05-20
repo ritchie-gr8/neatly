@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import api from "@/lib/axios";
 import { useRouter } from "next/router";
+import { formatPrice } from "@/lib/utils";
 
 const RoomLists = () => {
   const router = useRouter();
@@ -41,13 +42,9 @@ const RoomLists = () => {
 
         if (response.data) {
           const fetchedData = response.data.data || [];
-          const roomsArray = Array.isArray(fetchedData)
-            ? fetchedData
-            : [fetchedData];
+          const roomsArray = fetchedData.rooms;
           setRooms(roomsArray);
-
-          const maxCap = getMaxCapacityFromRooms(roomsArray);
-          setMaxCapacity(maxCap);
+          setMaxCapacity(fetchedData.maxCapacity);
         } else {
           setRooms([]);
         }
@@ -139,7 +136,7 @@ const RoomLists = () => {
             className="border-b-2 border-gray-300 pb-6 md:pb-8 lg:pb-0"
           >
             <div
-              className="pt-6 md:pt-8 lg:pt-10 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-40 
+              className="pt-6 md:pt-8 lg:pt-10 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-40
                                         flex flex-col md:flex-row md:items-stretch md:py-8 lg:py-20 gap-4 md:gap-6 lg:gap-8"
             >
               <Image
@@ -174,15 +171,15 @@ const RoomLists = () => {
                   {promotionPrice && promotionPrice < pricePerNight ? (
                     <>
                       <p className="line-through text-sm md:text-base text-gray-500">
-                        THB {parseFloat(pricePerNight).toFixed(2)}
+                        THB {formatPrice(pricePerNight)}
                       </p>
                       <p className="text-xl sm:text-lg md:text-xl lg:text-2xl font-semibold text-gray-900 mt-1">
-                        THB {parseFloat(promotionPrice).toFixed(2)}
+                        THB {formatPrice(promotionPrice)}
                       </p>
                     </>
                   ) : (
                     <p className="text-xl sm:text-lg md:text-xl lg:text-2xl font-semibold text-gray-900">
-                      THB {parseFloat(pricePerNight).toFixed(2)}
+                      THB {formatPrice(pricePerNight)}
                     </p>
                   )}
                   <p className="mt-1 md:mt-2 text-base sm:text-sm md:text-base text-gray-700">
@@ -197,11 +194,11 @@ const RoomLists = () => {
                       {`Total ${calculateNights(
                         checkIn,
                         checkOut
-                      )} night(s) : THB ${calculateTotalPrice(
+                      )} night(s) : THB ${formatPrice(calculateTotalPrice(
                         promotionPrice || pricePerNight,
                         checkIn,
                         checkOut
-                      ).toFixed(2)}`}
+                      ))}`}
                     </p>
                   )}
                 </div>

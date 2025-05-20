@@ -61,6 +61,7 @@ function FormItem({
 
 function FormLabel({
   className,
+  required = false,
   ...props
 }) {
   const { error, formItemId } = useFormField()
@@ -69,7 +70,8 @@ function FormLabel({
     <Label
       data-slot="form-label"
       data-error={!!error}
-      className={cn("data-[error=true]:text-destructive", className)}
+      // className={cn("data-[error=true]:text-destructive", className)}
+      className={cn(className, required && `after:content-["*"] after:text-red-500 after:-ml-1`)}
       htmlFor={formItemId}
       {...props} />
   );

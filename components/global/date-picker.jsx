@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { format } from "date-fns";
 import { IoCalendarOutline } from "react-icons/io5";
 import { cn } from "@/lib/utils";
@@ -15,8 +15,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { ChevronDown } from "lucide-react";
 
 const generateYearOptions = (
   currentYear,
@@ -70,7 +68,7 @@ const CustomCalendarHeader = ({
   const months = generateMonthOptions();
 
   return (
-    <div className="flex justify-between items-center p-3 border-b border-gray-200 cursor-pointer">
+    <div className="flex justify-between items-center p-3 gap-3 border-b border-gray-200 cursor-pointer">
       <Select
         value={currentMonth.toString()}
         onValueChange={(value) => onMonthChange(parseInt(value))}
@@ -111,14 +109,13 @@ const CustomCalendarHeader = ({
 const CustomDatePicker = ({
   title,
   defaultValue,
+  value,
   className,
   disabledDate = null,
   minYear = null,
   maxYear = null,
   onDateChange,
 }) => {
-  const [date, setDate] = useState(defaultValue);
-  const [selectedDate, setSelectedDate] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(
     defaultValue ? defaultValue.getMonth() : new Date().getMonth()
@@ -128,9 +125,6 @@ const CustomDatePicker = ({
   );
 
   const handleDateSelect = (selectedDate) => {
-    console.log('handle date select ',selectedDate)
-    setDate(selectedDate);
-    setSelectedDate(true);
     setIsOpen(false);
     if (selectedDate) {
       setCurrentMonth(selectedDate.getMonth());
@@ -151,62 +145,65 @@ const CustomDatePicker = ({
     setCurrentYear(year);
   };
 
+  console.log("value", value);
+  console.log("defaultValue", defaultValue);
+
   return (
-    <div>
-      <form className="flex flex-col">
-        <label>{title}</label>
+    <form className="flex flex-col justify-between">
+      <label>{title}</label>
 
-        <Popover open={isOpen} onOpenChange={handleOpenChange}>
-          <PopoverTrigger className="flex">
-            <div
-              role="button"
-              tabIndex={0}
-              variant="outline"
-              className={cn(
-                "py-3 pl-3 pr-4 mb-6 border-2 border-gray-400 w-full md:w-60 cursor-pointer bg-white rounded-sm justify-between flex flex-row items-center",
-                selectedDate ? "text-black" : "text-gray-600",
-                className,
-                "flex-1"
-              )}
-            >
-              {date && format(date, "EEE, dd MMM yyyy")}
-              <IoCalendarOutline className=" text-gray-600 text-xl" />
-            </div>
-          </PopoverTrigger>
-
-          <PopoverContent
-            className="w-auto p-0"
-            align="end"
-            side="bottom"
-            sideOffset={8}
+      <Popover open={isOpen} onOpenChange={handleOpenChange}>
+        <PopoverTrigger className="flex">
+          <div
+            role="button"
+            tabIndex={0}
+            variant="outline"
+            className={cn(
+              "py-3 pl-3 pr-4 mb-6 w-full cursor-pointer bg-white justify-between flex items-center",
+              "text-black",
+              className,
+              "flex-1 text-b2 border border-input shadow-xs rounded-md"
+            )}
           >
-            <CustomCalendarHeader
-              currentMonth={currentMonth}
-              currentYear={currentYear}
-              onMonthChange={handleMonthChange}
-              onYearChange={handleYearChange}
-              minYear={minYear}
-              maxYear={maxYear}
-            />
-            <Calendar
-              mode="single"
-              onSelect={handleDateSelect}
-              disabled={(date) =>
-                disabledDate
-                  ? disabledDate(date)
-                  : date < new Date().setHours(0, 0, 0, 0)
-              }
-              initialFocus
-              month={new Date(currentYear, currentMonth)}
-              onMonthChange={(month) => {
-                setCurrentMonth(month.getMonth());
-                setCurrentYear(month.getFullYear());
-              }}
-            />
-          </PopoverContent>
-        </Popover>
-      </form>
-    </div>
+            {value && format(value, "EEE, dd MMM yyyy")}
+            {!value && (
+              <span className="text-gray-600">Select your date of birth</span>
+            )}
+            <IoCalendarOutline className=" text-gray-600 text-xl" />
+          </div>
+        </PopoverTrigger>
+
+        <PopoverContent
+          className="w-auto p-0 md:max-w-[240px] flex flex-col items-center"
+          align="end"
+          side="bottom"
+          sideOffset={8}
+        >
+          <CustomCalendarHeader
+            currentMonth={currentMonth}
+            currentYear={currentYear}
+            onMonthChange={handleMonthChange}
+            onYearChange={handleYearChange}
+            minYear={minYear}
+            maxYear={maxYear}
+          />
+          <Calendar
+            mode="single"
+            onSelect={handleDateSelect}
+            disabled={(date) =>
+              disabledDate
+                ? disabledDate(date)
+                : date < new Date().setHours(0, 0, 0, 0)
+            }
+            month={new Date(currentYear, currentMonth)}
+            onMonthChange={(month) => {
+              setCurrentMonth(month.getMonth());
+              setCurrentYear(month.getFullYear());
+            }}
+          />
+        </PopoverContent>
+      </Popover>
+    </form>
   );
 };
 

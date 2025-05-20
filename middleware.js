@@ -20,6 +20,7 @@ const publicRoutes = [
   "/api/rooms/get-rooms",
   "/api/room-type",
   "/api/intents",
+  "/api/max-guest",
 ];
 
 const protectedRoutes = ["/admin", "/api/admin"];

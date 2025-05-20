@@ -18,6 +18,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { ROLES } from "@/constants/roles";
 import { PATHS } from "@/constants/paths";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const loginSchema = z.object({
   identifier: z.string().min(2, "Username or email is required"),
@@ -25,6 +27,7 @@ const loginSchema = z.object({
 });
 
 const SignInPage = () => {
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const router = useRouter();
   const form = useForm({
@@ -37,6 +40,7 @@ const SignInPage = () => {
 
   const onSubmit = async (data) => {
     try {
+      setLoading(true);
       const res = await login(data.identifier, data.password);
 
       if (!res?.success) {
@@ -44,10 +48,9 @@ const SignInPage = () => {
       }
 
       const user = res?.user;
-console.log('user',user)
 
       if (user) {
-        toast.success("Login successful");
+        toast.success("Login successful, redirecting...");
         if (user.role === ROLES.ADMIN) {
           router.push(PATHS.ADMIN.CUSTOMER_BOOKING);
         } else {
@@ -56,6 +59,7 @@ console.log('user',user)
       }
     } catch (error) {
       toast.error(error?.message || "An error occurred during login");
+      setLoading(false);
     }
   };
 
@@ -63,7 +67,7 @@ console.log('user',user)
     <DefaultLayout title="Sign In | Neatly">
       <div className="h-screen flex flex-col sm:grid sm:grid-cols-2">
         <div className="h-[25%] sm:h-full bg-[url('/images/auth/signin-bg-mb.png')] sm:bg-[url('/images/auth/signin-bg.jpg')] bg-cover bg-center"></div>
-        <div className="h-full bg-util-bg w-full px-4  sm:px-32 pt-10 sm:pt-40 text-gray-900">
+        <div className="h-full bg-util-bg w-full px-4 sm:px-12 lg:px-32 pt-10 sm:pt-40 text-gray-900">
           <h2 className="text-h2 text-green-800 font-medium mb-10 sm:mb-16">
             Log In
           </h2>
@@ -77,12 +81,13 @@ console.log('user',user)
                 name="identifier"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username or email</FormLabel>
+                    <FormLabel required>Username or email</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         placeholder="Enter your username or email"
                         className="placeholder:text-gray-600 p-3 h-fit"
+                        disabled={loading}
                       />
                     </FormControl>
                     <FormMessage className="text-xs" />
@@ -94,13 +99,14 @@ console.log('user',user)
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel required>Password</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         type="password"
                         placeholder="Enter your password"
                         className="placeholder:text-gray-600 p-3 h-fit"
+                        disabled={loading}
                       />
                     </FormControl>
                     <FormMessage className="text-xs" />
@@ -110,8 +116,16 @@ console.log('user',user)
               <Button
                 type="submit"
                 className="btn-primary py-4 h-fit text-base"
+                disabled={loading}
               >
-                Log In
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Logging in...
+                  </>
+                ) : (
+                  "Log In"
+                )}
               </Button>
             </form>
           </Form>

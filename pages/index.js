@@ -126,7 +126,7 @@ export default function Home() {
   }, []);
 
   return (
-    <DefaultLayout showFooter>
+    <DefaultLayout title="Home | Neatly" showFooter>
       <div className="bg-util-bg overflow-x-hidden">
         {/* First Box --- Hero Section */}
         <section className="md:aspect-[2/1] aspect-[1/2] h-[764px] w-full relative">
