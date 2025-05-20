@@ -123,6 +123,7 @@ export default function Home() {
               className="w-full px-12 lg:px-12 xl:px-30 2xl:px-60"
               data-aos="fade"
               data-aos-delay="500"
+              data-aos-duration="1500"
             >
               <SearchRoom pageType="landing-page" />
             </div>
