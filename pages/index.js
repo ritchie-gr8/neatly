@@ -1,18 +1,28 @@
-import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+
+const SearchRoom = dynamic(
+  () => import("@/components/search-result/search-room"),
+  {
+    ssr: false,
+  }
+);
+const ImageSlider = dynamic(() => import("@/components/global/image-slider"));
+const CircleArrowButton = dynamic(() =>
+  import("@/components/ui/circle-arrow-button")
+);
+const Loading = dynamic(() => import("@/components/global/loading"));
+
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import api from "@/lib/axios";
 import Image from "next/image";
 import DefaultLayout from "@/layouts/default.layout";
-import ImageSlider from "@/components/global/image-slider";
-import CircleArrowButton from "@/components/ui/circle-arrow-button";
+import Aos from "aos";
+import "aos/dist/aos.css";
 import layoutConfig from "@/constants/room-layout-config";
-import api from "@/lib/axios";
 import testimonials from "@/constants/testimonials";
 import services from "@/constants/services";
 import sliderImages from "@/constants/slider-home";
-import SearchRoom from "@/components/search-result/search-room";
-import Loading from "@/components/global/loading";
-import Aos from "aos";
-import "aos/dist/aos.css";
 import { FaArrowRight } from "react-icons/fa6";
 
 export const metadata = {
@@ -72,12 +82,14 @@ export default function Home() {
       );
     }, 6000);
     return () => clearInterval(interval);
-  }, [testimonialIndex]);
+  }, []);
 
-  const rooms = roomTypes.map((room, i) => ({
-    ...room,
-    ...layoutConfig[i % layoutConfig.length],
-  }));
+  const rooms = useMemo(() => {
+    return roomTypes.map((room, i) => ({
+      ...room,
+      ...layoutConfig[i % layoutConfig.length],
+    }));
+  }, [roomTypes]);
 
   return (
     <DefaultLayout title="Home | Neatly" showFooter>
@@ -91,7 +103,8 @@ export default function Home() {
             className="object-cover object-[center_65%] scale-100"
             priority
           />
-          <div className="w-full h-fit pt-24 absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-black/80 via-black/40 to-transparent">
+          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-transparent z-10 pointer-events-none" />
+          <div className="w-full h-fit pt-12 md:pt-24 absolute inset-0 flex flex-col items-center justify-center z-20">
             <h1
               className="text-white text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light text-center leading-tight md:leading-[1.1] pb-12 lg:pb-30"
               data-aos="fade-up"
@@ -106,7 +119,11 @@ export default function Home() {
                 Neatly Experience
               </span>
             </h1>
-            <div className="w-full px-6 lg:px-12 xl:px-30 2xl:px-60">
+            <div
+              className="w-full px-12 lg:px-12 xl:px-30 2xl:px-60"
+              data-aos="fade"
+              data-aos-delay="500"
+            >
               <SearchRoom pageType="landing-page" />
             </div>
           </div>
