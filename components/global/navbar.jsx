@@ -127,7 +127,8 @@ const Navbar = () => {
         </div>
 
         {/* Right bar --- Mobile */}
-        <div className="lg:hidden flex items-center">
+        
+        <div className="lg:hidden">
           <Sheet>
             <SheetTrigger asChild>
               <Menu className="w-6 h-6 text-green-600" />

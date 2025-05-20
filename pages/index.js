@@ -1,17 +1,28 @@
-import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+
+const SearchRoom = dynamic(
+  () => import("@/components/search-result/search-room"),
+  {
+    ssr: false,
+  }
+);
+const ImageSlider = dynamic(() => import("@/components/global/image-slider"));
+const CircleArrowButton = dynamic(() =>
+  import("@/components/ui/circle-arrow-button")
+);
+const Loading = dynamic(() => import("@/components/global/loading"));
+
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import api from "@/lib/axios";
 import Image from "next/image";
 import DefaultLayout from "@/layouts/default.layout";
-import ImageSlider from "@/components/global/image-slider";
-import CircleArrowButton from "@/components/ui/circle-arrow-button";
-import api from "@/lib/axios";
+import Aos from "aos";
+import "aos/dist/aos.css";
+import layoutConfig from "@/constants/room-layout-config";
 import testimonials from "@/constants/testimonials";
 import services from "@/constants/services";
 import sliderImages from "@/constants/slider-home";
-import SearchRoom from "@/components/search-result/search-room";
-import Loading from "@/components/global/loading";
-import Aos from "aos";
-import "aos/dist/aos.css";
 import { FaArrowRight } from "react-icons/fa6";
 
 export const metadata = {
@@ -50,6 +61,13 @@ export default function Home() {
         setIsMobile(false);
       }
     };
+    const AOS = () => {
+      Aos.init({
+        mirror: true,
+        duration: 1000,
+      });
+    };
+    AOS();
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => {
@@ -57,73 +75,21 @@ export default function Home() {
     };
   }, []);
 
-  const rooms = [
-    {
-      id: 1,
-      name: roomTypes[0]?.name || "",
-      image: roomTypes[0]?.defaultImage || "",
-      colSpan: "lg:col-span-3",
-      height: "lg:h-132 h-66",
-      rowSpan: "",
-    },
-    {
-      id: 2,
-      name: roomTypes[1]?.name || "",
-      image: roomTypes[1]?.defaultImage || "",
-      colSpan: "lg:col-span-2",
-      height: "lg:h-96 h-66",
-      rowSpan: "",
-    },
-    {
-      id: 3,
-      name: roomTypes[2]?.name || "",
-      image: roomTypes[2]?.defaultImage || "",
-      colSpan: "lg:col-span-1",
-      height: "lg:h-96 h-66",
-      rowSpan: "",
-    },
-    {
-      id: 4,
-      name: roomTypes[3]?.name || "",
-      image: roomTypes[3]?.defaultImage || "",
-      colSpan: "lg:col-span-1",
-      height: "lg:h-196 h-66",
-      rowSpan: "lg:row-span-2",
-    },
-    {
-      id: 5,
-      name: roomTypes[4]?.name || "",
-      image: roomTypes[4]?.defaultImage || "",
-      colSpan: "lg:col-span-2",
-      height: "lg:h-96 h-66",
-      rowSpan: "",
-    },
-    {
-      id: 6,
-      name: roomTypes[5]?.name || "",
-      image: roomTypes[5]?.defaultImage || "",
-      colSpan: "lg:col-span-2",
-      height: "lg:h-96 h-66",
-      rowSpan: "",
-    },
-  ];
-
   useEffect(() => {
     const interval = setInterval(() => {
       setTestimonialIndex((prev) =>
         prev === testimonials.length - 1 ? 0 : prev + 1
       );
     }, 6000);
-
     return () => clearInterval(interval);
-  }, [testimonialIndex]);
-
-  useEffect(() => {
-    Aos.init({
-      mirror: true,
-      duration: 1000,
-    });
   }, []);
+
+  const rooms = useMemo(() => {
+    return roomTypes.map((room, i) => ({
+      ...room,
+      ...layoutConfig[i % layoutConfig.length],
+    }));
+  }, [roomTypes]);
 
   return (
     <DefaultLayout title="Home | Neatly" showFooter>
@@ -137,7 +103,8 @@ export default function Home() {
             className="object-cover object-[center_65%] scale-100"
             priority
           />
-          <div className="w-full h-fit pt-24 absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-black/80 via-black/40 to-transparent">
+          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-transparent z-10 pointer-events-none" />
+          <div className="w-full h-fit pt-12 md:pt-24 absolute inset-0 flex flex-col items-center justify-center z-20">
             <h1
               className="text-white text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light text-center leading-tight md:leading-[1.1] pb-12 lg:pb-30"
               data-aos="fade-up"
@@ -152,13 +119,18 @@ export default function Home() {
                 Neatly Experience
               </span>
             </h1>
-            <div className="w-full px-6 lg:px-12 xl:px-30 2xl:px-60">
+            <div
+              className="w-full px-12 lg:px-12 xl:px-30 2xl:px-60"
+              data-aos="fade"
+              data-aos-delay="500"
+              data-aos-duration="1500"
+            >
               <SearchRoom pageType="landing-page" />
             </div>
           </div>
         </section>
 
-        {/* Second Box --- Neatly Hotel */}
+        {/* Second Box --- Hotel Master*/}
         <section className="w-full h-full py-12 md:py-30" id="about">
           <div className="px-6 lg:px-12 xl:px-30 2xl:px-60">
             <h1
@@ -174,7 +146,7 @@ export default function Home() {
             >
               <p>
                 Set in Bangkok, Thailand. Neatly Hotel offers 5-star
-                accommodation with an outdoor pool, kids&apos; club, sports
+                accommodation with an outdoor pool, kids, club, sports
                 facilities and a fitness centre. There is also a spa, an indoor
                 pool and saunas.
               </p>
@@ -207,13 +179,13 @@ export default function Home() {
             <h1
               className="lg:text-7xl text-5xl lg:pb-12"
               data-aos={isMobile ? "fade-up" : "fade-left"}
-          >
+            >
               Service & <br className="lg:hidden block" /> Facilities
             </h1>
             <div className="flex gap-18 flex-wrap justify-center">
               {services.map((service, index) => (
                 <div
-                  key={index}
+                  key={service.label}
                   className="flex flex-col items-center text-center w-30 h-30 gap-6 whitespace-nowrap"
                   data-aos={isMobile ? "fade-up" : "fade-left"}
                   data-aos-delay={isMobile ? 0 : index * 100}
@@ -240,15 +212,16 @@ export default function Home() {
                 {isLoading ? (
                   <Loading />
                 ) : (
-                  rooms.map((room) => (
+                  rooms.slice(0, 6).map((room) => (
                     <div
                       key={room.id}
                       className={`${room.colSpan} ${room.rowSpan} ${room.height} relative overflow-hidden cursor-pointer`}
                       data-aos="fade-up"
                     >
                       <img
-                        src={room.image}
+                        src={room.defaultImage}
                         alt={room.name}
+                        fill
                         className="absolute inset-0 w-full h-full object-cover"
                         loading="lazy"
                       />
@@ -272,11 +245,8 @@ export default function Home() {
 
         {/* Fifth Box --- Our Customer Says */}
         <section className="flex flex-col px-6 lg:px-12 xl:px-30 2xl:px-60 lg:py-30 py-12 bg-green-200">
-          <div data-aos="fade-up">
-            <h1
-              className="text-center lg:text-7xl text-4xl lg:pb-24 pb-12 text-green-800"
-
-            >
+          <div>
+            <h1 className="text-center lg:text-7xl text-4xl lg:pb-24 pb-12 text-green-800">
               Our Customer <br className="lg:hidden block" /> Says
             </h1>
             <div className="relative ">
@@ -298,6 +268,7 @@ export default function Home() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: isMobile ? -10 : -100 }}
                     transition={{ duration: 0.5 }}
+                    viewport={{ amount: 0.5 }}
                     className="text-green-700 max-w-4xl text-center lg:font-normal font-bold lg:px-12"
                   >
                     {testimonials[testimonialIndex].quote}
@@ -322,18 +293,25 @@ export default function Home() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.5 }}
+                viewport={{ amount: 0.5 }}
                 className="flex items-center justify-center lg:pt-12 pt-6 gap-4"
               >
-                <motion.img
-                  src={testimonials[testimonialIndex].img}
-                  alt={`${testimonials[testimonialIndex].name} image`}
-                  className="w-10 h-10 rounded-full"
+                <motion.div
                   transition={{ duration: 0.5 }}
-                  loading="lazy"
-                />
+                  viewport={{ amount: 0.5 }}
+                  className="relative w-8 h-8 rounded-full overflow-hidden"
+                >
+                  <Image
+                    src={testimonials[testimonialIndex].img}
+                    alt={`${testimonials[testimonialIndex].name} image`}
+                    fill
+                    loading="lazy"
+                  />
+                </motion.div>
                 <motion.p
                   className="text-gray-600"
                   transition={{ duration: 0.5 }}
+                  viewport={{ amount: 0.5 }}
                 >
                   {testimonials[testimonialIndex].name}
                 </motion.p>

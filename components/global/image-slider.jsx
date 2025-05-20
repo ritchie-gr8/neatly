@@ -63,6 +63,7 @@ export default function ImageSlider({
                 alt={`slide-${idx}`}
                 fill
                 className="object-cover md:px-2 px-1"
+                loading="lazy"
               />
             </div>
           ))}
