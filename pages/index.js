@@ -42,7 +42,7 @@ export default function Home() {
       setIsLoading(true);
       try {
         const response = await api.get("/room-type");
-        const data = response.data.data;
+        const data = response.data.roomTypes;
         setRoomTypes(data);
       } catch (error) {
         console.error("Error fetching room types:", error);

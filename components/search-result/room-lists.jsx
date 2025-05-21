@@ -41,7 +41,7 @@ const RoomLists = () => {
         const response = await api.get("/rooms/get-rooms");
 
         if (response.data) {
-          const fetchedData = response.data.data || [];
+          const fetchedData = response.data || [];
           const roomsArray = fetchedData.rooms;
           setRooms(roomsArray);
           setMaxCapacity(fetchedData.maxCapacity);

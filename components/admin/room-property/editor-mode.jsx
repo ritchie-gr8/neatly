@@ -247,7 +247,7 @@ const EditorMode = ({ setMode, selectedRoomTypeId, setLastAction }) => {
         });
         console.log("Room type created:", createResponse.data);
 
-        roomTypeId = createResponse.data.data.id;
+        roomTypeId = createResponse.data.id;
       }
 
       if (imageFile && roomTypeId) {
@@ -386,7 +386,7 @@ const EditorMode = ({ setMode, selectedRoomTypeId, setLastAction }) => {
       try {
         setIsLoadingBedTypes(true);
         const response = await api.get("/admin/bed-type");
-        setBedTypes(response.data.data || []);
+        setBedTypes(response.data || []);
       } catch (error) {
         console.error("Error fetching bed types:", error);
         toast.error("Failed to load bed types");
@@ -408,7 +408,7 @@ const EditorMode = ({ setMode, selectedRoomTypeId, setLastAction }) => {
           const response = await api.get(
             `/admin/room-type/${selectedRoomTypeId}`
           );
-          const roomTypeData = response.data.data;
+          const roomTypeData = response.data;
 
           console.log("Room type data:", roomTypeData);
 

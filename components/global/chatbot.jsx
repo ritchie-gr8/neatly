@@ -11,17 +11,17 @@ import getBotResponseForTopic from "@/lib/chatbot-response";
 const ChatbotPopup = ({ className }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const [messages, setMessages] = useState([
-    {
-      type: "bot",
-      content:
-        "Welcome to Neatly Hotel! ✨\nI'm your virtual assistant. Choose a topic you'd like to know more about. I'm here to help! 😊",
-    },
-  ]);
+  const [messages, setMessages] = useState([]);
+  const [greetingMessage, setGreetingMessage] = useState("")
+  const [autoReplyMessage, setAutoReplyMessage] = useState("");
   const [inputValue, setInputValue] = useState("");
   const chatContainerRef = useRef(null);
 
   const toggleChat = () => {
+    if (messages.length === 0) {
+      addMessage("bot", greetingMessage);
+    }
+
     setIsOpen(!isOpen);
   };
 
@@ -57,7 +57,11 @@ const ChatbotPopup = ({ className }) => {
       const intent = data.intent;
       console.log("User Intent:", intent);
       const botResponse = getBotResponseForTopic(intent);
-      addMessage("bot", botResponse);
+      if (!botResponse) {
+        addMessage("bot", autoReplyMessage);
+      } else {
+        addMessage("bot", botResponse);
+      }
     } catch (error) {
       console.error("Error getting bot response:", error);
 
@@ -86,6 +90,23 @@ const ChatbotPopup = ({ className }) => {
       handleSendMessage();
     }
   };
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await api.get("/admin/chatbot/message");
+        const { success, greetingMessage, autoReplyMessage } = response.data;
+
+        if (success) {
+          setGreetingMessage(greetingMessage);
+          setAutoReplyMessage(autoReplyMessage);
+        }
+      } catch (error) {
+        console.error("Error fetching chatbot messages:", error.message);
+      }
+    };
+    fetchMessages();
+  }, []);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {

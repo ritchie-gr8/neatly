@@ -5,7 +5,7 @@ import RoomTypeForm from "./forms/roomtype-form";
 import MessageForm from "./forms/message-form";
 import api from "@/lib/axios";
 
-const ResponseForm = ({ replyFormat, className }) => {
+const ResponseForm = ({ replyFormat, className, mode }) => {
   const [roomTypes, setRoomTypes] = useState([]);
 
   useEffect(() => {
@@ -22,11 +22,11 @@ const ResponseForm = ({ replyFormat, className }) => {
       <form>
         {replyFormat === "room-type" && (
           <Suspense fallback={<div>Loading...</div>}>
-            <RoomTypeForm className={className} roomTypes={roomTypes} />
+            <RoomTypeForm className={className} roomTypes={roomTypes} mode={mode} />
           </Suspense>
         )}
-        {replyFormat === "message" && <MessageForm className={className} />}
-        {replyFormat === "option" && <OptionForm className={className} />}
+        {replyFormat === "message" && <MessageForm className={className} mode={mode} />}
+        {replyFormat === "option" && <OptionForm className={className} mode={mode} />}
       </form>
     </Form>
   );

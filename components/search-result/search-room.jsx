@@ -51,7 +51,7 @@ const SearchRoom = ({
       setLoading(true);
       try {
         const response = await api.get("/max-guest");
-        const maxGuest = response.data.data.maxGuest;
+        const maxGuest = response.data.maxGuest;
         setMaxCapacity(maxGuest);
         setActualMaxCapacity(maxGuest);
       } catch (error) {

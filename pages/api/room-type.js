@@ -46,7 +46,9 @@ const GET = async (req, res) => {
 
     return successResponse({
       res,
-      data: formattedRoomTypes,
+      data: {
+        roomTypes: formattedRoomTypes,
+      },
     });
   } catch (error) {
     console.error("Error fetching room types:", error.message);

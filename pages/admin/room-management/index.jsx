@@ -78,7 +78,7 @@ const StatusDropdown = ({
     return "bg-[#F0F1F8] text-[#6E7288]";
   };
   // Filter statuses based on search term
-  const filteredStatuses = roomStatus.filter(status => 
+  const filteredStatuses = roomStatus.filter(status =>
     status.statusName.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const handleClearStatus = () => {
@@ -111,9 +111,9 @@ const StatusDropdown = ({
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full pr-8 text-gray-600"
                   />
-                  {/* <Search 
-                    size={16} 
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500" 
+                  {/* <Search
+                    size={16}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
                   /> */}
                   <button
                     type="button"
@@ -381,8 +381,8 @@ const RoomManagement = () => {
       try {
         setStatusLoading(true);
         const response = await api.get("/admin/room-status/list");
-        if (Array.isArray(response.data.data)) {
-          setRoomStatus(response.data.data);
+        if (Array.isArray(response.data)) {
+          setRoomStatus(response.data);
         } else {
           console.error("Invalid room status format:", response.data);
           setRoomStatus([]);
@@ -405,8 +405,8 @@ const RoomManagement = () => {
         setRoomTypesLoading(true);
         const response = await api.get("/admin/room-type/list");
         // console.log(response);
-        if (response.data.data?.items) {
-          setRoomTypes(response.data.data.items);
+        if (response.data?.items) {
+          setRoomTypes(response.data.items);
         } else {
           console.error("Invalid room types format:", response.data);
           setRoomTypes([]);
@@ -452,9 +452,9 @@ const RoomManagement = () => {
           search: debouncedSearchTerm.trim(),
         },
       });
-      const roomsData = response.data?.data;
+      const roomsData = response.data;
       // console.log(roomsData);
-      const { totalPages, rooms, page } = response.data?.data;
+      const { totalPages, rooms, page } = response.data;
 
       // console.log(rooms);
       setRooms(rooms || []);
@@ -478,7 +478,7 @@ const RoomManagement = () => {
     setCurrentPage(1);
     setSearchTerm(e.target.value);
   };
-  
+
   const handleClearSearch = () => {
     setSearchTerm("");
     setCurrentPage(1);
@@ -497,7 +497,7 @@ const RoomManagement = () => {
       )
     );
   };
-  // Create a new room via API call 
+  // Create a new room via API call
   const handleCreateRoom = async (roomData) => {
     try {
       const response = await api.post("/admin/rooms/create", {
@@ -516,7 +516,7 @@ const RoomManagement = () => {
       await fetchRooms();
       toast.success(`Room ${roomData.roomNumber} created successfully`);
       setLoading(false);
-    }, 100);  
+    }, 100);
       return true;
     } catch (error) {
       console.error("Error creating room:", error);
