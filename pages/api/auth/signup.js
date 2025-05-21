@@ -26,7 +26,16 @@ export default async function handler(req, res) {
       profilePicturePublicId,
     } = req.body;
 
-    if (!firstName || !lastName || !username || !email || !password || !phone || !dateOfBirth || !country) {
+    if (
+      !firstName ||
+      !lastName ||
+      !username ||
+      !email ||
+      !password ||
+      !phone ||
+      !dateOfBirth ||
+      !country
+    ) {
       return errorResponse({
         res,
         message: "All fields are required",
@@ -36,10 +45,7 @@ export default async function handler(req, res) {
 
     const existingUser = await db.user.findFirst({
       where: {
-        OR: [
-          { email },
-          { username },
-        ],
+        OR: [{ email }, { username }],
       },
     });
 
@@ -72,17 +78,19 @@ export default async function handler(req, res) {
     return successResponse({
       res,
       data: {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        username: user.username,
-        email: user.email,
-        phone: user.phone,
-        dateOfBirth: user.dateOfBirth,
-        country: user.country,
-        role: user.role,
-        profilePicture: user.profilePicture,
-        profilePicturePublicId: user.profilePicturePublicId,
+        user: {
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          username: user.username,
+          email: user.email,
+          phone: user.phone,
+          dateOfBirth: user.dateOfBirth,
+          country: user.country,
+          role: user.role,
+          profilePicture: user.profilePicture,
+          profilePicturePublicId: user.profilePicturePublicId,
+        },
       },
       status: HTTP_STATUS.CREATED,
     });

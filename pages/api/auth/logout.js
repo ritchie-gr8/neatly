@@ -23,8 +23,5 @@ export default async function handler(req, res) {
 
   return successResponse({
     res,
-    data: {
-      success: true,
-    },
   });
 }
