@@ -207,6 +207,10 @@ h3 {
   @apply font-[family-name:var(--font-noto-serif)]
 }
 
+.require-label {
+  @apply after:content-["*"] after:text-red-500 after:-ml-1
+}
+
 /* Animation utilities for Sheet component */
 @keyframes fade-in-0 {
   from { opacity: 0; }
