@@ -177,7 +177,7 @@ const Navbar = () => {
                       <SheetClose asChild>
                         <button
                           onClick={logout}
-                          className="flex items-center gap-2 hover:text-gray-600 transition border-t pt-4 w-full text-left"
+                          className="flex items-center gap-2 hover:text-gray-600 transition border-t pt-4 w-full text-left focus:outline-none"
                         >
                           <LogOut className="w-4 h-4 text-gray-500" /> Log out
                         </button>
