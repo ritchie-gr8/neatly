@@ -26,7 +26,7 @@ const RoomPropertyPage = () => {
       const { data } = await api.get(
         `/admin/room-type/list?page=${currentPage}${debouncedSearchTerm ? `&search=${encodeURIComponent(debouncedSearchTerm)}` : ''}`
       );
-      setRoomTypes(data?.data);
+      setRoomTypes(data);
     } catch (error) {
       console.error("Error fetching room types:", error);
     } finally {

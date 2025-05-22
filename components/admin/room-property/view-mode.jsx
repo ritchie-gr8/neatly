@@ -101,14 +101,14 @@ const ViewMode = ({
                     </tr>
                   ))}
                 </>
-              ) : roomTypes.items?.length === 0 ? (
+              ) : roomTypes?.items?.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="text-center py-4">
                     No room types found
                   </td>
                 </tr>
               ) : (
-                roomTypes.items?.map((roomType) => (
+                roomTypes?.items?.map((roomType) => (
                   <tr
                     key={roomType.id}
                     className="py-6 h-[120px] border-b border-gray-300 cursor-pointer hover:bg-gray-100"
@@ -140,7 +140,7 @@ const ViewMode = ({
         </CardContent>
       </Card>
 
-      {roomTypes.totalPages > 0 && (
+      {roomTypes?.totalPages > 0 && (
         <div className="flex justify-center py-4 mt-8">
           <CustomPagination
             currentPage={currentPage}
