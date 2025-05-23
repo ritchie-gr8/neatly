@@ -2,6 +2,16 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Custom scrollbar for horizontal scrolling containers */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 @theme {
   --color-green-900: #171F1B;
   --color-green-800: #2F3E35;

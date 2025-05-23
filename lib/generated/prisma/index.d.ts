@@ -19403,16 +19403,19 @@ export namespace Prisma {
 
   export type ChatbotResponseAvgAggregateOutputType = {
     id: number | null
+    order: number | null
   }
 
   export type ChatbotResponseSumAggregateOutputType = {
     id: number | null
+    order: number | null
   }
 
   export type ChatbotResponseMinAggregateOutputType = {
     id: number | null
     topic: string | null
     replyFormat: $Enums.ReplyFormat | null
+    order: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -19421,6 +19424,7 @@ export namespace Prisma {
     id: number | null
     topic: string | null
     replyFormat: $Enums.ReplyFormat | null
+    order: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -19429,6 +19433,7 @@ export namespace Prisma {
     id: number
     topic: number
     replyFormat: number
+    order: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -19437,16 +19442,19 @@ export namespace Prisma {
 
   export type ChatbotResponseAvgAggregateInputType = {
     id?: true
+    order?: true
   }
 
   export type ChatbotResponseSumAggregateInputType = {
     id?: true
+    order?: true
   }
 
   export type ChatbotResponseMinAggregateInputType = {
     id?: true
     topic?: true
     replyFormat?: true
+    order?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -19455,6 +19463,7 @@ export namespace Prisma {
     id?: true
     topic?: true
     replyFormat?: true
+    order?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -19463,6 +19472,7 @@ export namespace Prisma {
     id?: true
     topic?: true
     replyFormat?: true
+    order?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -19558,6 +19568,7 @@ export namespace Prisma {
     id: number
     topic: string
     replyFormat: $Enums.ReplyFormat
+    order: number
     createdAt: Date
     updatedAt: Date
     _count: ChatbotResponseCountAggregateOutputType | null
@@ -19585,6 +19596,7 @@ export namespace Prisma {
     id?: boolean
     topic?: boolean
     replyFormat?: boolean
+    order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     messageResponse?: boolean | ChatbotResponse$messageResponseArgs<ExtArgs>
@@ -19596,6 +19608,7 @@ export namespace Prisma {
     id?: boolean
     topic?: boolean
     replyFormat?: boolean
+    order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["chatbotResponse"]>
@@ -19604,6 +19617,7 @@ export namespace Prisma {
     id?: boolean
     topic?: boolean
     replyFormat?: boolean
+    order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["chatbotResponse"]>
@@ -19612,11 +19626,12 @@ export namespace Prisma {
     id?: boolean
     topic?: boolean
     replyFormat?: boolean
+    order?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ChatbotResponseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "topic" | "replyFormat" | "createdAt" | "updatedAt", ExtArgs["result"]["chatbotResponse"]>
+  export type ChatbotResponseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "topic" | "replyFormat" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["chatbotResponse"]>
   export type ChatbotResponseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     messageResponse?: boolean | ChatbotResponse$messageResponseArgs<ExtArgs>
     roomTypeResponse?: boolean | ChatbotResponse$roomTypeResponseArgs<ExtArgs>
@@ -19636,6 +19651,7 @@ export namespace Prisma {
       id: number
       topic: string
       replyFormat: $Enums.ReplyFormat
+      order: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["chatbotResponse"]>
@@ -20067,6 +20083,7 @@ export namespace Prisma {
     readonly id: FieldRef<"ChatbotResponse", 'Int'>
     readonly topic: FieldRef<"ChatbotResponse", 'String'>
     readonly replyFormat: FieldRef<"ChatbotResponse", 'ReplyFormat'>
+    readonly order: FieldRef<"ChatbotResponse", 'Int'>
     readonly createdAt: FieldRef<"ChatbotResponse", 'DateTime'>
     readonly updatedAt: FieldRef<"ChatbotResponse", 'DateTime'>
   }
@@ -21652,6 +21669,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseMinAggregateOutputType = {
     id: number | null
+    replyTitle: string | null
     buttonName: string | null
     responseId: number | null
     createdAt: Date | null
@@ -21660,6 +21678,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseMaxAggregateOutputType = {
     id: number | null
+    replyTitle: string | null
     buttonName: string | null
     responseId: number | null
     createdAt: Date | null
@@ -21668,6 +21687,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseCountAggregateOutputType = {
     id: number
+    replyTitle: number
     buttonName: number
     responseId: number
     createdAt: number
@@ -21688,6 +21708,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseMinAggregateInputType = {
     id?: true
+    replyTitle?: true
     buttonName?: true
     responseId?: true
     createdAt?: true
@@ -21696,6 +21717,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseMaxAggregateInputType = {
     id?: true
+    replyTitle?: true
     buttonName?: true
     responseId?: true
     createdAt?: true
@@ -21704,6 +21726,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseCountAggregateInputType = {
     id?: true
+    replyTitle?: true
     buttonName?: true
     responseId?: true
     createdAt?: true
@@ -21799,6 +21822,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseGroupByOutputType = {
     id: number
+    replyTitle: string
     buttonName: string
     responseId: number
     createdAt: Date
@@ -21826,6 +21850,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    replyTitle?: boolean
     buttonName?: boolean
     responseId?: boolean
     createdAt?: boolean
@@ -21837,6 +21862,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    replyTitle?: boolean
     buttonName?: boolean
     responseId?: boolean
     createdAt?: boolean
@@ -21846,6 +21872,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    replyTitle?: boolean
     buttonName?: boolean
     responseId?: boolean
     createdAt?: boolean
@@ -21855,13 +21882,14 @@ export namespace Prisma {
 
   export type RoomTypeResponseSelectScalar = {
     id?: boolean
+    replyTitle?: boolean
     buttonName?: boolean
     responseId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RoomTypeResponseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "buttonName" | "responseId" | "createdAt" | "updatedAt", ExtArgs["result"]["roomTypeResponse"]>
+  export type RoomTypeResponseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "replyTitle" | "buttonName" | "responseId" | "createdAt" | "updatedAt", ExtArgs["result"]["roomTypeResponse"]>
   export type RoomTypeResponseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chatbotResponse?: boolean | ChatbotResponseDefaultArgs<ExtArgs>
     roomTypes?: boolean | RoomTypeResponse$roomTypesArgs<ExtArgs>
@@ -21882,6 +21910,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
+      replyTitle: string
       buttonName: string
       responseId: number
       createdAt: Date
@@ -22312,6 +22341,7 @@ export namespace Prisma {
    */
   interface RoomTypeResponseFieldRefs {
     readonly id: FieldRef<"RoomTypeResponse", 'Int'>
+    readonly replyTitle: FieldRef<"RoomTypeResponse", 'String'>
     readonly buttonName: FieldRef<"RoomTypeResponse", 'String'>
     readonly responseId: FieldRef<"RoomTypeResponse", 'Int'>
     readonly createdAt: FieldRef<"RoomTypeResponse", 'DateTime'>
@@ -29629,6 +29659,7 @@ export namespace Prisma {
     id: 'id',
     topic: 'topic',
     replyFormat: 'replyFormat',
+    order: 'order',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -29649,6 +29680,7 @@ export namespace Prisma {
 
   export const RoomTypeResponseScalarFieldEnum: {
     id: 'id',
+    replyTitle: 'replyTitle',
     buttonName: 'buttonName',
     responseId: 'responseId',
     createdAt: 'createdAt',
@@ -30958,6 +30990,7 @@ export namespace Prisma {
     id?: IntFilter<"ChatbotResponse"> | number
     topic?: StringFilter<"ChatbotResponse"> | string
     replyFormat?: EnumReplyFormatFilter<"ChatbotResponse"> | $Enums.ReplyFormat
+    order?: IntFilter<"ChatbotResponse"> | number
     createdAt?: DateTimeFilter<"ChatbotResponse"> | Date | string
     updatedAt?: DateTimeFilter<"ChatbotResponse"> | Date | string
     messageResponse?: XOR<MessageResponseNullableScalarRelationFilter, MessageResponseWhereInput> | null
@@ -30969,6 +31002,7 @@ export namespace Prisma {
     id?: SortOrder
     topic?: SortOrder
     replyFormat?: SortOrder
+    order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     messageResponse?: MessageResponseOrderByWithRelationInput
@@ -30983,6 +31017,7 @@ export namespace Prisma {
     NOT?: ChatbotResponseWhereInput | ChatbotResponseWhereInput[]
     topic?: StringFilter<"ChatbotResponse"> | string
     replyFormat?: EnumReplyFormatFilter<"ChatbotResponse"> | $Enums.ReplyFormat
+    order?: IntFilter<"ChatbotResponse"> | number
     createdAt?: DateTimeFilter<"ChatbotResponse"> | Date | string
     updatedAt?: DateTimeFilter<"ChatbotResponse"> | Date | string
     messageResponse?: XOR<MessageResponseNullableScalarRelationFilter, MessageResponseWhereInput> | null
@@ -30994,6 +31029,7 @@ export namespace Prisma {
     id?: SortOrder
     topic?: SortOrder
     replyFormat?: SortOrder
+    order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ChatbotResponseCountOrderByAggregateInput
@@ -31010,6 +31046,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"ChatbotResponse"> | number
     topic?: StringWithAggregatesFilter<"ChatbotResponse"> | string
     replyFormat?: EnumReplyFormatWithAggregatesFilter<"ChatbotResponse"> | $Enums.ReplyFormat
+    order?: IntWithAggregatesFilter<"ChatbotResponse"> | number
     createdAt?: DateTimeWithAggregatesFilter<"ChatbotResponse"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ChatbotResponse"> | Date | string
   }
@@ -31076,6 +31113,7 @@ export namespace Prisma {
     OR?: RoomTypeResponseWhereInput[]
     NOT?: RoomTypeResponseWhereInput | RoomTypeResponseWhereInput[]
     id?: IntFilter<"RoomTypeResponse"> | number
+    replyTitle?: StringFilter<"RoomTypeResponse"> | string
     buttonName?: StringFilter<"RoomTypeResponse"> | string
     responseId?: IntFilter<"RoomTypeResponse"> | number
     createdAt?: DateTimeFilter<"RoomTypeResponse"> | Date | string
@@ -31086,6 +31124,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseOrderByWithRelationInput = {
     id?: SortOrder
+    replyTitle?: SortOrder
     buttonName?: SortOrder
     responseId?: SortOrder
     createdAt?: SortOrder
@@ -31100,6 +31139,7 @@ export namespace Prisma {
     AND?: RoomTypeResponseWhereInput | RoomTypeResponseWhereInput[]
     OR?: RoomTypeResponseWhereInput[]
     NOT?: RoomTypeResponseWhereInput | RoomTypeResponseWhereInput[]
+    replyTitle?: StringFilter<"RoomTypeResponse"> | string
     buttonName?: StringFilter<"RoomTypeResponse"> | string
     createdAt?: DateTimeFilter<"RoomTypeResponse"> | Date | string
     updatedAt?: DateTimeFilter<"RoomTypeResponse"> | Date | string
@@ -31109,6 +31149,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseOrderByWithAggregationInput = {
     id?: SortOrder
+    replyTitle?: SortOrder
     buttonName?: SortOrder
     responseId?: SortOrder
     createdAt?: SortOrder
@@ -31125,6 +31166,7 @@ export namespace Prisma {
     OR?: RoomTypeResponseScalarWhereWithAggregatesInput[]
     NOT?: RoomTypeResponseScalarWhereWithAggregatesInput | RoomTypeResponseScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"RoomTypeResponse"> | number
+    replyTitle?: StringWithAggregatesFilter<"RoomTypeResponse"> | string
     buttonName?: StringWithAggregatesFilter<"RoomTypeResponse"> | string
     responseId?: IntWithAggregatesFilter<"RoomTypeResponse"> | number
     createdAt?: DateTimeWithAggregatesFilter<"RoomTypeResponse"> | Date | string
@@ -32573,6 +32615,7 @@ export namespace Prisma {
   export type ChatbotResponseCreateInput = {
     topic: string
     replyFormat: $Enums.ReplyFormat
+    order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     messageResponse?: MessageResponseCreateNestedOneWithoutChatbotResponseInput
@@ -32584,6 +32627,7 @@ export namespace Prisma {
     id?: number
     topic: string
     replyFormat: $Enums.ReplyFormat
+    order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     messageResponse?: MessageResponseUncheckedCreateNestedOneWithoutChatbotResponseInput
@@ -32594,6 +32638,7 @@ export namespace Prisma {
   export type ChatbotResponseUpdateInput = {
     topic?: StringFieldUpdateOperationsInput | string
     replyFormat?: EnumReplyFormatFieldUpdateOperationsInput | $Enums.ReplyFormat
+    order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     messageResponse?: MessageResponseUpdateOneWithoutChatbotResponseNestedInput
@@ -32605,6 +32650,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     topic?: StringFieldUpdateOperationsInput | string
     replyFormat?: EnumReplyFormatFieldUpdateOperationsInput | $Enums.ReplyFormat
+    order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     messageResponse?: MessageResponseUncheckedUpdateOneWithoutChatbotResponseNestedInput
@@ -32616,6 +32662,7 @@ export namespace Prisma {
     id?: number
     topic: string
     replyFormat: $Enums.ReplyFormat
+    order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -32623,6 +32670,7 @@ export namespace Prisma {
   export type ChatbotResponseUpdateManyMutationInput = {
     topic?: StringFieldUpdateOperationsInput | string
     replyFormat?: EnumReplyFormatFieldUpdateOperationsInput | $Enums.ReplyFormat
+    order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32631,6 +32679,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     topic?: StringFieldUpdateOperationsInput | string
     replyFormat?: EnumReplyFormatFieldUpdateOperationsInput | $Enums.ReplyFormat
+    order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32688,6 +32737,7 @@ export namespace Prisma {
   }
 
   export type RoomTypeResponseCreateInput = {
+    replyTitle?: string
     buttonName: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -32697,6 +32747,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseUncheckedCreateInput = {
     id?: number
+    replyTitle?: string
     buttonName: string
     responseId: number
     createdAt?: Date | string
@@ -32705,6 +32756,7 @@ export namespace Prisma {
   }
 
   export type RoomTypeResponseUpdateInput = {
+    replyTitle?: StringFieldUpdateOperationsInput | string
     buttonName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32714,6 +32766,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
+    replyTitle?: StringFieldUpdateOperationsInput | string
     buttonName?: StringFieldUpdateOperationsInput | string
     responseId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32723,6 +32776,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseCreateManyInput = {
     id?: number
+    replyTitle?: string
     buttonName: string
     responseId: number
     createdAt?: Date | string
@@ -32730,6 +32784,7 @@ export namespace Prisma {
   }
 
   export type RoomTypeResponseUpdateManyMutationInput = {
+    replyTitle?: StringFieldUpdateOperationsInput | string
     buttonName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32737,6 +32792,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
+    replyTitle?: StringFieldUpdateOperationsInput | string
     buttonName?: StringFieldUpdateOperationsInput | string
     responseId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34182,18 +34238,21 @@ export namespace Prisma {
     id?: SortOrder
     topic?: SortOrder
     replyFormat?: SortOrder
+    order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type ChatbotResponseAvgOrderByAggregateInput = {
     id?: SortOrder
+    order?: SortOrder
   }
 
   export type ChatbotResponseMaxOrderByAggregateInput = {
     id?: SortOrder
     topic?: SortOrder
     replyFormat?: SortOrder
+    order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -34202,12 +34261,14 @@ export namespace Prisma {
     id?: SortOrder
     topic?: SortOrder
     replyFormat?: SortOrder
+    order?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type ChatbotResponseSumOrderByAggregateInput = {
     id?: SortOrder
+    order?: SortOrder
   }
 
   export type EnumReplyFormatWithAggregatesFilter<$PrismaModel = never> = {
@@ -34271,6 +34332,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseCountOrderByAggregateInput = {
     id?: SortOrder
+    replyTitle?: SortOrder
     buttonName?: SortOrder
     responseId?: SortOrder
     createdAt?: SortOrder
@@ -34284,6 +34346,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseMaxOrderByAggregateInput = {
     id?: SortOrder
+    replyTitle?: SortOrder
     buttonName?: SortOrder
     responseId?: SortOrder
     createdAt?: SortOrder
@@ -34292,6 +34355,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseMinOrderByAggregateInput = {
     id?: SortOrder
+    replyTitle?: SortOrder
     buttonName?: SortOrder
     responseId?: SortOrder
     createdAt?: SortOrder
@@ -37411,6 +37475,7 @@ export namespace Prisma {
   }
 
   export type RoomTypeResponseCreateWithoutChatbotResponseInput = {
+    replyTitle?: string
     buttonName: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -37419,6 +37484,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseUncheckedCreateWithoutChatbotResponseInput = {
     id?: number
+    replyTitle?: string
     buttonName: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -37486,6 +37552,7 @@ export namespace Prisma {
   }
 
   export type RoomTypeResponseUpdateWithoutChatbotResponseInput = {
+    replyTitle?: StringFieldUpdateOperationsInput | string
     buttonName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37494,6 +37561,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseUncheckedUpdateWithoutChatbotResponseInput = {
     id?: IntFieldUpdateOperationsInput | number
+    replyTitle?: StringFieldUpdateOperationsInput | string
     buttonName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37529,6 +37597,7 @@ export namespace Prisma {
   export type ChatbotResponseCreateWithoutMessageResponseInput = {
     topic: string
     replyFormat: $Enums.ReplyFormat
+    order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     roomTypeResponse?: RoomTypeResponseCreateNestedOneWithoutChatbotResponseInput
@@ -37539,6 +37608,7 @@ export namespace Prisma {
     id?: number
     topic: string
     replyFormat: $Enums.ReplyFormat
+    order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     roomTypeResponse?: RoomTypeResponseUncheckedCreateNestedOneWithoutChatbotResponseInput
@@ -37564,6 +37634,7 @@ export namespace Prisma {
   export type ChatbotResponseUpdateWithoutMessageResponseInput = {
     topic?: StringFieldUpdateOperationsInput | string
     replyFormat?: EnumReplyFormatFieldUpdateOperationsInput | $Enums.ReplyFormat
+    order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     roomTypeResponse?: RoomTypeResponseUpdateOneWithoutChatbotResponseNestedInput
@@ -37574,6 +37645,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     topic?: StringFieldUpdateOperationsInput | string
     replyFormat?: EnumReplyFormatFieldUpdateOperationsInput | $Enums.ReplyFormat
+    order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     roomTypeResponse?: RoomTypeResponseUncheckedUpdateOneWithoutChatbotResponseNestedInput
@@ -37583,6 +37655,7 @@ export namespace Prisma {
   export type ChatbotResponseCreateWithoutRoomTypeResponseInput = {
     topic: string
     replyFormat: $Enums.ReplyFormat
+    order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     messageResponse?: MessageResponseCreateNestedOneWithoutChatbotResponseInput
@@ -37593,6 +37666,7 @@ export namespace Prisma {
     id?: number
     topic: string
     replyFormat: $Enums.ReplyFormat
+    order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     messageResponse?: MessageResponseUncheckedCreateNestedOneWithoutChatbotResponseInput
@@ -37637,6 +37711,7 @@ export namespace Prisma {
   export type ChatbotResponseUpdateWithoutRoomTypeResponseInput = {
     topic?: StringFieldUpdateOperationsInput | string
     replyFormat?: EnumReplyFormatFieldUpdateOperationsInput | $Enums.ReplyFormat
+    order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     messageResponse?: MessageResponseUpdateOneWithoutChatbotResponseNestedInput
@@ -37647,6 +37722,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     topic?: StringFieldUpdateOperationsInput | string
     replyFormat?: EnumReplyFormatFieldUpdateOperationsInput | $Enums.ReplyFormat
+    order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     messageResponse?: MessageResponseUncheckedUpdateOneWithoutChatbotResponseNestedInput
@@ -37679,6 +37755,7 @@ export namespace Prisma {
   }
 
   export type RoomTypeResponseCreateWithoutRoomTypesInput = {
+    replyTitle?: string
     buttonName: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -37687,6 +37764,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseUncheckedCreateWithoutRoomTypesInput = {
     id?: number
+    replyTitle?: string
     buttonName: string
     responseId: number
     createdAt?: Date | string
@@ -37710,6 +37788,7 @@ export namespace Prisma {
   }
 
   export type RoomTypeResponseUpdateWithoutRoomTypesInput = {
+    replyTitle?: StringFieldUpdateOperationsInput | string
     buttonName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37718,6 +37797,7 @@ export namespace Prisma {
 
   export type RoomTypeResponseUncheckedUpdateWithoutRoomTypesInput = {
     id?: IntFieldUpdateOperationsInput | number
+    replyTitle?: StringFieldUpdateOperationsInput | string
     buttonName?: StringFieldUpdateOperationsInput | string
     responseId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37727,6 +37807,7 @@ export namespace Prisma {
   export type ChatbotResponseCreateWithoutOptionsResponseInput = {
     topic: string
     replyFormat: $Enums.ReplyFormat
+    order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     messageResponse?: MessageResponseCreateNestedOneWithoutChatbotResponseInput
@@ -37737,6 +37818,7 @@ export namespace Prisma {
     id?: number
     topic: string
     replyFormat: $Enums.ReplyFormat
+    order?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     messageResponse?: MessageResponseUncheckedCreateNestedOneWithoutChatbotResponseInput
@@ -37787,6 +37869,7 @@ export namespace Prisma {
   export type ChatbotResponseUpdateWithoutOptionsResponseInput = {
     topic?: StringFieldUpdateOperationsInput | string
     replyFormat?: EnumReplyFormatFieldUpdateOperationsInput | $Enums.ReplyFormat
+    order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     messageResponse?: MessageResponseUpdateOneWithoutChatbotResponseNestedInput
@@ -37797,6 +37880,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     topic?: StringFieldUpdateOperationsInput | string
     replyFormat?: EnumReplyFormatFieldUpdateOperationsInput | $Enums.ReplyFormat
+    order?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     messageResponse?: MessageResponseUncheckedUpdateOneWithoutChatbotResponseNestedInput
