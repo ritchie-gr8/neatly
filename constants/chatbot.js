@@ -1,0 +1,5 @@
+export const REPLY_FORMAT = {
+    MESSAGE: "MESSAGE",
+    ROOMTYPES: "ROOMTYPES",
+    OPTIONS: "OPTIONS"
+}

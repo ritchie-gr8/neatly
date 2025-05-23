@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ChatbotResponseProvider } from "@/contexts/chatbot-response-context";
 
 const chatbotMessagesSchema = z.object({
   greetingMessage: z.string().min(1, "Greeting message is required"),
@@ -29,6 +30,7 @@ const ChatbotPage = () => {
   const [isFormDirty, setIsFormDirty] = useState(false);
   const [configId, setConfigId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingResponses, setIsLoadingResponses] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(chatbotMessagesSchema),
@@ -38,7 +40,6 @@ const ChatbotPage = () => {
     },
   });
 
-  // Track when form values change
   const formValues = form.watch();
   const [originalValues, setOriginalValues] = useState({
     greetingMessage: "",
@@ -46,11 +47,33 @@ const ChatbotPage = () => {
   });
 
   const handleAddResponse = () => {
-    setResponseList((prev) => [...prev, {}]);
+    setResponseList((prev) => [...prev, { isNew: true }]);
   };
 
-  const handleRemoveResponse = (index) => {
-    setResponseList((prev) => prev.filter((_, i) => i !== index));
+  const handleRemoveResponse = async (index, id) => {
+    if (id) {
+      try {
+        const response = await api.delete(`/admin/chatbot/response?id=${id}`);
+        if (response.data.success) {
+          console.log(response.data);
+          toast.success("Response deleted successfully");
+          setResponseList((prev) => prev.filter((_, i) => i !== index));
+        }
+      } catch (error) {
+        console.error("Error deleting response:", error);
+        toast.error("Failed to delete response");
+      }
+    } else {
+      setResponseList((prev) => prev.filter((_, i) => i !== index));
+    }
+  };
+
+  const handleResponseSave = (index, data) => {
+    setResponseList((prev) =>
+      prev.map((item, i) =>
+        i === index ? { ...item, ...data, isNew: false } : item
+      )
+    );
   };
 
   const handleMessagesSave = async (data) => {
@@ -82,9 +105,8 @@ const ChatbotPage = () => {
   const fetchMessages = async () => {
     try {
       setIsLoading(true);
-      const response = await api.get("/admin/chatbot/message");
-      console.log("response.data", response.data);
-      const { success, greetingMessage, autoReplyMessage, id } = response.data;
+      const { data } = await api.get("/admin/chatbot/message");
+      const { success, greetingMessage, autoReplyMessage, id } = data;
 
       if (success) {
         form.reset({
@@ -105,11 +127,25 @@ const ChatbotPage = () => {
     }
   };
 
+  const fetchResponses = async () => {
+    setIsLoadingResponses(true);
+    try {
+      const { data } = await api.get("/admin/chatbot/response");
+      if (data.success && data.responses) {
+        setResponseList(data.responses);
+      }
+    } catch (error) {
+      console.error("Error fetching chatbot responses:", error);
+    } finally {
+      setIsLoadingResponses(false);
+    }
+  };
+
   useEffect(() => {
     fetchMessages();
+    fetchResponses();
   }, []);
 
-  // Check if form is dirty by comparing current values to original values
   useEffect(() => {
     const isDirty =
       formValues.greetingMessage !== originalValues.greetingMessage ||
@@ -153,7 +189,9 @@ const ChatbotPage = () => {
                   name="greetingMessage"
                   render={({ field }) => (
                     <FormItem className="space-y-2">
-                      <FormLabel className="mb-1">Greeting message *</FormLabel>
+                      <FormLabel required className="mb-1">
+                        Greeting message
+                      </FormLabel>
                       <FormControl>
                         <Textarea className="h-24" {...field} />
                       </FormControl>
@@ -167,8 +205,8 @@ const ChatbotPage = () => {
                   name="autoReplyMessage"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="mb-1">
-                        Auto-reply message *
+                      <FormLabel required className="mb-1">
+                        Auto-reply message
                       </FormLabel>
                       <FormControl>
                         <Textarea className="h-24" {...field} />
@@ -189,12 +227,21 @@ const ChatbotPage = () => {
             Suggestion menu & Response
           </h5>
 
-          {responseList?.map((response, index) => (
-            <ResponseCard
-              key={index}
-              onRemove={() => handleRemoveResponse(index)}
-            />
-          ))}
+          {isLoadingResponses ? (
+            <div className="space-y-4">
+              <Skeleton className="h-32" />
+              <Skeleton className="h-32" />
+            </div>
+          ) : responseList?.length > 0 ? (
+            responseList.map((response, index) => (
+              <ChatbotResponseProvider key={index} initialData={response}>
+                <ResponseCard
+                  onRemove={() => handleRemoveResponse(index, response.id)}
+                  onSave={(data) => handleResponseSave(index, data)}
+                />
+              </ChatbotResponseProvider>
+            ))
+          ) : null}
 
           <Button
             onClick={() => handleAddResponse()}
