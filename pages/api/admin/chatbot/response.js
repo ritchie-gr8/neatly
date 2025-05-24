@@ -71,9 +71,10 @@ const GET = async (req, res) => {
           },
         },
       },
-      orderBy: {
-        id: "asc",
-      },
+      orderBy: [
+        { order: "asc" },
+        { id: "asc" },
+      ],
     });
 
     return successResponse({
@@ -91,7 +92,6 @@ const GET = async (req, res) => {
   }
 };
 
-// POST a new chatbot response
 const POST = async (req, res) => {
   try {
     const { topic, replyFormat, data } = req.body;
@@ -104,10 +104,23 @@ const POST = async (req, res) => {
       });
     }
 
+    // Get the highest order value to place the new response at the end
+    const highestOrder = await db.chatbotResponse.findFirst({
+      orderBy: {
+        order: 'desc',
+      },
+      select: {
+        order: true,
+      },
+    });
+
+    const newOrder = highestOrder ? highestOrder.order + 1 : 0;
+
     const chatbotResponse = await db.chatbotResponse.create({
       data: {
         topic,
         replyFormat,
+        order: newOrder,
       },
     });
 
@@ -141,6 +154,7 @@ const POST = async (req, res) => {
       case "ROOMTYPES": {
         const roomTypeResponse = await db.roomTypeResponse.create({
           data: {
+            replyTitle: data.replyTitle,
             buttonName: data.buttonName,
             responseId: chatbotResponse.id,
           },
@@ -221,7 +235,6 @@ const POST = async (req, res) => {
   }
 };
 
-// Helper function to validate data based on reply format
 const validateResponseData = (replyFormat, data, res) => {
   switch (replyFormat) {
     case "MESSAGE":
@@ -235,6 +248,14 @@ const validateResponseData = (replyFormat, data, res) => {
       break;
 
     case "ROOMTYPES":
+      if (!data.replyTitle) {
+        return errorResponse({
+          res,
+          message: "Reply title is required",
+          status: HTTP_STATUS.BAD_REQUEST,
+        });
+      }
+
       if (!data.buttonName) {
         return errorResponse({
           res,
@@ -269,7 +290,6 @@ const validateResponseData = (replyFormat, data, res) => {
         });
       }
 
-      // Validate each option
       for (const option of data.options) {
         if (!option.optionText) {
           return errorResponse({
@@ -296,13 +316,10 @@ const validateResponseData = (replyFormat, data, res) => {
       });
   }
 
-  // If we reach here, validation passed
   return null;
 };
 
-// Helper function to clean up existing response types
 const cleanupExistingResponses = async (existingResponse, currentFormat) => {
-  // Clean up message response if it exists and not the current format
   if (existingResponse.messageResponse && currentFormat !== "MESSAGE") {
     await db.messageResponse.delete({
       where: { id: existingResponse.messageResponse.id },
@@ -372,11 +389,9 @@ const PUT = async (req, res) => {
       });
     }
 
-    // Validate the data based on reply format
     const validationError = validateResponseData(replyFormat, data, res);
     if (validationError) return validationError;
 
-    // Update the base response
     const updatedResponse = await db.chatbotResponse.update({
       where: { id: parseInt(id) },
       data: {
@@ -424,9 +439,11 @@ const PUT = async (req, res) => {
             id: existingResponse.roomTypeResponse?.id || -1,
           },
           update: {
+            replyTitle: data.replyTitle,
             buttonName: data.buttonName,
           },
           create: {
+            replyTitle: data.replyTitle,
             buttonName: data.buttonName,
             responseId: updatedResponse.id,
           },
@@ -518,7 +535,6 @@ const PUT = async (req, res) => {
   }
 };
 
-// DELETE a chatbot response
 const DELETE = async (req, res) => {
   try {
     const { id } = req.query;
@@ -531,7 +547,6 @@ const DELETE = async (req, res) => {
       });
     }
 
-    // Check if the response exists
     const existingResponse = await db.chatbotResponse.findUnique({
       where: { id: parseInt(id) },
     });
@@ -544,7 +559,6 @@ const DELETE = async (req, res) => {
       });
     }
 
-    // Delete the response (cascade will delete related records)
     await db.chatbotResponse.delete({
       where: { id: parseInt(id) },
     });

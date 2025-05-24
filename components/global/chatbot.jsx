@@ -4,7 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { X, Send } from "lucide-react";
+import { Send, X } from "lucide-react";
+import dynamic from "next/dynamic";
 import api from "@/lib/axios";
 import getBotResponseForTopic from "@/lib/chatbot-response";
 
@@ -12,32 +13,64 @@ const ChatbotPopup = ({ className }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [messages, setMessages] = useState([]);
-  const [greetingMessage, setGreetingMessage] = useState("")
+  const [greetingMessage, setGreetingMessage] = useState("");
   const [autoReplyMessage, setAutoReplyMessage] = useState("");
   const [inputValue, setInputValue] = useState("");
   const chatContainerRef = useRef(null);
 
   const toggleChat = () => {
-    if (messages.length === 0) {
+    // Set opening state but don't update UI yet
+    const opening = !isOpen;
+
+    // If opening and no messages, add greeting
+    if (messages.length === 0 && opening) {
       addMessage("bot", greetingMessage);
     }
 
-    setIsOpen(!isOpen);
+    // If we're opening the chat, prepare scroll position before UI update
+    if (opening) {
+      // Set the state first to trigger render
+      setIsOpen(true);
+
+      // Use requestAnimationFrame to scroll immediately after DOM update
+      requestAnimationFrame(() => {
+        if (chatContainerRef.current) {
+          chatContainerRef.current.scrollTop =
+            chatContainerRef.current.scrollHeight;
+        }
+      });
+    } else {
+      // Just close normally
+      setIsOpen(false);
+    }
   };
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
 
-  const handleTopicClick = (topic) => {
+  const handleTopicClick = async (topic) => {
     addMessage("user", topic);
     setIsTyping(true);
 
-    setTimeout(() => {
-      const response =
-        getBotResponseForTopic(topic) || "Hello! How can I help you today?";
-      addMessage("bot", response);
-      setIsTyping(false);
+    setTimeout(async () => {
+      try {
+        const response = await getBotResponseForTopic(topic);
+
+        if (!response) {
+          addMessage("bot", autoReplyMessage);
+        } else {
+          handleBotResponse(response);
+        }
+      } catch (error) {
+        console.error("Error getting bot response:", error);
+        addMessage(
+          "bot",
+          "Sorry, I encountered an error. Please try again later."
+        );
+      } finally {
+        setIsTyping(false);
+      }
     }, 800);
   };
 
@@ -51,16 +84,17 @@ const ChatbotPopup = ({ className }) => {
 
     try {
       console.log("Getting intent...");
-      const { data } = await api.post("/intents", {
+      const { data } = await api.post("/chatbot/intents", {
         message: trimmedMessage,
       });
       const intent = data.intent;
       console.log("User Intent:", intent);
-      const botResponse = getBotResponseForTopic(intent);
+
+      const botResponse = await getBotResponseForTopic(intent);
       if (!botResponse) {
         addMessage("bot", autoReplyMessage);
       } else {
-        addMessage("bot", botResponse);
+        handleBotResponse(botResponse);
       }
     } catch (error) {
       console.error("Error getting bot response:", error);
@@ -81,8 +115,72 @@ const ChatbotPopup = ({ className }) => {
     }
   };
 
+  const handleBotResponse = (response) => {
+    console.log("Handling bot response:", response);
+
+    const { type, success, data } = response;
+
+    if (!success) {
+      addMessage(
+        "bot",
+        autoReplyMessage || "I'm not sure how to respond to that."
+      );
+      return;
+    }
+
+    console.log("Response data:", data);
+
+    if (type === "MESSAGE") {
+      addMessage("bot", data.message);
+    } else if (type === "ROOMTYPES") {
+      const RoomTypeMessage = dynamic(() => import("./room-type-message"), {
+        loading: () => <div className="p-2">Loading room information...</div>,
+      });
+
+      addComponentMessage(
+        "bot",
+        <RoomTypeMessage
+          data={{
+            replyTitle: data.replyTitle || data.title,
+            roomTypes: data.roomTypes,
+            buttonName: data.buttonName,
+          }}
+        />
+      );
+    } else if (type === "OPTIONS") {
+      const OptionsMessage = dynamic(() => import("./options-message"), {
+        loading: () => <div className="p-2">Loading options...</div>,
+      });
+
+      const handleOptionSelect = (optionText, detailsText) => {
+        addMessage("user", optionText);
+        addMessage("bot", detailsText);
+      };
+
+      addComponentMessage(
+        "bot",
+        <OptionsMessage
+          data={{
+            title: data.title,
+            options: data.options,
+          }}
+          onOptionSelect={handleOptionSelect}
+        />
+      );
+    } else {
+      addMessage(
+        "bot",
+        "I have information about that, but I'm still learning how to display it properly."
+      );
+    }
+  };
+
   const addMessage = (type, content) => {
     setMessages((prev) => [...prev, { type, content }]);
+  };
+
+  const addComponentMessage = (type, component) => {
+    setMessages((prev) => [...prev, { type, component }]);
   };
 
   const handleKeyPress = (e) => {
@@ -108,11 +206,13 @@ const ChatbotPopup = ({ className }) => {
     fetchMessages();
   }, []);
 
-  // Auto-scroll to bottom when messages change
   useEffect(() => {
-    if (chatContainerRef.current) {
+    if (chatContainerRef.current && messages.length > 0) {
+      // Add a small delay to ensure components are fully rendered
+      // setTimeout(() => {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
+      // }, 100);
     }
   }, [messages]);
 
@@ -146,26 +246,28 @@ const ChatbotPopup = ({ className }) => {
 
           {/* Chat content */}
           <div
-            className="h-96 overflow-y-auto p-4 bg-gray-50"
+            className="h-96 overflow-y-auto overflow-x-hidden p-4 bg-gray-50"
             ref={chatContainerRef}
           >
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`mb-4 flex ${
+                className={`flex ${
                   message.type === "user" ? "justify-end" : "justify-start"
-                }`}
+                } mb-4`}
               >
                 <div
-                  className={`p-3 rounded-lg shadow-sm max-w-[85%] ${
+                  className={`rounded-lg p-3 max-w-xs md:max-w-md lg:max-w-lg ${
                     message.type === "user"
-                      ? "bg-orange-600 text-util-white"
-                      : "bg-white text-gray-800"
+                      ? "bg-orange-600 text-white rounded-tr-none"
+                      : "bg-gray-100 text-gray-800 rounded-tl-none"
                   }`}
                 >
-                  <p className="text-sm whitespace-pre-line">
-                    {message.content}
-                  </p>
+                  {message.component ? (
+                    message.component
+                  ) : (
+                    <p>{message.content}</p>
+                  )}
                 </div>
               </div>
             ))}

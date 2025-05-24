@@ -97,7 +97,28 @@ const RoomTypeForm = ({
 
   return (
     <div className={className}>
-      <Label htmlFor="room-type" className="mb-1 require-label">
+      <Label htmlFor="reply-title" className="mb-1 require-label">
+        Reply title
+      </Label>
+      <Input
+        id="reply-title"
+        className={cn(
+          "bg-util-white h-9 placeholder:text-b2",
+          errors?.replyTitle && "border-red-500"
+        )}
+        value={formData.replyTitle}
+        onChange={(e) => {
+          updateFormData({ replyTitle: e.target.value });
+          if (errors?.replyTitle) clearError("replyTitle");
+        }}
+        disabled={isLoading || mode === "view"}
+        placeholder="e.g., Our Room Types, Available Accommodations"
+      />
+      {errors?.replyTitle && (
+        <p className="text-red-500 text-xs mt-1">{errors.replyTitle}</p>
+      )}
+
+      <Label htmlFor="room-type" className="mt-4 mb-1 require-label">
         Room type
       </Label>
       <div className="relative">

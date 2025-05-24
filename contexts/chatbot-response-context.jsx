@@ -75,6 +75,12 @@ export function ChatbotResponseProvider({ children, initialData }) {
         newErrors.buttonName = "Button name is required";
         isValid = false;
       }
+
+      if (!formData.replyTitle || formData.replyTitle.trim() === "") {
+        newErrors.replyTitle = "Reply title is required";
+        isValid = false;
+      }
+
     } else if (replyFormat === REPLY_FORMAT.OPTIONS) {
       if (!formData.replyTitle || formData.replyTitle.trim() === "") {
         newErrors.replyTitle = "Reply title is required";

@@ -66,6 +66,7 @@ const ResponseCard = ({ onRemove, onSave }) => {
       } else if (replyFormat === REPLY_FORMAT.ROOMTYPES) {
         payload.data.buttonName = formData.buttonName;
         payload.data.roomTypes = formData.roomTypes.map((roomType) => roomType.roomTypeId ?? roomType.id);
+        payload.data.replyTitle = formData.replyTitle;
       } else if (replyFormat === REPLY_FORMAT.OPTIONS) {
         payload.data.replyTitle = formData.replyTitle;
         payload.data.options = formData.options;
@@ -100,7 +101,7 @@ const ResponseCard = ({ onRemove, onSave }) => {
   };
 
   return (
-    <div className="bg-gray-100 p-6 rounded-md flex space-x-6">
+    <div className="bg-gray-100 p-6 rounded-md flex space-x-6 w-full">
       <div className="flex-1">
         <div className="flex gap-6 w-full">
           <div className="w-full">
@@ -209,8 +210,7 @@ const ResponseCard = ({ onRemove, onSave }) => {
           </div>
         )}
       </div>
-      <div className="flex flex-col text-gray-700 space-y-4">
-        <GripVertical className="size-4 cursor-grab" />
+      <div className="flex flex-col text-gray-700 space-y-4 pt-7">
         {mode === "view" && (
           <Pencil
             className="size-4 cursor-pointer"

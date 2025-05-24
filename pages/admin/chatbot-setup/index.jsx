@@ -1,4 +1,5 @@
 import ResponseCard from "@/components/admin/chatbot-setup/response-card";
+import SortableResponseCard from "@/components/admin/chatbot-setup/sortable-response-card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
@@ -20,6 +21,22 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChatbotResponseProvider } from "@/contexts/chatbot-response-context";
 
+// Import drag and drop libraries
+import {
+  DndContext,
+  closestCenter,
+  useSensor,
+  useSensors,
+  PointerSensor,
+  KeyboardSensor,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+
 const chatbotMessagesSchema = z.object({
   greetingMessage: z.string().min(1, "Greeting message is required"),
   autoReplyMessage: z.string().min(1, "Auto reply message is required"),
@@ -31,6 +48,16 @@ const ChatbotPage = () => {
   const [configId, setConfigId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingResponses, setIsLoadingResponses] = useState(false);
+
+  // Set up sensors for drag and drop
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { delay: 100, tolerance: 5 },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const form = useForm({
     resolver: zodResolver(chatbotMessagesSchema),
@@ -74,6 +101,51 @@ const ChatbotPage = () => {
         i === index ? { ...item, ...data, isNew: false } : item
       )
     );
+  };
+
+  // Handle the drag and drop
+  const handleDragEnd = async (event) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      setResponseList((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over.id);
+
+        // Reorder the array
+        const reordered = arrayMove(items, oldIndex, newIndex);
+
+        // Update the order property for each item
+        const updated = reordered.map((item, index) => ({
+          ...item,
+          order: index
+        }));
+
+        // Save the new order to the backend
+        saveResponseOrder(updated);
+
+        return updated;
+      });
+    }
+  };
+
+  // Save the order to the backend
+  const saveResponseOrder = async (orderedResponses) => {
+    try {
+      // Only update responses that have an ID (are saved in the database)
+      const responsesToUpdate = orderedResponses
+        .filter(r => r.id) // Filter out unsaved responses
+        .map(r => ({ id: r.id, order: r.order }));
+
+      if (responsesToUpdate.length > 0) {
+        await api.put('/admin/chatbot/response-order', {
+          responses: responsesToUpdate
+        });
+      }
+    } catch (error) {
+      console.error('Failed to update response order:', error);
+      toast.error('Failed to save the new order. Please try again.');
+    }
   };
 
   const handleMessagesSave = async (data) => {
@@ -233,14 +305,38 @@ const ChatbotPage = () => {
               <Skeleton className="h-32" />
             </div>
           ) : responseList?.length > 0 ? (
-            responseList.map((response, index) => (
-              <ChatbotResponseProvider key={index} initialData={response}>
-                <ResponseCard
-                  onRemove={() => handleRemoveResponse(index, response.id)}
-                  onSave={(data) => handleResponseSave(index, data)}
-                />
-              </ChatbotResponseProvider>
-            ))
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={responseList.filter(r => r.id).map(r => r.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                {responseList.map((response, index) => (
+                  response.id ? (
+                    // Draggable component for saved responses
+                    <SortableResponseCard key={response.id} id={response.id}>
+                      <ChatbotResponseProvider initialData={response}>
+                        <ResponseCard
+                          onRemove={() => handleRemoveResponse(index, response.id)}
+                          onSave={(data) => handleResponseSave(index, data)}
+                        />
+                      </ChatbotResponseProvider>
+                    </SortableResponseCard>
+                  ) : (
+                    // Non-draggable for unsaved responses
+                    <ChatbotResponseProvider key={index} initialData={response}>
+                      <ResponseCard
+                        onRemove={() => handleRemoveResponse(index, response.id)}
+                        onSave={(data) => handleResponseSave(index, data)}
+                      />
+                    </ChatbotResponseProvider>
+                  )
+                ))}
+              </SortableContext>
+            </DndContext>
           ) : null}
 
           <Button
