@@ -7,44 +7,12 @@ import DefaultLayout from "@/layouts/default.layout";
 import PaymentMethodForm from "@/components/payment/forms/payment-method.layout";
 import { BookingProvider, useBooking } from "@/contexts/booking-context";
 import { useRouter } from "next/router";
-import api from "@/lib/axios";
 import { 
   validateCompleteBooking,
   validateBasicInfo,
   validateSpecialRequests,
   validatePaymentMethod
 } from "@/lib/validations/booking-validation";
-
-const processPayment = async (bookingData) => {
-  try {
-    const response = await api.post('/booking/create-booking', {
-      amount: bookingData.priceBreakdown.totalPrice,
-      currency: 'THB',
-      booking: {
-        customerName: `${bookingData.basicInfo.firstName} ${bookingData.basicInfo.lastName}`,
-        customerEmail: bookingData.basicInfo.email,
-        customerPhone: bookingData.basicInfo.phone,
-        checkIn: bookingData.bookingDetail.checkIn,
-        checkOut: bookingData.bookingDetail.checkOut,
-        roomType: bookingData.bookingDetail.roomType,
-        guests: bookingData.bookingDetail.guests
-      },
-      payment: {
-        holderName: bookingData.paymentMethod.creditCard.cardOwner,
-        cardNumber: bookingData.paymentMethod.creditCard.cardNumber,
-        expiryMonth: bookingData.paymentMethod.creditCard.expiryDate.split('/')[0],
-        expiryYear: `20${bookingData.paymentMethod.creditCard.expiryDate.split('/')[1]}`,
-        cvv: bookingData.paymentMethod.creditCard.cvc
-      },
-      description: 'Hotel Room Booking'
-    });
-
-    return response.data;
-  } catch (error) {
-    console.error('Payment API Error:', error);
-    throw error;
-  }
-};
 
 const PaymentPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -118,78 +86,124 @@ const PaymentPage = () => {
     setCurrentStep((prevStep) => Math.max(prevStep - 1, 1));
   };
 
-  const handleCompleteBooking = async () => {
-  console.log("=== COMPLETE BOOKING INITIATED ===");
-  
-  try {
-    // Get complete booking data with price calculations
-    const completeBookingData = getCompleteBookingData();
+  const handleCompleteBooking = () => {
+    console.log("=== COMPLETE BOOKING INITIATED ===");
     
-    // Validate all form data
-    const validation = validateCompleteBooking(completeBookingData);
-    
-    if (!validation.isValid) {
-      console.error("❌ Validation Errors:", validation.errors);
+    try {
+      // Get complete booking data with price calculations
+      const completeBookingData = getCompleteBookingData();
       
-      // Set validation errors in context to display under inputs
-      if (Object.keys(validation.errors.basicInfo).length > 0) {
-        setValidationErrorsForSection('basicInfo', validation.errors.basicInfo);
-      }
+      // Validate all form data
+      const validation = validateCompleteBooking(completeBookingData);
       
-      if (Object.keys(validation.errors.specialRequests).length > 0) {
-        setValidationErrorsForSection('specialRequests', validation.errors.specialRequests);
-      }
+      console.log("📋 Complete Booking Data:", {
+        ...completeBookingData,
+        timestamp: new Date().toISOString()
+      });
       
-      if (Object.keys(validation.errors.paymentMethod).length > 0) {
-        setValidationErrorsForSection('paymentMethod', validation.errors.paymentMethod);
-      }
+      console.log("💰 Price Breakdown:", completeBookingData.priceBreakdown);
       
-      alert("Please check the form and fix any highlighted errors before proceeding.");
-      return;
-    }
-
-    console.log("✅ All validations passed! Processing payment...");
-
-    // Only process payment if it's a credit card payment
-    if (completeBookingData.paymentMethod.type === "credit") {
-      // Show loading state (you can add a loading state to your component)
-      console.log("💳 Processing credit card payment...");
-      
-      // Call the payment API
-      const paymentResult = await processPayment(completeBookingData);
-      
-      if (paymentResult.success) {
-        console.log("✅ Payment successful!", paymentResult);
+      if (!validation.isValid) {
+        console.error("❌ Validation Errors:", validation.errors);
         
-        // Redirect to success page or show success message
-        alert(`🎉 Payment Successful!\n\nCharge ID: ${paymentResult.chargeId}\nAmount: THB ${paymentResult.amount}\n\nYour booking has been confirmed!`);
-        router.push('/payment-success');
+        // Set validation errors in context to display under inputs
+        if (Object.keys(validation.errors.basicInfo).length > 0) {
+          setValidationErrorsForSection('basicInfo', validation.errors.basicInfo);
+        }
         
-      } else {
-        console.error("❌ Payment failed:", paymentResult.error);
-        alert(`❌ Payment Failed\n\n${paymentResult.error}\n\nPlease check your card details and try again.`);
-        router.push('/payment-fail');
+        if (Object.keys(validation.errors.specialRequests).length > 0) {
+          setValidationErrorsForSection('specialRequests', validation.errors.specialRequests);
+        }
+        
+        if (Object.keys(validation.errors.paymentMethod).length > 0) {
+          setValidationErrorsForSection('paymentMethod', validation.errors.paymentMethod);
+        }
+        
+        // Show a simple notification message instead of detailed alert
+        alert("Please check the form and fix any highlighted errors before proceeding.");
+        return;
       }
-    } else {
-      // Handle cash payment (no API call needed)
-      console.log("💵 Cash payment selected - booking confirmed");
-      alert("🎉 Booking Confirmed!\n\nPayment method: Cash\nPlease pay at the hotel during check-in.");
       
-      // You can still save the booking to database here if needed
-      // router.push('/booking-success');
+      console.log("✅ All validations passed!");
+      console.log("📊 Data ready for submission to Omise and Database");
+      
+      // Log data prepared for Omise
+      console.log("💳 Data for Omise Payment:", {
+        amount: Math.round(completeBookingData.priceBreakdown.totalPrice * 100), // Convert to satang
+        currency: "THB",
+        customer: {
+          email: completeBookingData.basicInfo.email,
+          name: `${completeBookingData.basicInfo.firstName} ${completeBookingData.basicInfo.lastName}`,
+          phone: completeBookingData.basicInfo.phone
+        },
+        card: completeBookingData.paymentMethod.type === "credit" ? {
+          number: completeBookingData.paymentMethod.creditCard.cardNumber,
+          expiration_month: completeBookingData.paymentMethod.creditCard.expiryDate.split('/')[0],
+          expiration_year: `20${completeBookingData.paymentMethod.creditCard.expiryDate.split('/')[1]}`,
+          security_code: completeBookingData.paymentMethod.creditCard.cvc,
+          name: completeBookingData.paymentMethod.creditCard.cardOwner
+        } : null,
+        description: "Hotel Room Booking"
+      });
+      // Log card data (DEV ONLY)
+      if (completeBookingData.paymentMethod.type === "credit") {
+        const card = completeBookingData.paymentMethod.creditCard;
+        console.log("🔒 Card Data (DEV ONLY):", {
+          cardNumber: card.cardNumber,
+          cardOwner: card.cardOwner,
+          expiryDate: card.expiryDate,
+          cvc: card.cvc,
+        });
+      }
+      
+      // Log data prepared for Database
+      console.log("💾 Data for Database:", {
+        guest: {
+          firstName: completeBookingData.basicInfo.firstName,
+          lastName: completeBookingData.basicInfo.lastName,
+          email: completeBookingData.basicInfo.email,
+          phone: completeBookingData.basicInfo.phone,
+          country: completeBookingData.basicInfo.country,
+          dateOfBirth: completeBookingData.basicInfo.dateOfBirth
+        },
+        bookingDetails: completeBookingData.bookingDetail,
+        specialRequests: {
+          standard: completeBookingData.specialRequests.standardRequests,
+          special: completeBookingData.specialRequests.specialRequests,
+          additional: completeBookingData.specialRequests.additionalRequest
+        },
+        payment: {
+          method: completeBookingData.paymentMethod.type,
+          totalAmount: completeBookingData.priceBreakdown.totalPrice
+        },
+        priceBreakdown: completeBookingData.priceBreakdown
+      });
+      
+      // Success message
+      const successMessage = `
+🎉 Booking Ready for Processing!
+
+📋 Guest: ${completeBookingData.basicInfo.firstName} ${completeBookingData.basicInfo.lastName}
+📧 Email: ${completeBookingData.basicInfo.email}
+💰 Total Amount: THB ${completeBookingData.priceBreakdown.totalPrice.toLocaleString()}
+💳 Payment Method: ${completeBookingData.paymentMethod.type === 'credit' ? 'Credit Card' : 'Cash'}
+
+${completeBookingData.priceBreakdown.selectedSpecialRequests.length > 0 ? 
+  '🎁 Special Requests:\n' + 
+  completeBookingData.priceBreakdown.selectedSpecialRequests.map(req => 
+    `  • ${req.displayName}: +THB ${req.price}`
+  ).join('\n') + '\n' : ''
+}
+✅ All data validated and ready for Omise & Database
+      `.trim();
+      
+      alert(successMessage);
+      
+    } catch (error) {
+      console.error("❌ Error during booking completion:", error);
+      alert("An error occurred while processing your booking. Please try again.");
     }
-    
-  } catch (error) {
-    console.error("❌ Error during booking completion:", error);
-    
-    // Handle different types of errors
-    if (error.response?.data?.error) {
-      alert(`❌ Payment Error\n\n${error.response.data.error}\n\nPlease try again.`);
-    } else {
-      alert("❌ An error occurred while processing your booking. Please try again.");
-    }
-  }
-};
+  };
 
   const renderForm = () => {
     switch (currentStep) {
