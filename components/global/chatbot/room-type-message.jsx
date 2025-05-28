@@ -2,11 +2,11 @@ import React from 'react';
 import RoomTypeCard from './room-type-card';
 
 const RoomTypeMessage = ({ data }) => {
-  const { replyTitle, roomTypes, buttonName } = data;
+  const { replyTitle, title, roomTypes, buttonName } = data;
 
   return (
     <div className="w-full">
-      <p className="mb-3 text-gray-700">{replyTitle}</p>
+      <p className="mb-3 text-gray-700">{replyTitle ?? title}</p>
       <div className="flex overflow-x-auto pb-4 gap-4 hide-scrollbar">
         {roomTypes.map((room) => (
           <RoomTypeCard

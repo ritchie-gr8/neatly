@@ -1,4 +1,4 @@
-import { Box, BriefcaseBusiness, ChartPie, Hotel, MessageSquareText } from "lucide-react";
+import { Box, BriefcaseBusiness, ChartPie, Hotel, MessageCircleMore, MessageSquareText } from "lucide-react";
 import { HiClipboardDocumentCheck } from "react-icons/hi2";
 
 export const adminMenu = [
@@ -38,4 +38,10 @@ export const adminMenu = [
     icon: MessageSquareText,
     path: "/admin/chatbot-setup",
   },
+  {
+    id: "admin-chat-tab",
+    title: "Chat",
+    icon: MessageCircleMore,
+    path: "/admin/chat",
+  }
 ];
