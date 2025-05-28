@@ -19,14 +19,6 @@ const RoomGuestSelector = ({
   const [isOpen, setIsOpen] = useState(false);
   const [isSelected, setIsSelected] = useState(pageType === "search-result");
 
-  const getGuestRangeText = () => {
-    return `Min ${rooms} guests - Max ${maxCapacity} guests`;
-  };
-
-  const getRoomExplanationText = () => {
-    return `${rooms} rooms: Min ${rooms} guests (at least 1 per room), Max ${maxCapacity} guests`;
-  };
-
   const handleClick = (cb) => {
     if (!isSelected) {
       setIsSelected(true);
@@ -112,13 +104,6 @@ const RoomGuestSelector = ({
                   +
                 </button>
               </div>
-              <p className="text-xs text-gray-500 mt-1">
-                {getGuestRangeText()}
-              </p>
-
-              <p className="text-xs text-gray-500 mt-1">
-                {getRoomExplanationText()}
-              </p>
             </div>
           </div>
         </div>
