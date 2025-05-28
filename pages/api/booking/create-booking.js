@@ -1,3 +1,4 @@
+// pages/api/create-payment.js
 import { db } from "@/lib/prisma";
 
 const omise = require('omise')({
@@ -50,7 +51,7 @@ export default async function handler(req, res) {
         check_in: booking.checkIn,
         check_out: booking.checkOut,
         room_type: booking.roomType,
-        guests: (booking.guests ?? 1).toString(),
+        guests: booking.guests.toString(),
       },
     });
 
