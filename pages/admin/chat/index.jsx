@@ -13,6 +13,8 @@ import supabase from "@/lib/supabase/client";
 import api from "@/lib/axios";
 import { toast } from "sonner";
 import { normalizeSupabaseChatSession } from "@/lib/supabase/utils";
+import MessageItem from "@/components/global/chatbot/message-item";
+import { processMessage, formatMessageTime } from "@/lib/chat/message-renderer";
 
 const ChatContent = () => {
   const {
@@ -312,39 +314,44 @@ const ChatContent = () => {
                       No messages yet
                     </div>
                   ) : (
-                    messages.map((message, index) => (
-                      <div
-                        key={index}
-                        className={`flex ${
-                          message.sender === SENDER.ADMIN
-                            ? "justify-end"
-                            : "justify-start"
-                        }`}
-                      >
+                    messages.map((message, index) => {
+                      // Process message to handle component messages
+                      const processedMessage = processMessage(message);
+                      
+                      return (
                         <div
-                          className={`max-w-[70%] p-3 rounded-lg ${
-                            message.sender === SENDER.ADMIN
-                              ? "bg-blue-500 text-white"
-                              : message.sender === SENDER.BOT
-                              ? "bg-gray-200 text-gray-800"
-                              : "bg-gray-100 text-gray-800"
-                          }`}
+                          key={index}
+                          className={`flex ${
+                            processedMessage.sender === SENDER.ADMIN
+                              ? "justify-end"
+                              : "justify-start"
+                          } mb-4`}
                         >
-                          <div className="break-words">{message.content}</div>
-                          <div className="flex justify-end mt-1">
-                            <div
-                              className={`text-xs ${
-                                message.sender === SENDER.ADMIN
-                                  ? "text-blue-200"
-                                  : "text-gray-500"
-                              }`}
-                            >
-                              {new Date(message.timestamp).toLocaleTimeString()}
-                            </div>
-                          </div>
+                          <MessageItem 
+                            message={processedMessage}
+                            onOptionSelect={processedMessage.componentType === "OPTIONS" ? 
+                              (optionText, detailsText) => {
+                                // Add user's selection to messages
+                                const userMessage = {
+                                  content: optionText,
+                                  sender: SENDER.USER,
+                                  timestamp: new Date().toISOString()
+                                };
+                                setMessages(prev => [...prev, userMessage]);
+                                
+                                // Add bot's response
+                                const botMessage = {
+                                  content: detailsText,
+                                  sender: SENDER.BOT,
+                                  timestamp: new Date().toISOString()
+                                };
+                                setMessages(prev => [...prev, botMessage]);
+                              } : undefined
+                            }
+                          />
                         </div>
-                      </div>
-                    ))
+                      );
+                    })
                   )}
                 </div>
 

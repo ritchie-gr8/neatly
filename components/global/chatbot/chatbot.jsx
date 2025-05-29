@@ -207,16 +207,6 @@ const ChatbotPopup = ({ className }) => {
       if (!botResponse) {
         addMessage(SENDER.BOT, autoReplyMessage);
         setIsShowHandoff(true);
-        // addComponentMessage(
-        //   SENDER.BOT,
-        //   autoReplyMessage,
-        //   REPLY_FORMAT.HANDOFF,
-        //   <HandoffButton
-        //     onClick={() => {
-        //       console.log("Handoff clicked");
-        //     }}
-        //   />
-        // );
       } else {
         handleBotResponse(botResponse);
       }
@@ -231,8 +221,9 @@ const ChatbotPopup = ({ className }) => {
       } else {
         addMessage(
           SENDER.BOT,
-          "Sorry, I encountered an error. Please try again later."
+          "Sorry, I encountered an error. Please try again later or contact support."
         );
+        setIsShowHandoff(true);
       }
     } finally {
       setIsTyping(false);
@@ -257,7 +248,6 @@ const ChatbotPopup = ({ className }) => {
 
       const component = <RoomTypeMessage data={data} />;
 
-      // Use addComponentMessage with the component type and data
       addComponentMessage(SENDER.BOT, data, "ROOMTYPES", component);
     } else if (type === "OPTIONS") {
       // Create options component
@@ -274,7 +264,6 @@ const ChatbotPopup = ({ className }) => {
         <OptionsMessage data={data} onOptionSelect={handleOptionSelect} />
       );
 
-      // Use addComponentMessage with the component type and data
       addComponentMessage(SENDER.BOT, data, "OPTIONS", component);
     } else {
       addMessage(
@@ -495,6 +484,15 @@ const ChatbotPopup = ({ className }) => {
             className="h-96 overflow-y-auto overflow-x-hidden p-4 bg-util-bg"
             ref={chatContainerRef}
           >
+            {user?.id ? (
+              <div className="flex justify-start text-xs text-gray-600">
+                <p>Your previous conversation will be stored for 30 days.</p>
+              </div>
+            ) : (
+              <div className="flex justify-start text-xs text-gray-600">
+                <p>The system will not store your previous conversation.</p>
+              </div>
+            )}
             {messages.map((message, index) => (
               <div
                 key={`${message.timestamp}_${index}`}
