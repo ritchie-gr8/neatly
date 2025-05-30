@@ -14,7 +14,9 @@ export default async function handler(req, res) {
     const roomStatuses = await db.roomStatus.findMany();
     return successResponse({
       res,
-      data: roomStatuses,
+      data: {
+        roomStatuses,
+      },
     });
   } catch (error) {
     console.error("Error fetching room statuses:", error.message);

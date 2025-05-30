@@ -2,7 +2,7 @@ import Head from "next/head";
 import React from "react";
 import Navbar from "../components/global/navbar";
 import Footer from "../components/global/footer";
-import Chatbot from "../components/global/chatbot";
+import Chatbot from "../components/global/chatbot/chatbot";
 
 const DefaultLayout = ({ title, children, showFooter = false }) => {
   return (

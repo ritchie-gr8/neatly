@@ -381,8 +381,8 @@ const RoomManagement = () => {
       try {
         setStatusLoading(true);
         const response = await api.get("/admin/room-status/list");
-        if (Array.isArray(response.data)) {
-          setRoomStatus(response.data);
+        if (Array.isArray(response.data.roomStatuses)) {
+          setRoomStatus(response.data.roomStatuses);
         } else {
           console.error("Invalid room status format:", response.data);
           setRoomStatus([]);

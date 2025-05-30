@@ -1,27 +1,34 @@
-import { useState, useRef, useEffect, use } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { X } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useChatbotResponse } from "@/hooks/useChatbotResponse";
 
-const ROOM_TYPE_OPTIONS = [
-  "Superior Garden View",
-  "Deluxe",
-  "Superior",
-  "Supreme",
-  "Ocean View",
-  "Executive Suite",
-  "Family Room",
-  "Standard"
-];
+const RoomTypeForm = ({
+  className,
+  roomTypes = [],
+  mode,
+}) => {
+  const { formData, errors, clearError, updateFormData, isLoading} = useChatbotResponse();
 
-const RoomTypeForm = ({ className, roomTypes }) => {
-  const [selectedRoomTypes, setSelectedRoomTypes] = useState([]);
+  const getInitialSelectedRoomTypes = () => {
+    if (!formData || !formData.roomTypes) return [];
+    return formData.roomTypes
+      .map((rt) => {
+        const roomType = roomTypes.find((r) => r.id === rt.roomTypeId);
+        return roomType
+      })
+  };
+
+  const [selectedRoomTypes, setSelectedRoomTypes] = useState(
+    getInitialSelectedRoomTypes() || []
+  );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const inputRef = useRef(null);
   const dropdownRef = useRef(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -40,22 +47,31 @@ const RoomTypeForm = ({ className, roomTypes }) => {
     };
   }, []);
 
-  // Filter options based on search value
-  const filteredOptions = roomTypes?.filter(
-    (option) =>
-      !selectedRoomTypes.includes(option.name) &&
-      option.name.toLowerCase().includes(searchValue.toLowerCase())
-  ) || [];
+  const handleChangeRoomTypeIds = (roomType) => {
+    if (!formData.roomTypes) {
+      updateFormData({ roomTypes: [roomType] });
+    } else {
+      updateFormData({ roomTypes: [...formData.roomTypes, roomType] });
+    }
 
-  const handleRemoveRoomType = (roomType) => {
-    setSelectedRoomTypes(selectedRoomTypes.filter((type) => type !== roomType));
-  };
-
-  const handleAddRoomType = (roomType) => {
-    if (!selectedRoomTypes.includes(roomType)) {
+    if (!selectedRoomTypes.includes(roomType.name)) {
       setSelectedRoomTypes([...selectedRoomTypes, roomType]);
       setSearchValue("");
     }
+    if (errors.roomTypes) clearError("roomTypes");
+  };
+
+  const filteredOptions =
+    roomTypes?.filter(
+      (option) =>
+        !selectedRoomTypes.some(selected => selected?.id === option.id) &&
+        option.name.toLowerCase().includes(searchValue.toLowerCase())
+    ) || [];
+
+  const handleRemoveRoomType = (roomType) => {
+    const newSelectedRoomTypes = selectedRoomTypes.filter((type) => type.id !== roomType?.id);
+    setSelectedRoomTypes(newSelectedRoomTypes);
+    updateFormData({ roomTypes: newSelectedRoomTypes });
   };
 
   const handleInputClick = () => {
@@ -67,57 +83,106 @@ const RoomTypeForm = ({ className, roomTypes }) => {
     setIsDropdownOpen(true);
   };
 
+  useEffect(() => {
+    const selected = getInitialSelectedRoomTypes();
+    setSelectedRoomTypes(selected);
+  }, [roomTypes]);
+
+  useEffect(() => {
+    if (formData?.roomTypes?.length !== selectedRoomTypes?.length) {
+      const selected = getInitialSelectedRoomTypes();
+      setSelectedRoomTypes(selected);
+    }
+  }, [formData]);
+
   return (
     <div className={className}>
-      <Label htmlFor="room-type" className="mb-1">
+      <Label htmlFor="reply-title" className="mb-1 require-label">
+        Reply title
+      </Label>
+      <Input
+        id="reply-title"
+        className={cn(
+          "bg-util-white h-9 placeholder:text-b2",
+          errors?.replyTitle && "border-red-500"
+        )}
+        value={formData.replyTitle}
+        onChange={(e) => {
+          updateFormData({ replyTitle: e.target.value });
+          if (errors?.replyTitle) clearError("replyTitle");
+        }}
+        disabled={isLoading || mode === "view"}
+        placeholder="e.g., Our Room Types, Available Accommodations"
+      />
+      {errors?.replyTitle && (
+        <p className="text-red-500 text-xs mt-1">{errors.replyTitle}</p>
+      )}
+
+      <Label htmlFor="room-type" className="mt-4 mb-1 require-label">
         Room type
       </Label>
-      <div className="relative">
+      <div className={cn("relative", mode === "view" && "pointer-events-none opacity-80")}>
         <div
-          className="flex flex-wrap items-center gap-2 p-2 border rounded-md bg-util-white focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"
-          onClick={handleInputClick}
+          className={cn(
+            "flex flex-wrap items-center gap-2 border rounded-md bg-util-white px-3",
+            errors?.roomTypes && "border-red-500",
+            mode === "view" && "pointer-events-none opacity-80",
+            selectedRoomTypes.length === 0 && "h-9",
+            selectedRoomTypes.length > 0 && "h-fit py-2"
+          )}
+          onClick={mode !== "view" ? handleInputClick : undefined}
           ref={inputRef}
+          disabled={isLoading}
         >
-          {selectedRoomTypes.map((roomType) => (
+          { selectedRoomTypes?.length > 0 && selectedRoomTypes.map((roomType, index) => (
             <div
-              key={roomType}
+              key={roomType?.id || `${roomType?.name}-${index}`}
               className="flex items-center gap-1 px-2 py-1 text-sm bg-gray-100 rounded-md"
             >
-              {roomType}
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleRemoveRoomType(roomType);
-                }}
-                className="flex items-center justify-center w-4 h-4 ml-1 text-gray-500 hover:text-gray-700 cursor-pointer"
-              >
-                <X size={12} />
-              </button>
+              {roomType?.name}
+              {mode !== "view" && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRemoveRoomType(roomType);
+                  }}
+                  disabled={isLoading}
+                  className="flex items-center justify-center w-4 h-4 ml-1 text-gray-500 hover:text-gray-700 cursor-pointer"
+                >
+                  <X size={12} />
+                </button>
+              )}
             </div>
           ))}
-          <input
-            type="text"
-            value={searchValue}
-            onChange={handleInputChange}
-            className="flex-grow h-8 border-none outline-none bg-transparent"
-            placeholder={selectedRoomTypes.length === 0 ? "Select room types..." : ""}
-          />
+          {mode !== "view" && (
+            <input
+              type="text"
+              value={searchValue}
+              onChange={handleInputChange}
+              className="flex-grow h-full text-b2 border-none outline-none bg-transparent"
+              placeholder={
+                selectedRoomTypes.length === 0 ? "Select room types..." : ""
+              }
+              disabled={isLoading || mode === "view"}
+            />
+          )}
         </div>
 
-        {isDropdownOpen && filteredOptions.length > 0 && (
+        {isDropdownOpen && filteredOptions.length > 0 && mode !== "view" && (
           <div
-            className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg max-h-60 overflow-auto"
+            className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg max-h-60 overflow-auto text-b2"
             ref={dropdownRef}
           >
-            {filteredOptions.map((option) => (
+            {filteredOptions.map((option, index) => (
               <div
-                key={option.id}
+                key={option.id || `${option.name}-${index}`}
                 className="px-4 py-2 cursor-pointer hover:bg-gray-100"
                 onClick={() => {
-                  handleAddRoomType(option.name);
+                  handleChangeRoomTypeIds(option);
                   setIsDropdownOpen(false);
                 }}
+                disabled={isLoading}
               >
                 {option.name}
               </div>
@@ -125,11 +190,30 @@ const RoomTypeForm = ({ className, roomTypes }) => {
           </div>
         )}
       </div>
+      {errors?.roomTypes && (
+        <p className="text-red-500 text-xs mt-1">{errors.roomTypes}</p>
+      )}
 
-      <Label htmlFor="button-name" className="mt-4 mb-1">
+      <Label htmlFor="button-name" className="mt-4 mb-1 require-label">
         Button name
       </Label>
-      <Input id="button-name" className="bg-util-white" />
+      <Input
+        id="button-name"
+        className={cn(
+          "bg-util-white h-9 placeholder:text-b2",
+          errors?.buttonName && "border-red-500"
+        )}
+        value={formData.buttonName}
+        onChange={(e) => {
+          updateFormData({ buttonName: e.target.value });
+          if (errors?.buttonName) clearError("buttonName");
+        }}
+        disabled={isLoading || mode === "view"}
+        placeholder="e.g., View Rooms, Book Now"
+      />
+      {errors?.buttonName && (
+        <p className="text-red-500 text-xs mt-1">{errors.buttonName}</p>
+      )}
     </div>
   );
 };

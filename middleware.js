@@ -21,13 +21,16 @@ const publicRoutes = [
   "/api/room-type",
   "/api/intents",
   "/api/max-guest",
+  "/api/chatbot/response/message",
+  "/api/chat",
+  "/api/chatbot",
 ];
 
 const protectedRoutes = ["/admin", "/api/admin"];
 
 const isPublicPath = (path) => {
   return publicRoutes.some(
-    (publicPath) => path === publicPath || path.startsWith("/api/public/")
+    (publicPath) => path === publicPath || path.startsWith(publicPath)
   );
 };
 
