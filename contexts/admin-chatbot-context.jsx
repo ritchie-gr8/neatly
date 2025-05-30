@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/router";
 import { normalizeSupabaseChatSession } from "@/lib/supabase/utils";
 import { SENDER } from "@/constants/chatbot";
+import { ArrowRight, ChevronRight } from "lucide-react";
 
 const AdminChatbotContext = createContext(null);
 
@@ -109,15 +110,16 @@ export const AdminChatbotProvider = ({ children }) => {
       : `Guest ${session.sessionId}`;
 
     toast(
-      <div>
-        <h1>New Chat Request</h1>
-        <p>{userInfo}</p>
-        <p>{session.handoff_reason}</p>
+      <div className="flex items-center justify-between px-1 w-[200px]">
+        <div>
+          <h3 className="text-sm font-medium text-gray-900 truncate">New Request</h3>
+          <p className="text-xs text-gray-900 truncate">{userInfo}</p>
+        </div>
         <button
           onClick={() => navigateToChat(session.sessionId)}
-          className="cursor-pointer"
+          className="ml-8 cursor-pointer shrink-0 rounded-md bg-primary/10 hover:bg-primary/20 text-primary px-3 py-1.5 text-xs font-medium transition-colors flex items-center gap-1.5"
         >
-          Join Chat
+          Join <ChevronRight className="h-3.5 w-3.5" />
         </button>
       </div>
     );

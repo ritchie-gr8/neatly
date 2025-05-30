@@ -65,7 +65,9 @@ const ResponseCard = ({ onRemove, onSave }) => {
         payload.data.message = formData.message;
       } else if (replyFormat === REPLY_FORMAT.ROOMTYPES) {
         payload.data.buttonName = formData.buttonName;
-        payload.data.roomTypes = formData.roomTypes.map((roomType) => roomType.roomTypeId ?? roomType.id);
+        payload.data.roomTypes = formData.roomTypes.map(
+          (roomType) => roomType.roomTypeId ?? roomType.id
+        );
         payload.data.replyTitle = formData.replyTitle;
       } else if (replyFormat === REPLY_FORMAT.OPTIONS) {
         payload.data.replyTitle = formData.replyTitle;
@@ -142,7 +144,8 @@ const ResponseCard = ({ onRemove, onSave }) => {
                 className={cn(
                   "bg-util-white h-9",
                   errors.replyFormat && "border-red-500",
-                  !replyFormat && "text-gray-600"
+                  !replyFormat && "text-gray-600",
+                  "disabled:cursor-default"
                 )}
               >
                 <SelectValue placeholder="Select a reply format" />

@@ -101,6 +101,14 @@ const POST = async (req, res) => {
   try {
     const { sessionId, userId } = await req.body;
 
+    if (!sessionId) {
+      return errorResponse({
+        res,
+        message: "Session ID is required",
+        status: HTTP_STATUS.BAD_REQUEST,
+      });
+    }
+
     let session = await db.chatSession.findUnique({
       where: { sessionId },
     });

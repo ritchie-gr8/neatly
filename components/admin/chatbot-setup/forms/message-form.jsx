@@ -17,7 +17,7 @@ const MessageForm = ({ className, mode }) => {
       </Label>
       <Textarea
         id="message"
-        className={`bg-util-white h-24 ${
+        className={`bg-util-white h-24 disabled:cursor-default ${
           errors?.message ? "border-red-500" : ""
         }`}
         disabled={isLoading || mode === "view"}

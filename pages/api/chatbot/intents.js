@@ -41,7 +41,11 @@ export default async function handler(req, res) {
         role: "user",
         parts: [
           {
-            text: `Classify the user's intent from the following message into exactly one of these categories:
+            text: `First, determine if the following message is in English.
+
+          If the message is NOT in English, respond ONLY with "non_english".
+
+          If the message IS in English, classify the user's intent from the message into exactly one of these categories:
           ${formattedTopics}
 
           Respond with ONLY the category name, no explanation or additional text.
@@ -62,7 +66,11 @@ export default async function handler(req, res) {
       response?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ??
       "general inquiry";
 
-    res.status(200).json({ intent });
+    if (intent === "non_english") {
+      res.status(200).json({ intent: "general inquiry" });
+    } else {
+      res.status(200).json({ intent });
+    }
   } catch (error) {
     console.error("Error in intent classification:", error);
     res.status(500).json({ intent: "general inquiry" });

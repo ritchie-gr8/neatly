@@ -94,16 +94,13 @@ const ChatbotPopup = ({ className }) => {
   };
 
   useEffect(() => {
-    chatStorageRef.current = ChatStorageService.getInstance();
-    if (user) {
-      chatStorageRef.current.userId = user.id;
-    }
-
-    const initailizeChat = async () => {
+    const initializeChat = async () => {
       try {
         chatStorageRef.current = ChatStorageService.getInstance();
+
+        // Set user first, this will reset session if user just logged in
         if (user) {
-          chatStorageRef.current.userId = user.id;
+          chatStorageRef.current.setUser(user.id);
         }
 
         await chatStorageRef.current.initializeSession();
@@ -112,6 +109,9 @@ const ChatbotPopup = ({ className }) => {
         if (loadedMessages?.length > 0) {
           const processedMessages = loadedMessages.map(processMessage);
           setMessages(processedMessages);
+        } else {
+          // Reset messages if no loaded messages (fresh user session)
+          setMessages([]);
         }
 
         if (chatStorageRef.current.sessionId) {
@@ -130,7 +130,7 @@ const ChatbotPopup = ({ className }) => {
       }
     };
 
-    initailizeChat();
+    initializeChat();
   }, [user]);
 
   const toggleChat = () => {
@@ -193,6 +193,7 @@ const ChatbotPopup = ({ className }) => {
     addMessage(SENDER.USER, trimmedMessage);
     setInputValue("");
 
+    console.log("handoffSessionId", handoffSessionId);
     if (handoffSessionId) return;
 
     setIsTyping(true);
@@ -485,11 +486,11 @@ const ChatbotPopup = ({ className }) => {
             ref={chatContainerRef}
           >
             {user?.id ? (
-              <div className="flex justify-start text-xs text-gray-600">
+              <div className="flex justify-start text-xs text-gray-600 mb-2">
                 <p>Your previous conversation will be stored for 30 days.</p>
               </div>
             ) : (
-              <div className="flex justify-start text-xs text-gray-600">
+              <div className="flex justify-start text-xs text-gray-600 mb-2">
                 <p>The system will not store your previous conversation.</p>
               </div>
             )}

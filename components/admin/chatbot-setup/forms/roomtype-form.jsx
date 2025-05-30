@@ -121,7 +121,7 @@ const RoomTypeForm = ({
       <Label htmlFor="room-type" className="mt-4 mb-1 require-label">
         Room type
       </Label>
-      <div className="relative">
+      <div className={cn("relative", mode === "view" && "pointer-events-none opacity-80")}>
         <div
           className={cn(
             "flex flex-wrap items-center gap-2 border rounded-md bg-util-white px-3",

@@ -228,7 +228,7 @@ const ChatContent = () => {
         <h5 className="text-h5 font-semibold text-gray-900">Chat Support</h5>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-16 pt-6">
-        <Card>
+        <Card className="shadow-none">
           <CardHeader>
             <CardTitle>Active Sessions</CardTitle>
           </CardHeader>
@@ -262,7 +262,8 @@ const ChatContent = () => {
                       Last activity:{" "}
                       {new Date(session.lastMessageAt).toLocaleString()}
                     </div>
-                    {router.query.sessionId === session?.sessionId && !selectedSession && (
+                    {router.query.sessionId === session?.sessionId &&
+                      !selectedSession && (
                         <div className="mt-1 text-xs inline-block px-2 py-1 bg-red-100 text-red-800 rounded-full">
                           Needs assistance
                         </div>
@@ -274,7 +275,7 @@ const ChatContent = () => {
           </CardContent>
         </Card>
 
-        <Card className="md:col-span-2">
+        <Card className="md:col-span-2 shadow-none">
           <CardHeader>
             <CardTitle>
               <div className="flex items-center justify-between">
@@ -317,7 +318,7 @@ const ChatContent = () => {
                     messages.map((message, index) => {
                       // Process message to handle component messages
                       const processedMessage = processMessage(message);
-                      
+
                       return (
                         <div
                           key={index}
@@ -327,26 +328,34 @@ const ChatContent = () => {
                               : "justify-start"
                           } mb-4`}
                         >
-                          <MessageItem 
+                          <MessageItem
                             message={processedMessage}
-                            onOptionSelect={processedMessage.componentType === "OPTIONS" ? 
-                              (optionText, detailsText) => {
-                                // Add user's selection to messages
-                                const userMessage = {
-                                  content: optionText,
-                                  sender: SENDER.USER,
-                                  timestamp: new Date().toISOString()
-                                };
-                                setMessages(prev => [...prev, userMessage]);
-                                
-                                // Add bot's response
-                                const botMessage = {
-                                  content: detailsText,
-                                  sender: SENDER.BOT,
-                                  timestamp: new Date().toISOString()
-                                };
-                                setMessages(prev => [...prev, botMessage]);
-                              } : undefined
+                            onOptionSelect={
+                              processedMessage.componentType === "OPTIONS"
+                                ? (optionText, detailsText) => {
+                                    // Add user's selection to messages
+                                    const userMessage = {
+                                      content: optionText,
+                                      sender: SENDER.USER,
+                                      timestamp: new Date().toISOString(),
+                                    };
+                                    setMessages((prev) => [
+                                      ...prev,
+                                      userMessage,
+                                    ]);
+
+                                    // Add bot's response
+                                    const botMessage = {
+                                      content: detailsText,
+                                      sender: SENDER.BOT,
+                                      timestamp: new Date().toISOString(),
+                                    };
+                                    setMessages((prev) => [
+                                      ...prev,
+                                      botMessage,
+                                    ]);
+                                  }
+                                : undefined
                             }
                           />
                         </div>
