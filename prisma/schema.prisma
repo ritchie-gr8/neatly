@@ -279,6 +279,7 @@ model ChatbotResponse {
   id           Int         @id @default(autoincrement()) @map("chatbot_response_id")
   topic        String      // The trigger topic or intent for this response
   replyFormat  ReplyFormat @map("reply_format")
+  order        Int         @default(0) @map("order") // Field for drag-and-drop ordering
   createdAt    DateTime    @default(now()) @map("created_at")
   updatedAt    DateTime    @default(now()) @updatedAt @map("updated_at")
 
@@ -305,6 +306,7 @@ model MessageResponse {
 // RoomTypeResponse: For displaying room type cards
 model RoomTypeResponse {
   id              Int                   @id @default(autoincrement()) @map("room_type_response_id")
+  replyTitle      String                @map("reply_title") @default("") // Title displayed above the room type info
   buttonName      String                @map("button_name") // The label for the button
   chatbotResponse ChatbotResponse       @relation(fields: [responseId], references: [id], onDelete: Cascade)
   responseId      Int                   @unique @map("response_id")
