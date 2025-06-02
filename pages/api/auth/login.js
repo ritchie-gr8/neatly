@@ -80,6 +80,7 @@ export default async function handler(req, res) {
           role: user.role,
           country: user.country,
           profilePicture: user.profilePicture,
+          profilePicturePublicId: user.profilePicturePublicId,
         },
       },
     });

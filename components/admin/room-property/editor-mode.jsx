@@ -386,7 +386,7 @@ const EditorMode = ({ setMode, selectedRoomTypeId, setLastAction }) => {
       try {
         setIsLoadingBedTypes(true);
         const response = await api.get("/admin/bed-type");
-        setBedTypes(response.data || []);
+        setBedTypes(response?.data?.bedTypes || []);
       } catch (error) {
         console.error("Error fetching bed types:", error);
         toast.error("Failed to load bed types");
@@ -409,8 +409,6 @@ const EditorMode = ({ setMode, selectedRoomTypeId, setLastAction }) => {
             `/admin/room-type/${selectedRoomTypeId}`
           );
           const roomTypeData = response.data;
-
-          console.log("Room type data:", roomTypeData);
 
           setRoomTypeName(roomTypeData.name);
           form.setValue("name", roomTypeData.name || "");

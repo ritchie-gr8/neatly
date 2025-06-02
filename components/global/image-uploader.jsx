@@ -55,7 +55,7 @@ const ImageUploader = React.forwardRef(function ImageUploader(
         htmlFor="image-uploader"
         className="w-full h-full flex items-center justify-center"
       >
-        <div className="bg-gray-200 group-hover:bg-gray-300 rounded-sm w-full h-full flex flex-col items-center justify-center gap-2">
+        <div className="bg-gray-200 group-hover:bg-gray-300 rounded-sm w-full h-full flex flex-col items-center justify-center gap-2 overflow-hidden">
           {image ? (
             <img src={image} alt="" className="w-full h-full object-cover" />
           ) : (
