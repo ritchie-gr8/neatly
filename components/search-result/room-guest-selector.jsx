@@ -1,113 +1,187 @@
-import useClickOutside from "@/hooks/useClickOutside";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FiChevronDown } from "react-icons/fi";
 
 const RoomGuestSelector = ({
-  rooms,
-  onAddRoom,
-  onRemoveRoom,
-  guests,
-  onAddGuest,
-  onRemoveGuest,
-  maxCapacity,
-  pageType,
-  className,
+  roomCount: propRoomCount,
+  guestCount: propGuestCount,
+  onRoomChange,
+  onGuestChange,
 }) => {
-  const ref = useRef(null);
-  useClickOutside(ref, () => setIsOpen(false));
-
+  const [roomCount, setRoomCount] = useState(1);
+  const [guestCount, setGuestCount] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
-  const [isSelected, setIsSelected] = useState(pageType === "search-result");
+  const dropdownRef = useRef(null);
+  const [maxCapacity, setMaxCapacity] = useState();
 
-  const handleClick = (cb) => {
-    if (!isSelected) {
-      setIsSelected(true);
+  useEffect(() => {
+    if (propRoomCount !== undefined) {
+      setRoomCount(propRoomCount);
     }
+  }, [propRoomCount]);
 
-    cb();
+  useEffect(() => {
+    if (propGuestCount !== undefined) {
+      setGuestCount(propGuestCount);
+    }
+  }, [propGuestCount]);
+
+  const decreaseRoom = () => {
+    if (roomCount > 1) {
+      const newCount = roomCount - 1;  
+      setRoomCount(newCount);
+      onRoomChange?.(newCount);
+    }
   };
 
-  return (
-    <div className="relative w-full" ref={ref}>
-      <div
-        className={`py-2.5 pl-3 pr-4 h-12 flex items-center justify-between text-b2 p-3
-        border border-input shadow-xs rounded-md cursor-pointer hover:border-gray-400 ${
-          className ? className : ""
-        }`}
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <div className="flex items-center space-x-2">
-          <span className="text-black">
-            {rooms} {rooms === 1 ? "room" : "rooms"}, {guests}{" "}
-            {guests === 1 ? "guest" : "guests"}
-          </span>
-        </div>
-        <FiChevronDown
-          size={16}
-          className={`text-gray-600 transition-transform ${
-            isOpen ? "rotate-180" : ""
-          } `}
-        />
-      </div>
+  const increaseRoom = () => {
+    const newCount = roomCount + 1;
+    setRoomCount(newCount);
+    onRoomChange?.(newCount);
+  };
 
-      {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white border rounded-sm shadow-lg">
-          <div className="p-4">
-            <div className="mb-4">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">Rooms</h3>
-              <div className="flex items-center justify-between">
-                <button
-                  className={`w-8 h-8 flex items-center justify-center border rounded-full text-lg cursor-pointer hover:border-gray-700 transition-all duration-300 ${
-                    rooms <= 1
-                      ? "text-gray-300 cursor-not-allowed"
-                      : "text-gray-700"
-                  }`}
-                  onClick={() => handleClick(onRemoveRoom)}
-                  disabled={rooms <= 1}
-                >
-                  -
-                </button>
-                <span className="text-gray-700 font-medium">{rooms}</span>
-                <button
-                  className="w-8 h-8 flex items-center justify-center border rounded-full text-lg cursor-pointer hover:border-gray-700 transition-all duration-300 text-gray-700"
-                  onClick={() => handleClick(onAddRoom)}
-                >
-                  +
-                </button>
-              </div>
+  const decreaseGuest = () => {
+    if (guestCount > roomCount) {
+      const newCount = guestCount - 1;
+      setGuestCount(newCount);
+      onGuestChange?.(newCount); 
+    }
+  };
+
+  const increaseGuest = () => {
+    if (maxCapacity && guestCount < maxCapacity * roomCount) {
+      const newCount = guestCount + 1;
+      setGuestCount(newCount);
+      onGuestChange?.(newCount);
+    }
+  };
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        isOpen &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (guestCount < roomCount) {
+      const newCount = roomCount;
+      setGuestCount(newCount);
+      onGuestChange?.(newCount); 
+    }
+  }, [roomCount, guestCount, onGuestChange]); 
+
+  useEffect(() => {
+    const fetchMaxCapacity = async () => {
+      try {
+        const response = await fetch("api/rooms/get-max-capacity");
+        const data = await response.json();
+
+        if (data.success) {
+          setMaxCapacity(data.maxCapacity);
+        } else {
+          console.error("Failed to fetch max capacity:", data.error);
+        }
+      } catch (error) {
+        console.error("Error fetching max capacity:", error);
+      }
+    };
+
+    fetchMaxCapacity();
+  }, []);
+
+  const isDecreaseRoomDisabled = roomCount <= 1;
+  const isDecreaseGuestDisabled = guestCount <= roomCount;
+  const isIncreaseGuestDisabled = !maxCapacity || guestCount >= maxCapacity * roomCount;
+
+  return (
+    <div className="bg-white w-full  flex flex-col relative">
+      <div ref={dropdownRef} className="w-full flex flex-col justify-start">
+        <div
+          onClick={toggleDropdown}
+          className="flex justify-between items-center border shadow-xs rounded-md px-4 py-3 cursor-pointer"
+        >
+          <div>
+            <span className="text-gray-900 text-b2">
+              {roomCount} rooms, {guestCount} guests
+            </span>
+          </div>
+          <FiChevronDown
+            className={`text-gray-600 text-md cursor-pointer transition-transform duration-300 ease-in-out ${
+              isOpen ? "rotate-180" : ""
+            }`}
+          />
+        </div>
+
+        {isOpen && (
+          <div className="absolute top-full left-0 right-0 bg-white shadow-lg border p-4 rounded-sm mt-2">
+            <p>Rooms</p>
+            <div className="my-4 flex flex-row justify-between">
+              <button
+                onClick={decreaseRoom}
+                disabled={isDecreaseRoomDisabled}
+                className={`border w-8 h-8 rounded-full flex items-center justify-center text-lg font-medium transition-all ${
+                  isDecreaseRoomDisabled
+                    ? "border-gray-200 text-gray-300 cursor-not-allowed bg-gray-50"
+                    : "border-gray-300 text-gray-700 hover:border-gray-900 hover:bg-gray-50 cursor-pointer"
+                }`}
+              >
+                -
+              </button>
+              <p>{roomCount}</p>
+              <button
+                onClick={increaseRoom}
+                className="cursor-pointer border w-8 h-8 rounded-full hover:border-gray-900"
+              >
+                +
+              </button>
             </div>
 
-            <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-2">Guests</h3>
-              <div className="flex items-center justify-between">
-                <button
-                  className={`w-8 h-8 flex items-center justify-center border rounded-full text-lg cursor-pointer hover:border-gray-700 transition-all duration-300 ${
-                    guests <= 1
-                      ? "text-gray-300 cursor-not-allowed"
-                      : "text-gray-700"
-                  }`}
-                  onClick={() => handleClick(onRemoveGuest)}
-                  disabled={guests <= 1}
-                >
-                  -
-                </button>
-                <span className="text-gray-700 font-medium">{guests}</span>
-                <button
-                  className={`w-8 h-8 flex items-center justify-center border rounded-full text-lg cursor-pointer hover:border-gray-700 transition-all duration-300 ${
-                    guests >= maxCapacity
-                      ? "text-gray-300 cursor-not-allowed"
-                      : "text-gray-700"
-                  }`}
-                  onClick={() => handleClick(onAddGuest)}
-                  disabled={guests >= maxCapacity}
-                >
-                  +
-                </button>
-              </div>
+            <p>Guests</p>
+            <div className="mt-4 flex flex-row justify-between">
+              <button
+                onClick={decreaseGuest}
+                disabled={isDecreaseGuestDisabled}
+                className={`border w-8 h-8 rounded-full flex items-center justify-center text-lg font-medium transition-all ${
+                  isDecreaseGuestDisabled
+                    ? "border-gray-200 text-gray-300 cursor-not-allowed bg-gray-50"
+                    : "border-gray-300 text-gray-700 hover:border-gray-900 hover:bg-gray-50 cursor-pointer"
+                }`}
+              >
+                -
+              </button>
+              <p>{guestCount}</p>
+              <button
+                onClick={increaseGuest}
+                disabled={isIncreaseGuestDisabled}
+                className={`border w-8 h-8 rounded-full flex items-center justify-center text-lg font-medium transition-all ${
+                  isIncreaseGuestDisabled
+                    ? "border-gray-200 text-gray-300 cursor-not-allowed bg-gray-50"
+                    : "border-gray-300 text-gray-700 hover:border-gray-900 hover:bg-gray-50 cursor-pointer"
+                }`}
+              >
+                +
+              </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

@@ -6,7 +6,7 @@ const index = () => {
   return (
     <DefaultLayout title="Search Result" showFooter={true}>
       <div className="bg-gray-200">
-        <SearchRoom />
+        <SearchRoom/>
         <RoomLists />
       </div>
     </DefaultLayout>

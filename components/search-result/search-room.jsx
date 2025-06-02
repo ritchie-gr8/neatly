@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import CustomDatePicker from "../global/date-picker";
 import RoomGuestSelector from "../search-result/room-guest-selector";
 import { useRouter } from "next/router";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import api from "@/lib/axios";
 
 const SearchRoom = ({
@@ -18,14 +18,13 @@ const SearchRoom = ({
   const router = useRouter();
   const [checkInDate, setCheckInDate] = useState(today);
   const [checkOutDate, setCheckOutDate] = useState(tomorrow);
-  const [rooms, setRooms] = useState(1);
-  const [guests, setGuests] = useState(1);
-  const [maxCapacity, setMaxCapacity] = useState(1);
-  const [actualMaxCapacity, setActualMaxCapacity] = useState(1);
+  const [roomCount, setRoomCount] = useState(1);
+  const [guestCount, setGuestCount] = useState(1);
   const [loading, setLoading] = useState(false);
 
+  // อ่านค่าจาก URL เมื่อโหลดหน้า Search Result
   useEffect(() => {
-    if (router.isReady) {
+    if (pageType === "search-result" && router.isReady) {
       const { checkIn, checkOut, rooms, guests } = router.query;
 
       if (checkIn) {
@@ -37,32 +36,14 @@ const SearchRoom = ({
       }
 
       if (rooms) {
-        setRooms(parseInt(rooms, 10));
+        setRoomCount(parseInt(rooms, 10));
       }
 
       if (guests) {
-        setGuests(parseInt(guests, 10));
+        setGuestCount(parseInt(guests, 10));
       }
     }
-  }, [router.isReady, router.query]);
-
-  useEffect(() => {
-    const fetchMaxCapacity = async () => {
-      setLoading(true);
-      try {
-        const response = await api.get("/max-guest");
-        const maxGuest = response.data.maxGuest;
-        setMaxCapacity(maxGuest);
-        setActualMaxCapacity(maxGuest);
-      } catch (error) {
-        console.log(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMaxCapacity();
-  }, []);
+  }, [router.isReady, router.query, pageType]);
 
   const handleCheckInDateChange = (date) => {
     setCheckInDate(date);
@@ -74,42 +55,6 @@ const SearchRoom = ({
     }
   };
 
-  const handleAddRoom = () => {
-    const newRooms = rooms + 1;
-    const newMaxCapacity = actualMaxCapacity * newRooms;
-
-    setRooms(newRooms);
-    setMaxCapacity(newMaxCapacity);
-
-    if (guests < newRooms) {
-      setGuests(newRooms)
-    }
-  };
-
-  const handleRemoveRoom = () => {
-    if (rooms > 1) {
-      const newRooms = rooms - 1;
-      const newMaxCapacity = actualMaxCapacity * newRooms;
-
-      setRooms(newRooms);
-      setMaxCapacity(newMaxCapacity);
-
-      if (guests > newMaxCapacity) {
-        setGuests(newMaxCapacity);
-      }
-    }
-  };
-
-  const handleAddGuest = () => {
-    setGuests((prevGuests) => prevGuests + 1);
-  };
-
-  const handleRemoveGuest = () => {
-    if (guests > rooms) {
-      setGuests((prevGuests) => prevGuests - 1);
-    }
-  };
-
   const handleSearch = () => {
     setLoading(true);
     const checkInStr = format(checkInDate, "yyyy-MM-dd");
@@ -118,8 +63,8 @@ const SearchRoom = ({
     const queryParams = new URLSearchParams({
       checkIn: checkInStr,
       checkOut: checkOutStr,
-      rooms: rooms,
-      guests: guests,
+      rooms: roomCount,
+      guests: guestCount,
     });
 
     router.push(`/search-result?${queryParams.toString()}`);
@@ -146,7 +91,6 @@ const SearchRoom = ({
           className="mb-0 h-12 w-full"
         />
       </div>
-
       <div className="-translate-y-2.5 flex-1 md:max-w-[240px]">
         <CustomDatePicker
           title="Check Out"
@@ -158,28 +102,24 @@ const SearchRoom = ({
         />
       </div>
 
-      <div className="flex-1 md:max-w-[240px]">
-        <div className="-translate-y-2.5">
+      <div className="flex-1 md:max-w-[240px] z-50 w-full">
+        <div className="-translate-y-2.5 ">
           <label
             htmlFor="rooms-guests"
-            className="text-gray-900 whitespace-nowrap text-ellipsis overflow-hidden"
+            className="text-gray-900 whitespace-nowrap text-ellipsis "
           >
             Rooms & Guests
           </label>
           <RoomGuestSelector
-            rooms={rooms}
-            onAddRoom={handleAddRoom}
-            onRemoveRoom={handleRemoveRoom}
-            guests={guests}
-            onAddGuest={handleAddGuest}
-            onRemoveGuest={handleRemoveGuest}
-            maxCapacity={maxCapacity}
-            pageType={pageType}
+            roomCount={roomCount}
+            guestCount={guestCount}
+            onRoomChange={setRoomCount}
+            onGuestChange={setGuestCount}
           />
         </div>
       </div>
 
-      <div className="-translate-y-2.5 flex-1 md:max-w-[240px]">
+      <div className=" -translate-y-2.5 flex-1 md:max-w-[240px]">
         <button
           className={`w-full py-3 md:py-3 md:px-6 rounded-sm cursor-pointer ${
             pageType === "landing-page"

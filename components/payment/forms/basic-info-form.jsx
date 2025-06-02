@@ -1,4 +1,3 @@
-// components/payment/forms/basic-info-form.js (Updated version)
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import CustomDatePicker from "@/components/global/date-picker";
@@ -15,7 +14,7 @@ import { useBooking } from "@/contexts/booking-context";
 import { validateField } from "@/lib/validations/booking-validation";
 
 const BasicInfoForm = () => {
-  const { user } = useAuth();
+  const { user } = useAuth();  // ← นี่คือการดึงข้อมูล user จาก AuthContext
   const { 
     bookingData, 
     updateBasicInfo, 
@@ -40,7 +39,7 @@ const BasicInfoForm = () => {
 
   const hasDataInContext = () => {
     return (
-      bookingData.basicInfo.firstName ||
+      bookingData.basicInfo.firstName || // ← เช็คว่ามีข้อมูลใน booking context มั้ย  (เผื่อผู้ใช้เคยกรอกไว้แล้ว) ถ้าไม่มี: เอาข้อมูลจาก user (auth context) มาใส่ ถ้ามีแล้ว: ใช้ข้อมูลเดิมที่มีอยู่
       bookingData.basicInfo.lastName ||
       bookingData.basicInfo.email ||
       bookingData.basicInfo.phone ||
@@ -72,6 +71,7 @@ const BasicInfoForm = () => {
           country: user.country
         });
         
+        // ส่วนนี้คือการนำข้อมูลจาก auth มาใส่ในฟอร์ม  ดึงจาก user
         const userData = {
           firstName: user.firstName || "",
           lastName: user.lastName || "",
@@ -81,8 +81,8 @@ const BasicInfoForm = () => {
           country: user.country || "",
         };
         
-        setFormData(userData);
-        updateBasicInfo(userData);
+        setFormData(userData); // ← เอาข้อมูลจาก user มาใส่ในฟอร์ม
+        updateBasicInfo(userData); // ← เอาข้อมูลจาก user มาเก็บใน booking context
       } else {
         console.log("Using existing modified data from context:", bookingData.basicInfo);
         setFormData(bookingData.basicInfo);

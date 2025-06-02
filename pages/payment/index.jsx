@@ -1,113 +1,156 @@
-// pages/payment/index.js (Updated version with Next button validation)
+// pages/payment/index.jsx - ใช้ API แทน Context
 import BasicInfoForm from "@/components/payment/forms/basic-info-form";
 import SpecialRequestForm from "@/components/payment/forms/special-request-form";
 import React, { useState, useEffect } from "react";
-import BookingDetialSection from "@/components/payment/shared/booking-detial-section";
 import DefaultLayout from "@/layouts/default.layout";
 import PaymentMethodForm from "@/components/payment/forms/payment-method.layout";
-import { BookingProvider, useBooking } from "@/contexts/booking-context";
 import { useRouter } from "next/router";
 import api from "@/lib/axios";
-import { 
-  validateCompleteBooking,
-  validateBasicInfo,
-  validateSpecialRequests,
-  validatePaymentMethod
-} from "@/lib/validations/booking-validation";
+import dynamic from 'next/dynamic';
 
-const processPayment = async (bookingData) => {
-  try {
-    const response = await api.post('/booking/create-booking', {
-      amount: bookingData.priceBreakdown.totalPrice,
-      currency: 'THB',
-      booking: {
-        customerName: `${bookingData.basicInfo.firstName} ${bookingData.basicInfo.lastName}`,
-        customerEmail: bookingData.basicInfo.email,
-        customerPhone: bookingData.basicInfo.phone,
-        checkIn: bookingData.bookingDetail.checkIn,
-        checkOut: bookingData.bookingDetail.checkOut,
-        roomType: bookingData.bookingDetail.roomType,
-        guests: bookingData.bookingDetail.guests
-      },
-      payment: {
-        holderName: bookingData.paymentMethod.creditCard.cardOwner,
-        cardNumber: bookingData.paymentMethod.creditCard.cardNumber,
-        expiryMonth: bookingData.paymentMethod.creditCard.expiryDate.split('/')[0],
-        expiryYear: `20${bookingData.paymentMethod.creditCard.expiryDate.split('/')[1]}`,
-        cvv: bookingData.paymentMethod.creditCard.cvc
-      },
-      description: 'Hotel Room Booking'
-    });
-
-    return response.data;
-  } catch (error) {
-    console.error('Payment API Error:', error);
-    throw error;
+// ใช้ dynamic import สำหรับ BookingDetailSection
+const BookingDetailSection = dynamic(
+  () => import("@/components/payment/shared/booking-detail-section"),
+  { 
+    ssr: false, // ปิด Server-side rendering
+    loading: () => (
+      <div>
+        <div className="bg-green-800 md:rounded-t-sm p-4 md:py-4 md:px-6">
+          <div className="flex items-center">
+            <div className="w-6 h-6 bg-green-500 rounded mr-3"></div>
+            <h2 className="text-h5 font-inter font-semibold text-white">
+              Loading Booking Detail...
+            </h2>
+          </div>
+        </div>
+        <div className="bg-green-600 md:rounded-b-sm py-6 px-4 md:p-6">
+          <div className="animate-pulse space-y-4">
+            <div className="h-4 bg-green-400 rounded"></div>
+            <div className="h-4 bg-green-400 rounded"></div>
+            <div className="h-4 bg-green-400 rounded"></div>
+          </div>
+        </div>
+      </div>
+    )
   }
-};
+);
+
+// ❌ ลบฟังก์ชัน processPayment ออก (ใช้ mock data แทน)
+// const processPayment = async (bookingData) => { ... }
 
 const PaymentPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const router = useRouter();
-  const { 
-    getCompleteBookingData, 
-    setValidationErrorsForSection,
-    bookingData,
-    countdown
-  } = useBooking();
-
-  // Redirect to payment-fail when countdown reaches 0
-  useEffect(() => {
-    if (countdown === 0) {
-      console.log("⏰ Time expired! Redirecting to payment-fail page...");
-      router.push('/payment-fail');
+  
+  // ❌ ลบการใช้ useBooking context ออก
+  // const { getCompleteBookingData, setValidationErrorsForSection, bookingData, countdown } = useBooking();
+  
+  // ✅ สร้าง state ใหม่สำหรับ form data (mock data)
+  const [formData, setFormData] = useState({
+    basicInfo: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: ''
+    },
+    specialRequests: {
+      requests: ''
+    },
+    paymentMethod: {
+      type: 'credit', // 'credit' หรือ 'cash'
+      creditCard: {
+        cardNumber: '',
+        expiryDate: '',
+        cvc: '',
+        cardOwner: ''
+      }
     }
-  }, [countdown, router]);
+  });
+
+  // ✅ สร้าง validation errors state
+  const [validationErrors, setValidationErrors] = useState({
+    basicInfo: {},
+    specialRequests: {},
+    paymentMethod: {}
+  });
+
+  // ❌ ลบ countdown จาก context - ใช้ countdown จาก BookingDetailSection แทน
+
+  // ❌ ลบ useEffect สำหรับ countdown redirect - ให้ BookingDetailSection จัดการเอง
+
+  // ✅ ฟังก์ชันง่าย ๆ สำหรับ validation (mock)
+  const validateCurrentStep = () => {
+    let hasErrors = false;
+    let errors = {};
+
+    if (currentStep === 1) {
+      // Basic Info validation
+      if (!formData.basicInfo.firstName.trim()) {
+        errors.firstName = 'First name is required';
+        hasErrors = true;
+      }
+      if (!formData.basicInfo.lastName.trim()) {
+        errors.lastName = 'Last name is required';
+        hasErrors = true;
+      }
+      if (!formData.basicInfo.email.trim()) {
+        errors.email = 'Email is required';
+        hasErrors = true;
+      }
+      if (!formData.basicInfo.phone.trim()) {
+        errors.phone = 'Phone is required';
+        hasErrors = true;
+      }
+      
+      setValidationErrors(prev => ({ ...prev, basicInfo: errors }));
+      
+    } else if (currentStep === 2) {
+      // Special Requests validation (optional - ไม่บังคับ)
+      setValidationErrors(prev => ({ ...prev, specialRequests: {} }));
+      
+    } else if (currentStep === 3) {
+      // Payment Method validation
+      if (formData.paymentMethod.type === 'credit') {
+        if (!formData.paymentMethod.creditCard.cardNumber.trim()) {
+          errors.cardNumber = 'Card number is required';
+          hasErrors = true;
+        }
+        if (!formData.paymentMethod.creditCard.expiryDate.trim()) {
+          errors.expiryDate = 'Expiry date is required';
+          hasErrors = true;
+        }
+        if (!formData.paymentMethod.creditCard.cvc.trim()) {
+          errors.cvc = 'CVC is required';
+          hasErrors = true;
+        }
+        if (!formData.paymentMethod.creditCard.cardOwner.trim()) {
+          errors.cardOwner = 'Card owner name is required';
+          hasErrors = true;
+        }
+      }
+      
+      setValidationErrors(prev => ({ ...prev, paymentMethod: errors }));
+    }
+
+    return !hasErrors;
+  };
 
   // ปิดการใช้งาน handleStepClick - ให้กดได้แค่ปุ่ม Next/Back เท่านั้น
   const handleStepClick = (e, stepNumber) => {
     e.stopPropagation();
-    // ไม่ให้กดเปลี่ยน step ได้ - ต้องใช้ปุ่ม Next/Back เท่านั้น
     console.log("Step click disabled - use Next/Back buttons instead");
     return;
   };
 
-  // แก้ไขฟังก์ชัน goToNextStep ให้ validate ก่อน
+  // ✅ แก้ไขฟังก์ชัน goToNextStep ให้ validate ก่อน
   const goToNextStep = () => {
     console.log("=== NEXT BUTTON VALIDATION ===");
     
-    let hasErrors = false;
-    
     // Validate current step
-    if (currentStep === 1) {
-      // Validate Basic Info
-      const basicInfoValidation = validateBasicInfo(bookingData.basicInfo);
-      
-      if (!basicInfoValidation.isValid) {
-        console.log("❌ Basic Info Validation Errors:", basicInfoValidation.errors);
-        setValidationErrorsForSection('basicInfo', basicInfoValidation.errors);
-        hasErrors = true;
-      } else {
-        console.log("✅ Basic Info validation passed");
-        setValidationErrorsForSection('basicInfo', {});
-      }
-      
-    } else if (currentStep === 2) {
-      // Validate Special Requests
-      const specialRequestsValidation = validateSpecialRequests(bookingData.specialRequests);
-      
-      if (!specialRequestsValidation.isValid) {
-        console.log("❌ Special Requests Validation Errors:", specialRequestsValidation.errors);
-        setValidationErrorsForSection('specialRequests', specialRequestsValidation.errors);
-        hasErrors = true;
-      } else {
-        console.log("✅ Special Requests validation passed");
-        setValidationErrorsForSection('specialRequests', {});
-      }
-    }
+    const isValid = validateCurrentStep();
     
-    // Only proceed to next step if no validation errors
-    if (!hasErrors) {
+    if (isValid) {
+      console.log("✅ Validation passed - moving to next step");
       setCurrentStep((prevStep) => Math.min(prevStep + 1, 3));
     } else {
       console.log("🚫 Cannot proceed to next step due to validation errors");
@@ -118,89 +161,96 @@ const PaymentPage = () => {
     setCurrentStep((prevStep) => Math.max(prevStep - 1, 1));
   };
 
+  // ✅ ฟังก์ชัน mock สำหรับ complete booking
   const handleCompleteBooking = async () => {
-  console.log("=== COMPLETE BOOKING INITIATED ===");
-  
-  try {
-    // Get complete booking data with price calculations
-    const completeBookingData = getCompleteBookingData();
+    console.log("=== COMPLETE BOOKING INITIATED ===");
     
-    // Validate all form data
-    const validation = validateCompleteBooking(completeBookingData);
-    
-    if (!validation.isValid) {
-      console.error("❌ Validation Errors:", validation.errors);
+    try {
+      // Validate all steps
+      const isValid = validateCurrentStep();
       
-      // Set validation errors in context to display under inputs
-      if (Object.keys(validation.errors.basicInfo).length > 0) {
-        setValidationErrorsForSection('basicInfo', validation.errors.basicInfo);
+      if (!isValid) {
+        alert("Please check the form and fix any highlighted errors before proceeding.");
+        return;
       }
-      
-      if (Object.keys(validation.errors.specialRequests).length > 0) {
-        setValidationErrorsForSection('specialRequests', validation.errors.specialRequests);
-      }
-      
-      if (Object.keys(validation.errors.paymentMethod).length > 0) {
-        setValidationErrorsForSection('paymentMethod', validation.errors.paymentMethod);
-      }
-      
-      alert("Please check the form and fix any highlighted errors before proceeding.");
-      return;
-    }
 
-    console.log("✅ All validations passed! Processing payment...");
+      console.log("✅ All validations passed!");
+      console.log("📋 Form Data:", formData);
 
-    // Only process payment if it's a credit card payment
-    if (completeBookingData.paymentMethod.type === "credit") {
-      // Show loading state (you can add a loading state to your component)
-      console.log("💳 Processing credit card payment...");
-      
-      // Call the payment API
-      const paymentResult = await processPayment(completeBookingData);
-      
-      if (paymentResult.success) {
-        console.log("✅ Payment successful!", paymentResult);
+      // Mock payment processing
+      if (formData.paymentMethod.type === "credit") {
+        console.log("💳 Processing credit card payment...");
         
-        // Redirect to success page or show success message
-        alert(`🎉 Payment Successful!\n\nCharge ID: ${paymentResult.chargeId}\nAmount: THB ${paymentResult.amount}\n\nYour booking has been confirmed!`);
+        // Simulate API call delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Mock success
+        alert(`🎉 Payment Successful!\n\nBooking confirmed!\nPayment method: Credit Card`);
         router.push('/payment-success');
         
       } else {
-        console.error("❌ Payment failed:", paymentResult.error);
-        alert(`❌ Payment Failed\n\n${paymentResult.error}\n\nPlease check your card details and try again.`);
-        router.push('/payment-fail');
+        // Handle cash payment
+        console.log("💵 Cash payment selected - booking confirmed");
+        alert("🎉 Booking Confirmed!\n\nPayment method: Cash\nPlease pay at the hotel during check-in.");
+        router.push('/payment-success');
       }
-    } else {
-      // Handle cash payment (no API call needed)
-      console.log("💵 Cash payment selected - booking confirmed");
-      alert("🎉 Booking Confirmed!\n\nPayment method: Cash\nPlease pay at the hotel during check-in.");
       
-      // You can still save the booking to database here if needed
-      // router.push('/booking-success');
-    }
-    
-  } catch (error) {
-    console.error("❌ Error during booking completion:", error);
-    
-    // Handle different types of errors
-    if (error.response?.data?.error) {
-      alert(`❌ Payment Error\n\n${error.response.data.error}\n\nPlease try again.`);
-    } else {
+    } catch (error) {
+      console.error("❌ Error during booking completion:", error);
       alert("❌ An error occurred while processing your booking. Please try again.");
     }
-  }
-};
+  };
+
+  // ✅ ฟังก์ชันสำหรับอัพเดท form data และ errors
+  const updateFormData = (section, data, errors = null) => {
+    setFormData(prev => ({
+      ...prev,
+      [section]: { ...prev[section], ...data }
+    }));
+    
+    // อัพเดท errors ด้วย (ถ้ามี)
+    if (errors !== null) {
+      setValidationErrors(prev => ({
+        ...prev,
+        [section]: errors
+      }));
+    }
+  };
 
   const renderForm = () => {
     switch (currentStep) {
       case 1:
-        return <BasicInfoForm />;
+        return (
+          <BasicInfoForm 
+            data={formData.basicInfo}
+            errors={validationErrors.basicInfo}
+            onUpdate={(data, errors) => updateFormData('basicInfo', data, errors)}
+          />
+        );
       case 2:
-        return <SpecialRequestForm />;
+        return (
+          <SpecialRequestForm 
+            data={formData.specialRequests}
+            errors={validationErrors.specialRequests}
+            onUpdate={(data) => updateFormData('specialRequests', data)}
+          />
+        );
       case 3:
-        return <PaymentMethodForm />;
+        return (
+          <PaymentMethodForm 
+            data={formData.paymentMethod}
+            errors={validationErrors.paymentMethod}
+            onUpdate={(data) => updateFormData('paymentMethod', data)}
+          />
+        );
       default:
-        return <BasicInfoForm />;
+        return (
+          <BasicInfoForm 
+            data={formData.basicInfo}
+            errors={validationErrors.basicInfo}
+            onUpdate={(data) => updateFormData('basicInfo', data)}
+          />
+        );
     }
   };
 
@@ -330,7 +380,8 @@ const PaymentPage = () => {
           </div>
 
           <div className="md:w-1/2">
-            <BookingDetialSection />
+            {/* ✅ BookingDetailSection จะดึงข้อมูลจาก API เอง */}
+            <BookingDetailSection />
           </div>
         </div>
       </DefaultLayout>
@@ -363,12 +414,9 @@ const PaymentPage = () => {
   );
 };
 
+// ✅ ลบ BookingProvider wrapper ออก - ไม่ใช้ context แล้ว
 const index = () => {
-  return (
-    <BookingProvider>
-      <PaymentPage />
-    </BookingProvider>
-  );
+  return <PaymentPage />;
 };
 
 export default index;
