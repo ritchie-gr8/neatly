@@ -79,7 +79,7 @@ const CustomCalendarHeader = ({
 
         <SelectContent>
           {months.map((month) => (
-            <SelectItem key={month.value} value={month.value.toString()}>
+            <SelectItem key={month.value} value={month.value.toString()} className="!cursor-pointer">
               {month.label}
             </SelectItem>
           ))}
@@ -96,7 +96,7 @@ const CustomCalendarHeader = ({
 
         <SelectContent>
           {years.map((year) => (
-            <SelectItem key={year} value={year.toString()}>
+            <SelectItem key={year} value={year.toString()} className="!cursor-pointer">
               {year}
             </SelectItem>
           ))}
@@ -115,6 +115,7 @@ const CustomDatePicker = ({
   minYear = null,
   maxYear = null,
   onDateChange,
+  disabled = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(
@@ -146,11 +147,11 @@ const CustomDatePicker = ({
   };
 
   return (
-    <form className="flex flex-col justify-between">
+    <div className="flex flex-col justify-between">
       <label>{title}</label>
 
       <Popover open={isOpen} onOpenChange={handleOpenChange}>
-        <PopoverTrigger className="flex">
+        <PopoverTrigger className="flex" disabled={disabled}>
           <div
             role="button"
             tabIndex={0}
@@ -159,7 +160,8 @@ const CustomDatePicker = ({
               "py-3 pl-3 pr-4 mb-6 w-full cursor-pointer bg-white justify-between flex items-center",
               "text-black",
               "flex-1 text-b2 border border-input shadow-xs rounded-md",
-              className
+              className,
+              disabled && "opacity-50"
             )}
           >
             {value && format(value, "EEE, dd MMM yyyy")}
@@ -200,7 +202,7 @@ const CustomDatePicker = ({
           />
         </PopoverContent>
       </Popover>
-    </form>
+    </div>
   );
 };
 

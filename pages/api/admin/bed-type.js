@@ -28,7 +28,9 @@ const GET = async (req, res) => {
     // Return the bed types with a success message
     return successResponse({
       res,
-      data: bedTypes,
+      data: {
+        bedTypes,
+      },
       message: "Bed types retrieved successfully",
     });
   } catch (error) {

@@ -79,6 +79,18 @@ function AuthProvider({ children }) {
     }
   };
 
+  const updateProfile = (updatedUserData) => {
+    if (!user) return { success: false, error: "No user is logged in" };
+    
+    // Update the user state with the new data
+    setUser(prevUser => ({
+      ...prevUser,
+      ...updatedUserData
+    }));
+    
+    return { success: true };
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -88,6 +100,7 @@ function AuthProvider({ children }) {
         login,
         signup,
         logout,
+        updateProfile,
         isAuthenticated: !!user,
       }}
     >

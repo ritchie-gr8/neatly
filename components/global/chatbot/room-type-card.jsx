@@ -2,6 +2,7 @@ import React from "react";
 // import Image from 'next/image';
 import { formatPrice } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
+import { useRouter } from "next/router";
 
 const RoomTypeCard = ({ room, buttonLabel }) => {
   const {
@@ -13,6 +14,8 @@ const RoomTypeCard = ({ room, buttonLabel }) => {
     id,
     description,
   } = room;
+
+  const router = useRouter();
 
   return (
     <div className="flex-shrink-0 w-60 bg-white rounded-lg shadow-md overflow-hidden">
@@ -68,7 +71,7 @@ const RoomTypeCard = ({ room, buttonLabel }) => {
         className="cursor-pointer w-full bg-orange-100 text-orange-500 py-2 px-4 font-semibold
         flex items-center justify-between hover:bg-orange-600 hover:text-white"
         onClick={() => {
-          console.log(`View details for room ${id}`);
+          router.push(`/rooms/${id}`);
         }}
       >
         {buttonLabel}
