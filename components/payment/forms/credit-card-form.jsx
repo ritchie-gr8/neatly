@@ -5,40 +5,43 @@ import { validateField } from "@/lib/validations/booking-validation";
 import { cn } from "@/lib/utils";
 
 const CreditCardForm = () => {
-  const { 
-    bookingData, 
-    updatePaymentMethod, 
-    validationErrors, 
-    setValidationErrorsForSection 
+  const {
+    bookingData,
+    updatePaymentMethod,
+    validationErrors,
+    setValidationErrorsForSection,
   } = useBooking();
-  const creditCardData = bookingData.paymentMethod.creditCard;
 
-  // Get current validation errors for payment method
+  const creditCardData = bookingData.paymentMethod?.creditCard || {
+    cardNumber: "",
+    cardOwner: "",
+    expiryDate: "",
+    cvc: "",
+  };
+
   const currentErrors = validationErrors.paymentMethod || {};
 
-  // Validate single field and update errors
   const validateSingleField = (fieldName, value) => {
     const error = validateField(fieldName, value);
-    
-    setValidationErrorsForSection('paymentMethod', {
+
+    setValidationErrorsForSection("paymentMethod", {
       ...currentErrors,
-      [fieldName]: error
+      [fieldName]: error,
     });
   };
 
   const handleCreditCardChange = (e) => {
     const { id, value } = e.target;
-    const newData = {
-      ...bookingData.paymentMethod,
-      creditCard: {
-        ...creditCardData,
-        [id]: value,
-      },
+
+    const newCreditCardData = {
+      ...creditCardData,
+      [id]: value,
     };
 
-    updatePaymentMethod(newData);
-    
-    // Validate the field in real-time
+    updatePaymentMethod({
+      creditCard: newCreditCardData,
+    });
+
     validateSingleField(id, value);
   };
 
@@ -62,7 +65,9 @@ const CreditCardForm = () => {
             )}
           />
           {currentErrors.cardNumber && (
-            <p className="text-red-500 text-sm mt-1 mb-5">{currentErrors.cardNumber}</p>
+            <p className="text-red-500 text-sm mt-1 mb-5">
+              {currentErrors.cardNumber}
+            </p>
           )}
           {!currentErrors.cardNumber && <div className="mb-6"></div>}
         </div>
@@ -80,7 +85,9 @@ const CreditCardForm = () => {
             )}
           />
           {currentErrors.cardOwner && (
-            <p className="text-red-500 text-sm mt-1 mb-5">{currentErrors.cardOwner}</p>
+            <p className="text-red-500 text-sm mt-1 mb-5">
+              {currentErrors.cardOwner}
+            </p>
           )}
           {!currentErrors.cardOwner && <div className="mb-6"></div>}
         </div>
@@ -99,7 +106,9 @@ const CreditCardForm = () => {
               )}
             />
             {currentErrors.expiryDate && (
-              <p className="text-red-500 text-sm mt-1">{currentErrors.expiryDate}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {currentErrors.expiryDate}
+              </p>
             )}
           </div>
 

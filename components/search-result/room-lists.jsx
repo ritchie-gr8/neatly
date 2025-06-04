@@ -1,4 +1,3 @@
-// components/search/room-lists.jsx (แก้ไขใหม่)
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import api from "@/lib/axios";
@@ -17,7 +16,7 @@ const RoomLists = () => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await api.get("/rooms/get-available-room", {
         params: searchParams,
       });
@@ -31,11 +30,11 @@ const RoomLists = () => {
       if (err.response) {
         const status = err.response.status;
         const errorData = err.response.data;
-        setError(`Error ${status}: ${errorData.message || 'Unknown error'}`);
+        setError(`Error ${status}: ${errorData.message || "Unknown error"}`);
       } else if (err.request) {
-        setError('Unable to connect to server');
+        setError("Unable to connect to server");
       } else {
-        setError('An unexpected error occurred');
+        setError("An unexpected error occurred");
       }
     } finally {
       setLoading(false);
@@ -55,7 +54,7 @@ const RoomLists = () => {
     } else {
       if (router.isReady) {
         setLoading(false);
-        setError('Search parameters incomplete');
+        setError("Search parameters incomplete");
       }
     }
   }, [router.isReady, checkIn, checkOut, rooms, guests]);
@@ -72,39 +71,87 @@ const RoomLists = () => {
     return pricePerNight * nights * roomsNeeded;
   };
 
-  // ✅ แก้ไขฟังก์ชัน handleBookNow ให้ง่ายขึ้น
   const handleBookNow = async (room) => {
     try {
-      console.log("🚀 Book Now clicked for room:", room.id);
-      
-      const roomType = room.roomType || {};
-      
-      // เตรียม parameters สำหรับส่งไปหน้า payment
-      const bookingParams = {
-        roomTypeId: roomType.id,
-        roomId: room.id, // เพิ่ม roomId ด้วย (สำหรับเลือกห้องเฉพาะ)
-        checkIn: checkIn,
-        checkOut: checkOut,
-        adults: parseInt(guests) || 1, // เปลี่ยนจาก guests เป็น adults
-        rooms: parseInt(rooms) || 1,
+      const nights = calculateNights(checkIn, checkOut);
+      const roomsNeeded = parseInt(rooms) || 1;
+      const pricePerNight =
+        room.roomType.promotionPrice &&
+        room.roomType.promotionPrice < room.roomType.pricePerNight
+          ? room.roomType.promotionPrice
+          : room.roomType.pricePerNight;
+      const totalAmount = calculateTotalPrice(
+        pricePerNight,
+        nights,
+        roomsNeeded
+      );
+
+      // Mock ข้อมูล Guest ก่อน (จะอัพเดทภายหลัง)
+    const mockGuestData = {
+      firstName: "John",
+      lastName: "Doe", 
+      email: "john.doe@example.com",
+      phone: "0812345678",
+      country: "Thailand",
+      dateOfBirth: "1990-01-01"
+    };
+
+      const bookingData = {
+        guest: mockGuestData,
+        booking: {
+          checkInDate: checkIn,
+          checkOutDate: checkOut,
+          adults: parseInt(guests),
+          additionalRequests: "", // หรือจาก form
+          totalAmount: totalAmount,
+        },
+        bookingRoom: {
+          roomId: room.id,
+          roomTypeId: room.roomType.id,
+          pricePerNight: pricePerNight,
+        },
+        specialRequests: [], // array ของ special requests ถ้ามี
+        payment: {
+          totalAmount: totalAmount,
+          method: "credit", // default หรือจาก user selection
+        },
       };
 
-      console.log("📋 Booking params:", bookingParams);
+      // เรียก API สร้าง booking
+      const response = await api.post("/booking/post-booking-detail", bookingData);
 
-      // ✅ Redirect ไปหน้า payment พร้อม parameters (ไม่ต้องเรียก API ก่อน)
-      router.push({
-        pathname: '/payment',
-        query: bookingParams
-      });
-      
+      if (response.data && response.data.success) {
+        // ถ้าสร้าง booking สำเร็จ ให้ redirect ไปหน้า payment พร้อมกับ booking ID
+        const bookingId = response.data.data.booking.id;
+        const bookingNumber = response.data.data.booking.bookingNumber;
+  
+        router.push({
+          pathname: '/payment',
+          query: {
+            bookingId: bookingId,
+            bookingNumber: bookingNumber,
+            roomTypeId: room.roomType.id,
+            roomId: room.id,
+            checkIn: checkIn,
+            checkOut: checkOut,
+            adults: parseInt(guests),
+            rooms: parseInt(rooms),
+            totalAmount: totalAmount
+          }
+        });
+      } else {
+        throw new Error(response.data.message || "Failed to create booking");
+      }
+
     } catch (error) {
-      console.error('❌ Error in handleBookNow:', error);
-      alert('เกิดข้อผิดพลาดในการเตรียมข้อมูลการจอง กรุณาลองใหม่อีกครั้ง');
+      console.log(error);
     }
   };
 
   if (loading) {
-    return <div className="text-center py-10 text-gray-500">Loading data...</div>;
+    return (
+      <div className="text-center py-10 text-gray-500">Loading data...</div>
+    );
   }
 
   if (error) {
@@ -148,7 +195,10 @@ const RoomLists = () => {
 
         const nights = calculateNights(checkIn, checkOut);
         const roomsNeeded = parseInt(rooms) || 1;
-        const finalPrice = promotionPrice && promotionPrice < pricePerNight ? promotionPrice : pricePerNight;
+        const finalPrice =
+          promotionPrice && promotionPrice < pricePerNight
+            ? promotionPrice
+            : pricePerNight;
         const totalPrice = calculateTotalPrice(finalPrice, nights, roomsNeeded);
 
         return (
@@ -212,7 +262,9 @@ const RoomLists = () => {
 
                   {checkIn && checkOut && (
                     <p className="mt-2 text-sm text-gray-700">
-                      {`Total ${nights} night(s) : THB ${formatPrice(totalPrice)}`}
+                      {`Total ${nights} night(s) : THB ${formatPrice(
+                        totalPrice
+                      )}`}
                     </p>
                   )}
                 </div>
@@ -224,8 +276,7 @@ const RoomLists = () => {
                   >
                     Room Detail
                   </Link>
-                  
-                  {/* ✅ ปุ่ม Book Now ใหม่ */}
+
                   <button
                     onClick={() => handleBookNow(room)}
                     className="bg-orange-600 text-white px-8 py-3 sm:px-4 sm:py-2 md:px-6 md:py-3 rounded-sm text-base sm:text-sm md:text-base cursor-pointer whitespace-nowrap hover:bg-orange-500 transition-all duration-300 min-w-[130px] sm:min-w-0"

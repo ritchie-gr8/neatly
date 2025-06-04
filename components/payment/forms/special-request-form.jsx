@@ -1,33 +1,45 @@
 // components/payment/forms/special-request-form.js (Updated version)
-import React,{ useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { useBooking } from "@/contexts/booking-context";
 import { validateField } from "@/lib/validations/booking-validation";
 import { cn } from "@/lib/utils";
 
 const SpecialRequestForm = () => {
-  const { 
-    bookingData, 
-    updateSpecialRequests, 
-    validationErrors, 
-    setValidationErrorsForSection 
+  const {
+    bookingData,
+    updateSpecialRequests,
+    validationErrors,
+    setValidationErrorsForSection,
   } = useBooking();
-  const [formData, setFormData] = useState(bookingData.specialRequests);
 
-  // Get current validation errors for special requests
+  const formData = bookingData.specialRequests || {
+    standardRequests: {
+      earlyCheckIn: false,
+      lateCheckOut: false,
+      nonSmokingRoom: false,
+      highFloorRoom: false,
+      quietRoom: false,
+    },
+    specialRequests: {
+      babyCot: false,
+      airportTransfer: false,
+      extraBed: false,
+      extraPillows: false,
+      phoneChargers: false,
+      breakfast: false,
+    },
+    additionalRequest: "",
+  };
+
   const currentErrors = validationErrors.specialRequests || {};
 
-  useEffect(() => {
-    setFormData(bookingData.specialRequests);
-  }, [bookingData.specialRequests]);
-
-  // Validate additional request field
   const validateAdditionalRequest = (value) => {
-    const error = validateField('additionalRequest', value);
-    
-    setValidationErrorsForSection('specialRequests', {
+    const error = validateField("additionalRequest", value);
+
+    setValidationErrorsForSection("specialRequests", {
       ...currentErrors,
-      additionalRequest: error
+      additionalRequest: error,
     });
   };
 
@@ -42,7 +54,6 @@ const SpecialRequestForm = () => {
       standardRequests: newStandardRequests,
     };
 
-    setFormData(newData);
     updateSpecialRequests(newData);
   };
 
@@ -57,7 +68,6 @@ const SpecialRequestForm = () => {
       specialRequests: newSpecialRequests,
     };
 
-    setFormData(newData);
     updateSpecialRequests(newData);
   };
 
@@ -68,10 +78,8 @@ const SpecialRequestForm = () => {
       additionalRequest: value,
     };
 
-    setFormData(newData);
     updateSpecialRequests(newData);
-    
-    // Validate the additional request field in real-time
+
     validateAdditionalRequest(value);
   };
 
@@ -239,14 +247,18 @@ const SpecialRequestForm = () => {
         <textarea
           className={cn(
             "w-full h-20 border rounded-sm p-3 pr-4 text-black mb-1",
-            currentErrors.additionalRequest ? "border-red-500" : "border-gray-400"
+            currentErrors.additionalRequest
+              ? "border-red-500"
+              : "border-gray-400"
           )}
           value={formData.additionalRequest}
           onChange={handleAdditionalRequestChange}
           placeholder="Enter any additional requests..."
         />
         {currentErrors.additionalRequest && (
-          <p className="text-red-500 text-sm mt-1">{currentErrors.additionalRequest}</p>
+          <p className="text-red-500 text-sm mt-1">
+            {currentErrors.additionalRequest}
+          </p>
         )}
       </div>
     </section>

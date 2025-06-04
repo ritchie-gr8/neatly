@@ -1,3 +1,4 @@
+// แก้ไข basic-info-form.js
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import CustomDatePicker from "@/components/global/date-picker";
@@ -14,7 +15,7 @@ import { useBooking } from "@/contexts/booking-context";
 import { validateField } from "@/lib/validations/booking-validation";
 
 const BasicInfoForm = () => {
-  const { user } = useAuth();  // ← นี่คือการดึงข้อมูล user จาก AuthContext
+  const { user } = useAuth();
   const { 
     bookingData, 
     updateBasicInfo, 
@@ -22,33 +23,29 @@ const BasicInfoForm = () => {
     setValidationErrorsForSection 
   } = useBooking();
   const [isInitialized, setIsInitialized] = useState(false);
-
-  const [formData, setFormData] = useState(bookingData.basicInfo);
-
-  // Get current validation errors for basic info
-  const currentErrors = validationErrors.basicInfo || {};
+  
+  // ใช้ข้อมูลจาก Context เป็นหลัก
+  const formData = bookingData.basicInfo || {};
+  const currentErrors = validationErrors?.basicInfo || {};
 
   const parseDate = (dateString) => {
     if (!dateString) return null;
-
     if (dateString instanceof Date) return dateString;
-
     const parsedDate = new Date(dateString);
     return isNaN(parsedDate.getTime()) ? null : parsedDate;
   };
 
   const hasDataInContext = () => {
     return (
-      bookingData.basicInfo.firstName || // ← เช็คว่ามีข้อมูลใน booking context มั้ย  (เผื่อผู้ใช้เคยกรอกไว้แล้ว) ถ้าไม่มี: เอาข้อมูลจาก user (auth context) มาใส่ ถ้ามีแล้ว: ใช้ข้อมูลเดิมที่มีอยู่
-      bookingData.basicInfo.lastName ||
-      bookingData.basicInfo.email ||
-      bookingData.basicInfo.phone ||
-      bookingData.basicInfo.dateOfBirth ||
-      bookingData.basicInfo.country
+      formData.firstName ||
+      formData.lastName ||
+      formData.email ||
+      formData.phone ||
+      formData.dateOfBirth ||
+      formData.country
     );
   };
 
-  // Validate single field and update errors
   const validateSingleField = (fieldName, value) => {
     const error = validateField(fieldName, value, formData);
     
@@ -61,7 +58,6 @@ const BasicInfoForm = () => {
   useEffect(() => {
     if (user && !isInitialized) {
       if (!hasDataInContext()) {
-        // ครั้งแรก: ใช้ข้อมูลจาก auth context
         console.log("Loading initial user data from auth context:", {
           firstName: user.firstName,
           lastName: user.lastName,
@@ -71,7 +67,6 @@ const BasicInfoForm = () => {
           country: user.country
         });
         
-        // ส่วนนี้คือการนำข้อมูลจาก auth มาใส่ในฟอร์ม  ดึงจาก user
         const userData = {
           firstName: user.firstName || "",
           lastName: user.lastName || "",
@@ -81,50 +76,36 @@ const BasicInfoForm = () => {
           country: user.country || "",
         };
         
-        setFormData(userData); // ← เอาข้อมูลจาก user มาใส่ในฟอร์ม
-        updateBasicInfo(userData); // ← เอาข้อมูลจาก user มาเก็บใน booking context
+        updateBasicInfo(userData);
       } else {
-        console.log("Using existing modified data from context:", bookingData.basicInfo);
-        setFormData(bookingData.basicInfo);
+        console.log("Using existing modified data from context:", formData);
       }
       setIsInitialized(true);
     }
-  }, [user, isInitialized, bookingData.basicInfo, updateBasicInfo]);
-
-  useEffect(() => {
-    if (isInitialized) {
-      setFormData(bookingData.basicInfo);
-    }
-  }, [bookingData.basicInfo, isInitialized]);
+  }, [user, isInitialized, updateBasicInfo]); 
 
   const handleInputChange = (e) => {
-    const { id, value } = e.target;
-    const newData = { ...formData, [id]: value };
-
-    setFormData(newData);
-    updateBasicInfo(newData);
-    
-    // Validate the field in real-time
-    validateSingleField(id, value);
+    const { name, value } = e.target;
+    updateBasicInfo({
+      [name]: value
+    });
   };
 
   const handleDateChange = (date) => {
-    const newData = { ...formData, dateOfBirth: date };
-
-    setFormData(newData);
-    updateBasicInfo(newData);
+    updateBasicInfo({
+      dateOfBirth: date
+    });
     
-    // Validate date field
+   
     validateSingleField('dateOfBirth', date);
   };
 
   const handleCountryChange = (value) => {
-    const newData = { ...formData, country: value };
-
-    setFormData(newData);
-    updateBasicInfo(newData);
+    updateBasicInfo({
+      country: value
+    });
     
-    // Validate country field
+    
     validateSingleField('country', value);
   };
 
@@ -134,12 +115,13 @@ const BasicInfoForm = () => {
         Basic Information
       </div>
 
-      <form className="px-4 md:px-0 pb-6 md:pb-0 text-gray-900 ">
+      <form className="px-4 md:px-0 pb-6 md:pb-0 text-gray-900">
         <div className="flex flex-col">
           <label>First name</label>
           <input
             id="firstName"
-            value={formData.firstName}
+            name="firstName" 
+            value={formData.firstName || ""} 
             onChange={handleInputChange}
             className={cn(
               "mb-1 py-3 pl-3 pr-4 border rounded-sm w-full text-black",
@@ -156,7 +138,8 @@ const BasicInfoForm = () => {
           <label>Last name</label>
           <input
             id="lastName"
-            value={formData.lastName}
+            name="lastName" 
+            value={formData.lastName || ""} 
             onChange={handleInputChange}
             placeholder="Cho"
             className={cn(
@@ -174,7 +157,8 @@ const BasicInfoForm = () => {
           <label>Email</label>
           <input
             id="email"
-            value={formData.email}
+            name="email" 
+            value={formData.email || ""}
             onChange={handleInputChange}
             placeholder="kate.cho@gmail.com"
             className={cn(
@@ -192,7 +176,8 @@ const BasicInfoForm = () => {
           <label>Phone number</label>
           <input
             id="phone"
-            value={formData.phone}
+            name="phone" 
+            value={formData.phone || ""} 
             onChange={handleInputChange}
             placeholder="088 888 8888"
             className={cn(
@@ -225,7 +210,7 @@ const BasicInfoForm = () => {
 
         <div className="flex flex-col">
           <label>Country</label>
-          <Select value={formData.country} onValueChange={handleCountryChange}>
+          <Select value={formData.country || ""} onValueChange={handleCountryChange}>
             <div>
               <SelectTrigger
                 className={cn(

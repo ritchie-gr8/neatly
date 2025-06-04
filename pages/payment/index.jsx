@@ -1,159 +1,59 @@
-// pages/payment/index.jsx - ใช้ API แทน Context
 import BasicInfoForm from "@/components/payment/forms/basic-info-form";
 import SpecialRequestForm from "@/components/payment/forms/special-request-form";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import BookingDetialSection from "@/components/payment/shared/booking-detial-section";
 import DefaultLayout from "@/layouts/default.layout";
 import PaymentMethodForm from "@/components/payment/forms/payment-method.layout";
+import { BookingProvider, useBooking } from "@/contexts/booking-context";
 import { useRouter } from "next/router";
-import api from "@/lib/axios";
-import dynamic from 'next/dynamic';
-
-// ใช้ dynamic import สำหรับ BookingDetailSection
-const BookingDetailSection = dynamic(
-  () => import("@/components/payment/shared/booking-detail-section"),
-  { 
-    ssr: false, // ปิด Server-side rendering
-    loading: () => (
-      <div>
-        <div className="bg-green-800 md:rounded-t-sm p-4 md:py-4 md:px-6">
-          <div className="flex items-center">
-            <div className="w-6 h-6 bg-green-500 rounded mr-3"></div>
-            <h2 className="text-h5 font-inter font-semibold text-white">
-              Loading Booking Detail...
-            </h2>
-          </div>
-        </div>
-        <div className="bg-green-600 md:rounded-b-sm py-6 px-4 md:p-6">
-          <div className="animate-pulse space-y-4">
-            <div className="h-4 bg-green-400 rounded"></div>
-            <div className="h-4 bg-green-400 rounded"></div>
-            <div className="h-4 bg-green-400 rounded"></div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-);
-
-// ❌ ลบฟังก์ชัน processPayment ออก (ใช้ mock data แทน)
-// const processPayment = async (bookingData) => { ... }
+import { 
+  validateCompleteBooking,
+  validateBasicInfo,
+  validateSpecialRequests,
+  validatePaymentMethod
+} from "@/lib/validations/booking-validation";
 
 const PaymentPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
-  
-  // ❌ ลบการใช้ useBooking context ออก
-  // const { getCompleteBookingData, setValidationErrorsForSection, bookingData, countdown } = useBooking();
-  
-  // ✅ สร้าง state ใหม่สำหรับ form data (mock data)
-  const [formData, setFormData] = useState({
-    basicInfo: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: ''
-    },
-    specialRequests: {
-      requests: ''
-    },
-    paymentMethod: {
-      type: 'credit', // 'credit' หรือ 'cash'
-      creditCard: {
-        cardNumber: '',
-        expiryDate: '',
-        cvc: '',
-        cardOwner: ''
-      }
-    }
-  });
+  const { 
+    getCompleteBookingData, 
+    setValidationErrorsForSection,
+    bookingData
+  } = useBooking();
 
-  // ✅ สร้าง validation errors state
-  const [validationErrors, setValidationErrors] = useState({
-    basicInfo: {},
-    specialRequests: {},
-    paymentMethod: {}
-  });
-
-  // ❌ ลบ countdown จาก context - ใช้ countdown จาก BookingDetailSection แทน
-
-  // ❌ ลบ useEffect สำหรับ countdown redirect - ให้ BookingDetailSection จัดการเอง
-
-  // ✅ ฟังก์ชันง่าย ๆ สำหรับ validation (mock)
-  const validateCurrentStep = () => {
-    let hasErrors = false;
-    let errors = {};
-
-    if (currentStep === 1) {
-      // Basic Info validation
-      if (!formData.basicInfo.firstName.trim()) {
-        errors.firstName = 'First name is required';
-        hasErrors = true;
-      }
-      if (!formData.basicInfo.lastName.trim()) {
-        errors.lastName = 'Last name is required';
-        hasErrors = true;
-      }
-      if (!formData.basicInfo.email.trim()) {
-        errors.email = 'Email is required';
-        hasErrors = true;
-      }
-      if (!formData.basicInfo.phone.trim()) {
-        errors.phone = 'Phone is required';
-        hasErrors = true;
-      }
-      
-      setValidationErrors(prev => ({ ...prev, basicInfo: errors }));
-      
-    } else if (currentStep === 2) {
-      // Special Requests validation (optional - ไม่บังคับ)
-      setValidationErrors(prev => ({ ...prev, specialRequests: {} }));
-      
-    } else if (currentStep === 3) {
-      // Payment Method validation
-      if (formData.paymentMethod.type === 'credit') {
-        if (!formData.paymentMethod.creditCard.cardNumber.trim()) {
-          errors.cardNumber = 'Card number is required';
-          hasErrors = true;
-        }
-        if (!formData.paymentMethod.creditCard.expiryDate.trim()) {
-          errors.expiryDate = 'Expiry date is required';
-          hasErrors = true;
-        }
-        if (!formData.paymentMethod.creditCard.cvc.trim()) {
-          errors.cvc = 'CVC is required';
-          hasErrors = true;
-        }
-        if (!formData.paymentMethod.creditCard.cardOwner.trim()) {
-          errors.cardOwner = 'Card owner name is required';
-          hasErrors = true;
-        }
-      }
-      
-      setValidationErrors(prev => ({ ...prev, paymentMethod: errors }));
-    }
-
-    return !hasErrors;
-  };
-
-  // ปิดการใช้งาน handleStepClick - ให้กดได้แค่ปุ่ม Next/Back เท่านั้น
   const handleStepClick = (e, stepNumber) => {
     e.stopPropagation();
-    console.log("Step click disabled - use Next/Back buttons instead");
     return;
   };
 
-  // ✅ แก้ไขฟังก์ชัน goToNextStep ให้ validate ก่อน
   const goToNextStep = () => {
-    console.log("=== NEXT BUTTON VALIDATION ===");
+    let hasErrors = false;
+
+    if (currentStep === 1) {
+      const basicInfoValidation = validateBasicInfo(bookingData.basicInfo);
+      
+      if (!basicInfoValidation.isValid) {
+        setValidationErrorsForSection('basicInfo', basicInfoValidation.errors);
+        hasErrors = true;
+      } else {
+        setValidationErrorsForSection('basicInfo', {});
+      }
+      
+    } else if (currentStep === 2) {
+      const specialRequestsValidation = validateSpecialRequests(bookingData.specialRequests);
+      
+      if (!specialRequestsValidation.isValid) {
+        setValidationErrorsForSection('specialRequests', specialRequestsValidation.errors);
+        hasErrors = true;
+      } else {
+        setValidationErrorsForSection('specialRequests', {});
+      }
+    }
     
-    // Validate current step
-    const isValid = validateCurrentStep();
-    
-    if (isValid) {
-      console.log("✅ Validation passed - moving to next step");
+    if (!hasErrors) {
       setCurrentStep((prevStep) => Math.min(prevStep + 1, 3));
-    } else {
-      console.log("🚫 Cannot proceed to next step due to validation errors");
     }
   };
 
@@ -161,96 +61,232 @@ const PaymentPage = () => {
     setCurrentStep((prevStep) => Math.max(prevStep - 1, 1));
   };
 
-  // ✅ ฟังก์ชัน mock สำหรับ complete booking
   const handleCompleteBooking = async () => {
-    console.log("=== COMPLETE BOOKING INITIATED ===");
+    if (isSubmitting) return;
     
     try {
-      // Validate all steps
-      const isValid = validateCurrentStep();
+      setIsSubmitting(true);
       
-      if (!isValid) {
+      const completeBookingData = getCompleteBookingData();
+      const validation = validateCompleteBooking(completeBookingData);
+      
+      if (!validation.isValid) {
+        if (Object.keys(validation.errors.basicInfo).length > 0) {
+          setValidationErrorsForSection('basicInfo', validation.errors.basicInfo);
+        }
+        if (Object.keys(validation.errors.specialRequests).length > 0) {
+          setValidationErrorsForSection('specialRequests', validation.errors.specialRequests);
+        }
+        if (Object.keys(validation.errors.paymentMethod).length > 0) {
+          setValidationErrorsForSection('paymentMethod', validation.errors.paymentMethod);
+        }
+        
         alert("Please check the form and fix any highlighted errors before proceeding.");
         return;
       }
 
-      console.log("✅ All validations passed!");
-      console.log("📋 Form Data:", formData);
+      const bookingPayload = {
+        guest: {
+          firstName: completeBookingData.basicInfo.firstName,
+          lastName: completeBookingData.basicInfo.lastName,
+          email: completeBookingData.basicInfo.email,
+          phone: completeBookingData.basicInfo.phone,
+          country: completeBookingData.basicInfo.country,
+          dateOfBirth: completeBookingData.basicInfo.dateOfBirth
+        },
+        booking: {
+          checkInDate: completeBookingData.bookingDetail.searchParams.checkIn,
+          checkOutDate: completeBookingData.bookingDetail.searchParams.checkOut,
+          adults: completeBookingData.bookingDetail.totalGuests,
+          additionalRequests: completeBookingData.specialRequests.additionalRequest,
+          totalAmount: completeBookingData.priceBreakdown.totalPrice
+        },
+        bookingRoom: {
+          roomId: completeBookingData.bookingDetail.roomData.id,
+          roomTypeId: completeBookingData.bookingDetail.roomData.roomType.id,
+          pricePerNight: completeBookingData.priceBreakdown.pricePerNight
+        },
+        specialRequests: completeBookingData.priceBreakdown.selectedSpecialRequests,
+        payment: {
+          method: completeBookingData.paymentMethod.type,
+          totalAmount: completeBookingData.priceBreakdown.totalPrice
+        }
+      };
 
-      // Mock payment processing
-      if (formData.paymentMethod.type === "credit") {
-        console.log("💳 Processing credit card payment...");
+      const response = await fetch('/api/booking/post-booking-detail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bookingPayload)
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // 🎉 แสดงข้อมูลทั้งหมดสำหรับเพื่อนนำไปใช้กับ Omise
+        console.log("🎉 BOOKING CONFIRMED! Complete data for Omise:");
+        console.log("=====================================");
         
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // 👤 Basic Information
+        console.log("👤 Basic Information:");
+        console.log({
+          firstName: completeBookingData.basicInfo.firstName,
+          lastName: completeBookingData.basicInfo.lastName,
+          email: completeBookingData.basicInfo.email,
+          phone: completeBookingData.basicInfo.phone,
+          country: completeBookingData.basicInfo.country,
+          dateOfBirth: completeBookingData.basicInfo.dateOfBirth
+        });
+
+        // 💳 Payment Method
+        console.log("💳 Payment Method:");
+        console.log({
+          type: completeBookingData.paymentMethod.type,
+          creditCard: completeBookingData.paymentMethod.type === 'credit' ? {
+            cardNumber: completeBookingData.paymentMethod.creditCard.cardNumber,
+            cardOwner: completeBookingData.paymentMethod.creditCard.cardOwner,
+            expiryDate: completeBookingData.paymentMethod.creditCard.expiryDate,
+            cvc: completeBookingData.paymentMethod.creditCard.cvc
+          } : null
+        });
+
+        // 🏨 Booking Details
+        console.log("🏨 Booking Details:");
+        console.log({
+          bookingNumber: result.data.booking.bookingNumber,
+          bookingId: result.data.booking.id,
+          guestId: result.data.guest.id,
+          roomId: completeBookingData.bookingDetail.roomData.id,
+          roomTypeId: completeBookingData.bookingDetail.roomData.roomType.id,
+          roomName: completeBookingData.bookingDetail.roomData.roomType.name,
+          checkIn: completeBookingData.bookingDetail.searchParams.checkIn,
+          checkOut: completeBookingData.bookingDetail.searchParams.checkOut,
+          adults: completeBookingData.bookingDetail.totalGuests,
+          rooms: completeBookingData.bookingDetail.totalRooms,
+          nights: completeBookingData.bookingDetail.nights
+        });
+
+        // ✨ Special Requests
+        console.log("✨ Special Requests:");
+        console.log({
+          standardRequests: completeBookingData.specialRequests.standardRequests,
+          specialRequests: completeBookingData.specialRequests.specialRequests,
+          additionalRequest: completeBookingData.specialRequests.additionalRequest,
+          selectedRequests: completeBookingData.priceBreakdown.selectedSpecialRequests
+        });
+
+        // 💰 Price Breakdown
+        console.log("💰 Price Breakdown:");
+        console.log({
+          pricePerNight: completeBookingData.priceBreakdown.pricePerNight,
+          basePrice: completeBookingData.priceBreakdown.basePrice,
+          specialRequestsPrice: completeBookingData.priceBreakdown.specialRequestsPrice,
+          totalPrice: completeBookingData.priceBreakdown.totalPrice
+        });
+
+        // 📦 Complete Raw Data
+        console.log("📦 Complete Raw Data:");
+        console.log(completeBookingData);
+
+        // 🎯 Formatted data สำหรับ Omise API
+        console.log("🎯 Formatted data for Omise API:");
+        const omisePayload = {
+          // Customer Info
+          customer: {
+            firstName: completeBookingData.basicInfo.firstName,
+            lastName: completeBookingData.basicInfo.lastName,
+            email: completeBookingData.basicInfo.email,
+            phone: completeBookingData.basicInfo.phone,
+            country: completeBookingData.basicInfo.country,
+            dateOfBirth: completeBookingData.basicInfo.dateOfBirth
+          },
+
+          // Payment Info
+          payment: {
+            amount: Math.round(completeBookingData.priceBreakdown.totalPrice * 100), // Omise ใช้หน่วยสตางค์
+            currency: "THB",
+            method: completeBookingData.paymentMethod.type,
+            card: completeBookingData.paymentMethod.type === 'credit' ? {
+              number: completeBookingData.paymentMethod.creditCard.cardNumber,
+              name: completeBookingData.paymentMethod.creditCard.cardOwner,
+              expiration_month: completeBookingData.paymentMethod.creditCard.expiryDate?.split('/')[0],
+              expiration_year: completeBookingData.paymentMethod.creditCard.expiryDate?.split('/')[1],
+              security_code: completeBookingData.paymentMethod.creditCard.cvc
+            } : null
+          },
+
+          // Booking Info
+          booking: {
+            bookingNumber: result.data.booking.bookingNumber,
+            bookingId: result.data.booking.id,
+            guestId: result.data.guest.id,
+            roomId: completeBookingData.bookingDetail.roomData.id,
+            roomTypeId: completeBookingData.bookingDetail.roomData.roomType.id,
+            checkIn: completeBookingData.bookingDetail.searchParams.checkIn,
+            checkOut: completeBookingData.bookingDetail.searchParams.checkOut,
+            adults: completeBookingData.bookingDetail.totalGuests,
+            rooms: completeBookingData.bookingDetail.totalRooms,
+            nights: completeBookingData.bookingDetail.nights,
+            specialRequests: completeBookingData.priceBreakdown.selectedSpecialRequests
+          },
+
+          // Metadata for reference
+          metadata: {
+            roomName: completeBookingData.bookingDetail.roomData.roomType.name,
+            pricePerNight: completeBookingData.priceBreakdown.pricePerNight,
+            basePrice: completeBookingData.priceBreakdown.basePrice,
+            specialRequestsPrice: completeBookingData.priceBreakdown.specialRequestsPrice,
+            totalPrice: completeBookingData.priceBreakdown.totalPrice
+          }
+        };
         
-        // Mock success
-        alert(`🎉 Payment Successful!\n\nBooking confirmed!\nPayment method: Credit Card`);
-        router.push('/payment-success');
+        console.log(omisePayload);
+        console.log("=====================================");
+        
+        const successMessage = `
+🎉 Booking Created Successfully!
+
+📋 Booking Number: ${result.data.booking.bookingNumber}
+👤 Guest: ${completeBookingData.basicInfo.firstName} ${completeBookingData.basicInfo.lastName}
+📧 Email: ${completeBookingData.basicInfo.email}
+💰 Total Amount: THB ${completeBookingData.priceBreakdown.totalPrice.toLocaleString()}
+💳 Payment Method: ${completeBookingData.paymentMethod.type === 'credit' ? 'Credit Card' : 'Cash'}
+
+${completeBookingData.priceBreakdown.selectedSpecialRequests.length > 0 ? 
+  '🎁 Special Requests:\n' + 
+  completeBookingData.priceBreakdown.selectedSpecialRequests.map(req => 
+    `  • ${req.displayName}: +THB ${req.price}`
+  ).join('\n') + '\n' : ''
+}
+✅ Your booking has been confirmed!
+        `.trim();
+        
+        alert(successMessage);
+        
+        router.push(`/booking-confirmation/${result.data.booking.bookingNumber}`);
         
       } else {
-        // Handle cash payment
-        console.log("💵 Cash payment selected - booking confirmed");
-        alert("🎉 Booking Confirmed!\n\nPayment method: Cash\nPlease pay at the hotel during check-in.");
-        router.push('/payment-success');
+        throw new Error(result.message || 'Failed to create booking');
       }
       
     } catch (error) {
-      console.error("❌ Error during booking completion:", error);
-      alert("❌ An error occurred while processing your booking. Please try again.");
-    }
-  };
-
-  // ✅ ฟังก์ชันสำหรับอัพเดท form data และ errors
-  const updateFormData = (section, data, errors = null) => {
-    setFormData(prev => ({
-      ...prev,
-      [section]: { ...prev[section], ...data }
-    }));
-    
-    // อัพเดท errors ด้วย (ถ้ามี)
-    if (errors !== null) {
-      setValidationErrors(prev => ({
-        ...prev,
-        [section]: errors
-      }));
+      alert("An error occurred while creating your booking. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const renderForm = () => {
     switch (currentStep) {
       case 1:
-        return (
-          <BasicInfoForm 
-            data={formData.basicInfo}
-            errors={validationErrors.basicInfo}
-            onUpdate={(data, errors) => updateFormData('basicInfo', data, errors)}
-          />
-        );
+        return <BasicInfoForm />;
       case 2:
-        return (
-          <SpecialRequestForm 
-            data={formData.specialRequests}
-            errors={validationErrors.specialRequests}
-            onUpdate={(data) => updateFormData('specialRequests', data)}
-          />
-        );
+        return <SpecialRequestForm />;
       case 3:
-        return (
-          <PaymentMethodForm 
-            data={formData.paymentMethod}
-            errors={validationErrors.paymentMethod}
-            onUpdate={(data) => updateFormData('paymentMethod', data)}
-          />
-        );
+        return <PaymentMethodForm />;
       default:
-        return (
-          <BasicInfoForm 
-            data={formData.basicInfo}
-            errors={validationErrors.basicInfo}
-            onUpdate={(data) => updateFormData('basicInfo', data)}
-          />
-        );
+        return <BasicInfoForm />;
     }
   };
 
@@ -286,14 +322,12 @@ const PaymentPage = () => {
   return (
     <div className="bg-white md:bg-gray-200">
       <DefaultLayout title="Payment">
-        {/* Header Section */}
         <header className="bg-gray-200 md:px-40 md:pt-20 md:pb-10 cursor-pointer">
           <div className="text-green-800 font-noto-serif text-h3 md:text-h2 px-4 md:px-0 py-6">
             Booking Room
           </div>
 
           <div className="text-gray-600 px-4 md:px-0 pb-6 font-inter font-semibold md:flex md:flex-row md:items-center md:pb-10 md:border-b md:border-gray-300">
-            {/* Step 1 */}
             <div
               onClick={(e) => handleStepClick(e, 1)}
               className="flex flex-row items-center cursor-default"
@@ -310,7 +344,6 @@ const PaymentPage = () => {
               </div>
             </div>
 
-            {/* Step 2 */}
             <div
               onClick={(e) => handleStepClick(e, 2)}
               className="flex flex-row items-center mt-4 md:mt-0 md:ml-16 cursor-default"
@@ -327,7 +360,6 @@ const PaymentPage = () => {
               </div>
             </div>
 
-            {/* Step 3 */}
             <div
               onClick={(e) => handleStepClick(e, 3)}
               className="flex flex-row items-center mt-4 md:mt-0 md:ml-16 cursor-default"
@@ -350,7 +382,6 @@ const PaymentPage = () => {
           <div className="md:flex md:flex-col md:w-1/2">
             {renderForm()}
 
-            {/* Button */}
             <div className="hidden md:block md:mt-10">
               <footer className="font-semibold flex flex-row justify-between items-center py-6 md:py-0 px-4 md:px-0">
                 <p
@@ -371,17 +402,21 @@ const PaymentPage = () => {
                   onClick={
                     currentStep === 3 ? handleCompleteBooking : goToNextStep
                   }
-                  className="btn-primary px-8 py-4 cursor-pointer transition-all duration-200 hover:opacity-90"
+                  className={`btn-primary px-8 py-4 cursor-pointer transition-all duration-200 hover:opacity-90 ${
+                    isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                  style={{
+                    pointerEvents: isSubmitting ? "none" : "auto",
+                  }}
                 >
-                  {currentStep === 3 ? "Confirm Booking" : "Next"}
+                  {isSubmitting ? "Processing..." : (currentStep === 3 ? "Confirm Booking" : "Next")}
                 </div>
               </footer>
             </div>
           </div>
 
           <div className="md:w-1/2">
-            {/* ✅ BookingDetailSection จะดึงข้อมูลจาก API เอง */}
-            <BookingDetailSection />
+            <BookingDetialSection />
           </div>
         </div>
       </DefaultLayout>
@@ -404,9 +439,14 @@ const PaymentPage = () => {
 
           <div
             onClick={currentStep === 3 ? handleCompleteBooking : goToNextStep}
-            className="btn-primary px-8 py-4 cursor-pointer transition-all duration-200 hover:opacity-90"
+            className={`btn-primary px-8 py-4 cursor-pointer transition-all duration-200 hover:opacity-90 ${
+              isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+            style={{
+              pointerEvents: isSubmitting ? "none" : "auto",
+            }}
           >
-            {currentStep === 3 ? "Confirm Booking" : "Next"}
+            {isSubmitting ? "Processing..." : (currentStep === 3 ? "Confirm Booking" : "Next")}
           </div>
         </footer>
       </div>
@@ -414,9 +454,12 @@ const PaymentPage = () => {
   );
 };
 
-// ✅ ลบ BookingProvider wrapper ออก - ไม่ใช้ context แล้ว
 const index = () => {
-  return <PaymentPage />;
+  return (
+    <BookingProvider>
+      <PaymentPage />
+    </BookingProvider>
+  );
 };
 
 export default index;

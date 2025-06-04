@@ -7,21 +7,22 @@ import { useBooking } from "@/contexts/booking-context";
 
 const PaymentMethodForm = () => {
   const { bookingData, updatePaymentMethod } = useBooking();
-  const [paymentMethod, setPaymentMethod] = useState(bookingData.paymentMethod.type);
+  const currentPaymentMethod = bookingData.paymentMethod?.type || 'credit';
+  const [paymentMethod, setPaymentMethod] = useState(currentPaymentMethod);
 
   useEffect(() => {
-    setPaymentMethod(bookingData.paymentMethod.type);
-  }, [bookingData.paymentMethod.type]);
+    const newPaymentMethod = bookingData.paymentMethod?.type || 'credit';
+    setPaymentMethod(newPaymentMethod);
+  }, [bookingData.paymentMethod?.type]);
 
   const handlePaymentMethodChange = (e, method) => {
     e.stopPropagation();
     console.log("Payment method selected:", method);
     setPaymentMethod(method);
-    const newData = {
-      ...bookingData.paymentMethod,
+    
+    updatePaymentMethod({
       type: method
-    };
-    updatePaymentMethod(newData);
+    });
   };
 
   const payByCreditCard = () => {
