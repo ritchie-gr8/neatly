@@ -150,7 +150,7 @@ const RoomLists = () => {
 
   if (loading) {
     return (
-      <div className="text-center py-10 text-gray-500">Loading data...</div>
+      <div className="text-center py-20 text-gray-500 ">Loading data...</div>
     );
   }
 
