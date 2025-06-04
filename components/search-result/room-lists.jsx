@@ -8,10 +8,13 @@ import { formatPrice } from "@/lib/utils";
 const RoomLists = () => {
   const router = useRouter();
   const { checkIn, checkOut, rooms, guests } = router.query;
+  
+  // State สำหรับจัดการข้อมูล
   const [availableRooms, setAvailableRooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // ฟังก์ชันดึงข้อมูลห้องที่ว่าง
   const fetchAvailableRooms = async (searchParams) => {
     try {
       setLoading(true);
@@ -27,6 +30,7 @@ const RoomLists = () => {
         setError("No available rooms found");
       }
     } catch (err) {
+      // จัดการ error แบบละเอียด
       if (err.response) {
         const status = err.response.status;
         const errorData = err.response.data;
@@ -41,7 +45,9 @@ const RoomLists = () => {
     }
   };
 
+  // useEffect จะทำงานเมื่อ component โหลดหรือ dependencies เปลี่ยน
   useEffect(() => {
+    // ตรวจสอบว่า router พร้อมและมี parameters ครบ
     if (router.isReady && checkIn && checkOut && rooms && guests) {
       const searchParams = {
         checkIn,
@@ -59,6 +65,7 @@ const RoomLists = () => {
     }
   }, [router.isReady, checkIn, checkOut, rooms, guests]);
 
+  // ฟังก์ชันคำนวณจำนวนคืน
   const calculateNights = (checkInDate, checkOutDate) => {
     const start = new Date(checkInDate);
     const end = new Date(checkOutDate);
@@ -67,12 +74,15 @@ const RoomLists = () => {
     return diffDays;
   };
 
+  // ฟังก์ชันคำนวณราคารวม
   const calculateTotalPrice = (pricePerNight, nights, roomsNeeded) => {
     return pricePerNight * nights * roomsNeeded;
   };
 
+  // ฟังก์ชันจัดการการจอง
   const handleBookNow = async (room) => {
     try {
+      // ตรวจสอบข้อมูลที่จำเป็น
       if (!checkIn || !checkOut) {
         alert('กรุณาเลือกวันที่เช็คอินและเช็คเอาท์');
         return;
@@ -86,6 +96,7 @@ const RoomLists = () => {
       const roomType = room.roomType || {};
       const bedType = roomType.bedType || {};
       
+      // เตรียมข้อมูลสำหรับส่งไปหน้า payment
       const bookingParams = {
         roomTypeId: roomType.id,
         roomId: room.id,
@@ -102,17 +113,18 @@ const RoomLists = () => {
         description: roomType.description || "Comfortable room with modern amenities"
       };
 
+      // นำทางไปหน้า payment พร้อมข้อมูล
       router.push({
         pathname: '/payment',
         query: bookingParams
       });
 
     } catch (error) {
-      console.error("❌ Error in handleBookNow:", error);
       alert("เกิดข้อผิดพลาดในการเตรียมข้อมูลการจอง กรุณาลองใหม่อีกครั้ง");
     }
   };
 
+  // Conditional Rendering: แสดงผลตามสถานะ
   if (loading) {
     return <div className="text-center py-20 text-gray-500">Loading data...</div>;
   }
@@ -124,7 +136,7 @@ const RoomLists = () => {
   if (availableRooms.length === 0) {
     return (
       <div className="text-center py-10">
-        <h2 className="text-xl font-semibold mb-2">
+        <h2 className="text-xl font-semibold mb-2 text-black">
           No rooms found that match your search criteria.
         </h2>
         <p className="text-gray-600 mb-4">
@@ -137,17 +149,19 @@ const RoomLists = () => {
     );
   }
 
+  // แสดงรายการห้อง
   return (
     <div>
       {availableRooms.map((room, index) => {
+        // destructuring เพื่อดึงข้อมูลออกมา
         const roomType = room.roomType || {};
         const bedType = roomType.bedType || {};
         const roomImages = roomType.roomImages || [];
 
-        const imageUrl =
-          roomImages.length > 0 && roomImages[0].imageUrl
-            ? roomImages[0].imageUrl
-            : "https://placehold.co/600x400";
+        // กำหนดค่าเริ่มต้นกรณีข้อมูลไม่มี
+        const imageUrl = roomImages.length > 0 && roomImages[0].imageUrl
+          ? roomImages[0].imageUrl
+          : "https://placehold.co/600x400";
         const roomName = roomType.name || "Room Name Not Available";
         const capacity = roomType.capacity || "N/A";
         const bedDescription = bedType.bedDescription || "N/A";
@@ -156,12 +170,12 @@ const RoomLists = () => {
         const pricePerNight = roomType.pricePerNight || 0;
         const promotionPrice = roomType.promotionPrice || 0;
 
+        // คำนวณราคา
         const nights = calculateNights(checkIn, checkOut);
         const roomsNeeded = parseInt(rooms) || 1;
-        const finalPrice =
-          promotionPrice && promotionPrice < pricePerNight
-            ? promotionPrice
-            : pricePerNight;
+        const finalPrice = promotionPrice && promotionPrice < pricePerNight
+          ? promotionPrice
+          : pricePerNight;
         const totalPrice = calculateTotalPrice(finalPrice, nights, roomsNeeded);
 
         return (
@@ -170,6 +184,8 @@ const RoomLists = () => {
             className="border-b-2 border-gray-300 pb-6 md:pb-8 lg:pb-0"
           >
             <div className="pt-6 md:pt-8 lg:pt-10 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-40 flex flex-col md:flex-row md:items-stretch md:py-8 lg:py-20 gap-4 md:gap-6 lg:gap-8">
+              
+              {/* รูปภาพห้อง */}
               <Image
                 src={imageUrl}
                 alt={`${roomName}-image`}
@@ -180,6 +196,7 @@ const RoomLists = () => {
                 unoptimized
               />
 
+              {/* ข้อมูลห้อง */}
               <div className="py-4 md:px-4 md:py-0 md:w-1/3 lg:pl-8">
                 <h1 className="text-black text-2xl md:text-2xl lg:text-3xl font-semibold font-inter">
                   {roomName}
@@ -197,8 +214,10 @@ const RoomLists = () => {
                 </p>
               </div>
 
+              {/* ราคาและปุ่ม */}
               <div className="w-full md:w-1/3 lg:w-1/3 flex flex-col items-end justify-between">
                 <div className="text-right w-full">
+                  {/* แสดงราคา: มีโปรโมชันหรือไม่ */}
                   {promotionPrice && promotionPrice < pricePerNight ? (
                     <>
                       <p className="line-through text-sm md:text-base text-gray-500">
@@ -213,6 +232,7 @@ const RoomLists = () => {
                       THB {formatPrice(pricePerNight)}
                     </p>
                   )}
+                  
                   <p className="mt-1 md:mt-2 text-base sm:text-sm md:text-base text-gray-700">
                     Per Night
                   </p>
@@ -220,6 +240,7 @@ const RoomLists = () => {
                     (Including Taxes & Fees)
                   </p>
 
+                  {/* แสดงราคารวมถ้ามีข้อมูลวันที่ */}
                   {checkIn && checkOut && (
                     <p className="mt-2 text-sm text-gray-700">
                       {`Total ${nights} night(s) : THB ${formatPrice(totalPrice)}`}
@@ -227,6 +248,7 @@ const RoomLists = () => {
                   )}
                 </div>
 
+                {/* ปุ่ม Room Detail และ Book Now */}
                 <div className="flex flex-row mt-6 mb-2 md:mt-0 md:mb-0 w-full justify-between items-center md:space-x-4">
                   <Link
                     href={`/room-detail/${room.id || index}`}

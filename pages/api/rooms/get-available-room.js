@@ -1,4 +1,3 @@
-// /pages/api/rooms/get-room-available.js
 import { PrismaClient } from '../../../lib/generated/prisma';
 
 const prisma = new PrismaClient();
@@ -14,6 +13,7 @@ export default async function handler(req, res) {
   try {
     const { checkIn, checkOut, rooms, guests } = req.query;
 
+    // ตรวจสอบ required parameters
     if (!checkIn || !checkOut || !rooms || !guests) {
       return res.status(400).json({
         success: false,
@@ -21,12 +21,13 @@ export default async function handler(req, res) {
       });
     }
 
+    // แปลงข้อมูลเป็นรูปแบบที่ถูกต้อง
     const checkInDate = new Date(checkIn);
     const checkOutDate = new Date(checkOut);
     const roomCount = parseInt(rooms);
     const guestCount = parseInt(guests);
 
-
+    // Validation ข้อมูล
     if (isNaN(checkInDate.getTime()) || isNaN(checkOutDate.getTime())) {
       return res.status(400).json({
         success: false,
@@ -41,116 +42,147 @@ export default async function handler(req, res) {
       });
     }
 
-    console.log('ค้นหาห้องสำหรับ:', {
-      checkIn: checkInDate,
-      checkOut: checkOutDate,
-      rooms: roomCount,
-      guests: guestCount
+    console.log('Search params:', { checkIn, checkOut, rooms, guests });
+
+    // Step 1: หา roomId ที่ถูกจองแล้วในช่วงเวลาที่ต้องการ
+    // ใช้ Prisma ORM แทน Raw Query
+    const bookedRooms = await prisma.bookingRoom.findMany({
+      where: {
+        booking: {
+          bookingStatus: {
+            notIn: ['CANCELLED', 'NO_SHOW']
+          },
+          OR: [
+            {
+              // การจองที่เริ่มก่อนหรือในวันเริ่ม และจบหลังวันเริ่ม
+              AND: [
+                { checkInDate: { lte: checkInDate } },
+                { checkOutDate: { gt: checkInDate } }
+              ]
+            },
+            {
+              // การจองที่เริ่มก่อนวันจบ และจบในหรือหลังวันจบ  
+              AND: [
+                { checkInDate: { lt: checkOutDate } },
+                { checkOutDate: { gte: checkOutDate } }
+              ]
+            },
+            {
+              // การจองที่อยู่ภายในช่วงเวลาที่ต้องการ
+              AND: [
+                { checkInDate: { gte: checkInDate } },
+                { checkOutDate: { lte: checkOutDate } }
+              ]
+            }
+          ]
+        }
+      },
+      select: {
+        roomId: true
+      }
     });
 
-    // ค้นหา RoomTypes ที่มีห้องจริงอยู่และไม่ถูกจอง
+    const bookedRoomIds = bookedRooms.map(booking => booking.roomId);
+    console.log('Booked room IDs:', bookedRoomIds);
+
+    // Step 2: หา RoomType ที่มีห้องว่าง
+    const guestsPerRoom = Math.ceil(guestCount / roomCount);
+    
     const availableRoomTypes = await prisma.roomType.findMany({
       where: {
-        // ต้องมีห้องจริงอยู่ในตาราง Rooms
+        // ต้องมีความจุเพียงพอ
+        capacity: {
+          gte: guestsPerRoom
+        },
+        // ต้องมีห้องที่ไม่ได้ถูกจอง
         rooms: {
           some: {
-            // ห้องต้องไม่ถูกจองในช่วงวันที่เลือก
-            NOT: {
-              bookingRooms: {
-                some: {
-                  booking: {
-                    AND: [
-                      // booking ยังไม่ถูกยกเลิก
-                      {
-                        bookingStatus: {
-                          notIn: ['CANCELLED', 'NO_SHOW']
-                        }
-                      },
-                      // วันที่ทับซ้อนกัน
-                      {
-                        OR: [
-                          // กรณีที่ 1: checkIn อยู่ระหว่างการจองที่มีอยู่
-                          {
-                            AND: [
-                              { checkInDate: { lte: checkInDate } },
-                              { checkOutDate: { gt: checkInDate } }
-                            ]
-                          },
-                          // กรณีที่ 2: checkOut อยู่ระหว่างการจองที่มีอยู่
-                          {
-                            AND: [
-                              { checkInDate: { lt: checkOutDate } },
-                              { checkOutDate: { gte: checkOutDate } }
-                            ]
-                          },
-                          // กรณีที่ 3: การจองใหม่ครอบคลุมการจองที่มีอยู่
-                          {
-                            AND: [
-                              { checkInDate: { gte: checkInDate } },
-                              { checkOutDate: { lte: checkOutDate } }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                }
-              }
+            id: bookedRoomIds.length > 0 ? {
+              notIn: bookedRoomIds
+            } : {
+              not: undefined // หากไม่มีห้องที่ถูกจอง ให้หาห้องทั้งหมด
             }
           }
         }
       },
       include: {
-        bedType: true,
-        roomImages: {
-          orderBy: {
-            imageOrder: 'asc'
+        // ดึงข้อมูล BedType
+        bedType: {
+          select: {
+            id: true,
+            bedDescription: true
           }
         },
-        rooms: {
-          take: 1, // เอาเฉพาะห้องแรกเพื่อแสดงว่ามีห้องประเภทนี้อยู่จริง
+        // ดึงรูปภาพ default เท่านั้น
+        roomImages: {
           where: {
-            roomStatus: {
-              statusName: 'AVAILABLE' // เฉพาะห้องที่พร้อมใช้งาน
+            imageDefault: true
+          },
+          orderBy: {
+            imageOrder: 'asc'
+          },
+          take: 1,
+          select: {
+            id: true,
+            imageUrl: true,
+            imageOrder: true,
+            imageDefault: true
+          }
+        },
+        // ดึงห้องที่ว่าง (เอาแค่ห้องแรก)
+        rooms: {
+          where: {
+            id: bookedRoomIds.length > 0 ? {
+              notIn: bookedRoomIds
+            } : {
+              not: undefined
             }
+          },
+          take: 1,
+          select: {
+            id: true,
+            roomNumber: true
           }
         }
       }
     });
 
-    // กรองห้องที่มีความจุเพียงพอ
-    const filteredRoomTypes = availableRoomTypes.filter(roomType => {
-      const capacity = roomType.capacity || 0;
-      const guestsPerRoom = Math.ceil(guestCount / roomCount);
-      return capacity >= guestsPerRoom;
-    });
+    console.log('Available room types found:', availableRoomTypes.length);
 
-    // แปลงข้อมูลให้เป็นรูปแบบที่ frontend ต้องการ
-    const formattedRooms = filteredRoomTypes.map(roomType => ({
-      id: roomType.rooms[0]?.id || roomType.id, // ใช้ room id หรือ roomType id
-      roomType: {
-        id: roomType.id,
-        name: roomType.name,
-        description: roomType.description,
-        capacity: roomType.capacity,
-        roomSize: roomType.roomSize,
-        pricePerNight: roomType.pricePerNight,
-        promotionPrice: roomType.promotionPrice,
-        isPromotion: roomType.isPromotion,
-        bedType: roomType.bedType ? {
-          id: roomType.bedType.id,
-          bedDescription: roomType.bedType.bedDescription
-        } : null,
-        roomImages: roomType.roomImages.map(image => ({
-          id: image.id,
-          imageUrl: image.imageUrl,
-          imageOrder: image.imageOrder,
-          imageDefault: image.imageDefault
-        }))
-      }
-    }));
+    // Step 3: จัดรูปแบบข้อมูลให้ตรงกับที่ frontend ต้องการ
+    const formattedRooms = availableRoomTypes
+      .filter(roomType => 
+        roomType.rooms.length > 0 // ต้องมีห้องว่างจริงๆ
+      )
+      .map(roomType => {
+        const selectedRoom = roomType.rooms[0];
+        
+        return {
+          id: selectedRoom.id,
+          roomType: {
+            id: roomType.id,
+            name: roomType.name,
+            description: roomType.description,
+            capacity: roomType.capacity,
+            roomSize: roomType.roomSize,
+            pricePerNight: roomType.pricePerNight ? Number(roomType.pricePerNight) : 0,
+            promotionPrice: roomType.promotionPrice ? Number(roomType.promotionPrice) : null,
+            isPromotion: roomType.isPromotion,
+            bedType: roomType.bedType ? {
+              id: roomType.bedType.id,
+              bedDescription: roomType.bedType.bedDescription
+            } : null,
+            roomImages: roomType.roomImages.map(image => ({
+              id: image.id,
+              imageUrl: image.imageUrl,
+              imageOrder: image.imageOrder,
+              imageDefault: image.imageDefault
+            }))
+          }
+        };
+      });
 
-    console.log(`พบห้องที่ว่าง ${formattedRooms.length} ประเภท`);
+    console.log('Formatted rooms count:', formattedRooms.length);
 
     // ส่งผลลัพธ์กลับ
     res.status(200).json({
@@ -163,16 +195,25 @@ export default async function handler(req, res) {
         rooms: roomCount,
         guests: guestCount
       },
-      totalAvailable: formattedRooms.length
+      totalAvailable: formattedRooms.length,
+      debug: process.env.NODE_ENV === 'development' ? {
+        bookedRoomIds: bookedRoomIds.length,
+        availableRoomTypes: availableRoomTypes.length,
+        guestsPerRoom: guestsPerRoom,
+        bookedRooms: bookedRoomIds
+      } : undefined
     });
 
   } catch (error) {
-    console.error('Error fetching available rooms:', error);
-    
+    console.error('API Error:', error);
     res.status(500).json({
       success: false,
       message: 'Internal server error',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      error: process.env.NODE_ENV === 'development' ? {
+        message: error.message,
+        stack: error.stack,
+        code: error.code
+      } : undefined
     });
   } finally {
     await prisma.$disconnect();

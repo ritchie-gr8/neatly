@@ -6,22 +6,19 @@ import DefaultLayout from "@/layouts/default.layout";
 import PaymentMethodForm from "@/components/payment/forms/payment-method.layout";
 import { BookingProvider, useBooking } from "@/contexts/booking-context";
 import { useRouter } from "next/router";
-import { 
+import {
   validateCompleteBooking,
   validateBasicInfo,
   validateSpecialRequests,
-  validatePaymentMethod
+  validatePaymentMethod,
 } from "@/lib/validations/booking-validation";
 
 const PaymentPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
-  const { 
-    getCompleteBookingData, 
-    setValidationErrorsForSection,
-    bookingData
-  } = useBooking();
+  const { getCompleteBookingData, setValidationErrorsForSection, bookingData } =
+    useBooking();
 
   const handleStepClick = (e, stepNumber) => {
     e.stopPropagation();
@@ -33,25 +30,29 @@ const PaymentPage = () => {
 
     if (currentStep === 1) {
       const basicInfoValidation = validateBasicInfo(bookingData.basicInfo);
-      
+
       if (!basicInfoValidation.isValid) {
-        setValidationErrorsForSection('basicInfo', basicInfoValidation.errors);
+        setValidationErrorsForSection("basicInfo", basicInfoValidation.errors);
         hasErrors = true;
       } else {
-        setValidationErrorsForSection('basicInfo', {});
+        setValidationErrorsForSection("basicInfo", {});
       }
-      
     } else if (currentStep === 2) {
-      const specialRequestsValidation = validateSpecialRequests(bookingData.specialRequests);
-      
+      const specialRequestsValidation = validateSpecialRequests(
+        bookingData.specialRequests
+      );
+
       if (!specialRequestsValidation.isValid) {
-        setValidationErrorsForSection('specialRequests', specialRequestsValidation.errors);
+        setValidationErrorsForSection(
+          "specialRequests",
+          specialRequestsValidation.errors
+        );
         hasErrors = true;
       } else {
-        setValidationErrorsForSection('specialRequests', {});
+        setValidationErrorsForSection("specialRequests", {});
       }
     }
-    
+
     if (!hasErrors) {
       setCurrentStep((prevStep) => Math.min(prevStep + 1, 3));
     }
@@ -63,27 +64,51 @@ const PaymentPage = () => {
 
   const handleCompleteBooking = async () => {
     if (isSubmitting) return;
-    
+
     try {
       setIsSubmitting(true);
-      
+
       const completeBookingData = getCompleteBookingData();
       const validation = validateCompleteBooking(completeBookingData);
-      
+
       if (!validation.isValid) {
         if (Object.keys(validation.errors.basicInfo).length > 0) {
-          setValidationErrorsForSection('basicInfo', validation.errors.basicInfo);
+          setValidationErrorsForSection(
+            "basicInfo",
+            validation.errors.basicInfo
+          );
         }
         if (Object.keys(validation.errors.specialRequests).length > 0) {
-          setValidationErrorsForSection('specialRequests', validation.errors.specialRequests);
+          setValidationErrorsForSection(
+            "specialRequests",
+            validation.errors.specialRequests
+          );
         }
         if (Object.keys(validation.errors.paymentMethod).length > 0) {
-          setValidationErrorsForSection('paymentMethod', validation.errors.paymentMethod);
+          setValidationErrorsForSection(
+            "paymentMethod",
+            validation.errors.paymentMethod
+          );
         }
-        
-        alert("Please check the form and fix any highlighted errors before proceeding.");
+
+        alert(
+          "Please check the form and fix any highlighted errors before proceeding."
+        );
         return;
       }
+
+      // ตรวจสอบว่ามี roomId และ roomTypeId
+      if (
+        !completeBookingData.bookingDetail.roomData?.id ||
+        !completeBookingData.bookingDetail.roomData?.roomType?.id
+      ) {
+        alert("ไม่พบข้อมูลห้องพัก กรุณาเลือกห้องพักใหม่");
+        router.push("/rooms"); // ส่งกลับไปที่หน้าเลือกห้อง
+        return;
+      }
+
+      // การตรวจสอบห้องพักถูกจัดการที่ API get-room-available แล้ว
+      // ข้ามขั้นตอนการตรวจสอบซ้ำ
 
       const bookingPayload = {
         guest: {
@@ -92,42 +117,56 @@ const PaymentPage = () => {
           email: completeBookingData.basicInfo.email,
           phone: completeBookingData.basicInfo.phone,
           country: completeBookingData.basicInfo.country,
-          dateOfBirth: completeBookingData.basicInfo.dateOfBirth
+          dateOfBirth: completeBookingData.basicInfo.dateOfBirth,
         },
         booking: {
           checkInDate: completeBookingData.bookingDetail.searchParams.checkIn,
           checkOutDate: completeBookingData.bookingDetail.searchParams.checkOut,
           adults: completeBookingData.bookingDetail.totalGuests,
-          additionalRequests: completeBookingData.specialRequests.additionalRequest,
-          totalAmount: completeBookingData.priceBreakdown.totalPrice
+          additionalRequests:
+            completeBookingData.specialRequests.additionalRequest,
+          totalAmount: completeBookingData.priceBreakdown.totalPrice,
         },
         bookingRoom: {
           roomId: completeBookingData.bookingDetail.roomData.id,
           roomTypeId: completeBookingData.bookingDetail.roomData.roomType.id,
-          pricePerNight: completeBookingData.priceBreakdown.pricePerNight
+          pricePerNight: completeBookingData.priceBreakdown.pricePerNight,
         },
-        specialRequests: completeBookingData.priceBreakdown.selectedSpecialRequests,
+        specialRequests:
+          completeBookingData.priceBreakdown.selectedSpecialRequests,
         payment: {
           method: completeBookingData.paymentMethod.type,
-          totalAmount: completeBookingData.priceBreakdown.totalPrice
-        }
+          totalAmount: completeBookingData.priceBreakdown.totalPrice,
+        },
       };
 
-      const response = await fetch('/api/booking/post-booking-detail', {
-        method: 'POST',
+      console.log("Sending booking payload:", bookingPayload);
+
+      const response = await fetch("/api/booking/post-booking-detail", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(bookingPayload)
+        body: JSON.stringify(bookingPayload),
       });
 
       const result = await response.json();
 
+      // ตรวจสอบสถานะการตอบกลับจาก API
+      if (!response.ok) {
+        throw new Error(
+          result.message ||
+            `เกิดข้อผิดพลาด (${response.status}): ${
+              result.error || "ไม่สามารถสร้างการจองได้"
+            }`
+        );
+      }
+
       if (result.success) {
-        // 🎉 แสดงข้อมูลทั้งหมดสำหรับเพื่อนนำไปใช้กับ Omise
+        // ส่วนแสดงข้อมูลทั้งหมดสำหรับเพื่อนนำไปใช้กับ Omise (คงไว้เหมือนเดิม)
         console.log("🎉 BOOKING CONFIRMED! Complete data for Omise:");
         console.log("=====================================");
-        
+
         // 👤 Basic Information
         console.log("👤 Basic Information:");
         console.log({
@@ -136,19 +175,25 @@ const PaymentPage = () => {
           email: completeBookingData.basicInfo.email,
           phone: completeBookingData.basicInfo.phone,
           country: completeBookingData.basicInfo.country,
-          dateOfBirth: completeBookingData.basicInfo.dateOfBirth
+          dateOfBirth: completeBookingData.basicInfo.dateOfBirth,
         });
 
         // 💳 Payment Method
         console.log("💳 Payment Method:");
         console.log({
           type: completeBookingData.paymentMethod.type,
-          creditCard: completeBookingData.paymentMethod.type === 'credit' ? {
-            cardNumber: completeBookingData.paymentMethod.creditCard.cardNumber,
-            cardOwner: completeBookingData.paymentMethod.creditCard.cardOwner,
-            expiryDate: completeBookingData.paymentMethod.creditCard.expiryDate,
-            cvc: completeBookingData.paymentMethod.creditCard.cvc
-          } : null
+          creditCard:
+            completeBookingData.paymentMethod.type === "credit"
+              ? {
+                  cardNumber:
+                    completeBookingData.paymentMethod.creditCard.cardNumber,
+                  cardOwner:
+                    completeBookingData.paymentMethod.creditCard.cardOwner,
+                  expiryDate:
+                    completeBookingData.paymentMethod.creditCard.expiryDate,
+                  cvc: completeBookingData.paymentMethod.creditCard.cvc,
+                }
+              : null,
         });
 
         // 🏨 Booking Details
@@ -164,16 +209,19 @@ const PaymentPage = () => {
           checkOut: completeBookingData.bookingDetail.searchParams.checkOut,
           adults: completeBookingData.bookingDetail.totalGuests,
           rooms: completeBookingData.bookingDetail.totalRooms,
-          nights: completeBookingData.bookingDetail.nights
+          nights: completeBookingData.bookingDetail.nights,
         });
 
         // ✨ Special Requests
         console.log("✨ Special Requests:");
         console.log({
-          standardRequests: completeBookingData.specialRequests.standardRequests,
+          standardRequests:
+            completeBookingData.specialRequests.standardRequests,
           specialRequests: completeBookingData.specialRequests.specialRequests,
-          additionalRequest: completeBookingData.specialRequests.additionalRequest,
-          selectedRequests: completeBookingData.priceBreakdown.selectedSpecialRequests
+          additionalRequest:
+            completeBookingData.specialRequests.additionalRequest,
+          selectedRequests:
+            completeBookingData.priceBreakdown.selectedSpecialRequests,
         });
 
         // 💰 Price Breakdown
@@ -181,8 +229,9 @@ const PaymentPage = () => {
         console.log({
           pricePerNight: completeBookingData.priceBreakdown.pricePerNight,
           basePrice: completeBookingData.priceBreakdown.basePrice,
-          specialRequestsPrice: completeBookingData.priceBreakdown.specialRequestsPrice,
-          totalPrice: completeBookingData.priceBreakdown.totalPrice
+          specialRequestsPrice:
+            completeBookingData.priceBreakdown.specialRequestsPrice,
+          totalPrice: completeBookingData.priceBreakdown.totalPrice,
         });
 
         // 📦 Complete Raw Data
@@ -199,21 +248,35 @@ const PaymentPage = () => {
             email: completeBookingData.basicInfo.email,
             phone: completeBookingData.basicInfo.phone,
             country: completeBookingData.basicInfo.country,
-            dateOfBirth: completeBookingData.basicInfo.dateOfBirth
+            dateOfBirth: completeBookingData.basicInfo.dateOfBirth,
           },
 
           // Payment Info
           payment: {
-            amount: Math.round(completeBookingData.priceBreakdown.totalPrice * 100), // Omise ใช้หน่วยสตางค์
+            amount: Math.round(
+              completeBookingData.priceBreakdown.totalPrice * 100
+            ), // Omise ใช้หน่วยสตางค์
             currency: "THB",
             method: completeBookingData.paymentMethod.type,
-            card: completeBookingData.paymentMethod.type === 'credit' ? {
-              number: completeBookingData.paymentMethod.creditCard.cardNumber,
-              name: completeBookingData.paymentMethod.creditCard.cardOwner,
-              expiration_month: completeBookingData.paymentMethod.creditCard.expiryDate?.split('/')[0],
-              expiration_year: completeBookingData.paymentMethod.creditCard.expiryDate?.split('/')[1],
-              security_code: completeBookingData.paymentMethod.creditCard.cvc
-            } : null
+            card:
+              completeBookingData.paymentMethod.type === "credit"
+                ? {
+                    number:
+                      completeBookingData.paymentMethod.creditCard.cardNumber,
+                    name: completeBookingData.paymentMethod.creditCard
+                      .cardOwner,
+                    expiration_month:
+                      completeBookingData.paymentMethod.creditCard.expiryDate?.split(
+                        "/"
+                      )[0],
+                    expiration_year:
+                      completeBookingData.paymentMethod.creditCard.expiryDate?.split(
+                        "/"
+                      )[1],
+                    security_code:
+                      completeBookingData.paymentMethod.creditCard.cvc,
+                  }
+                : null,
           },
 
           // Booking Info
@@ -228,7 +291,8 @@ const PaymentPage = () => {
             adults: completeBookingData.bookingDetail.totalGuests,
             rooms: completeBookingData.bookingDetail.totalRooms,
             nights: completeBookingData.bookingDetail.nights,
-            specialRequests: completeBookingData.priceBreakdown.selectedSpecialRequests
+            specialRequests:
+              completeBookingData.priceBreakdown.selectedSpecialRequests,
           },
 
           // Metadata for reference
@@ -236,42 +300,80 @@ const PaymentPage = () => {
             roomName: completeBookingData.bookingDetail.roomData.roomType.name,
             pricePerNight: completeBookingData.priceBreakdown.pricePerNight,
             basePrice: completeBookingData.priceBreakdown.basePrice,
-            specialRequestsPrice: completeBookingData.priceBreakdown.specialRequestsPrice,
-            totalPrice: completeBookingData.priceBreakdown.totalPrice
-          }
+            specialRequestsPrice:
+              completeBookingData.priceBreakdown.specialRequestsPrice,
+            totalPrice: completeBookingData.priceBreakdown.totalPrice,
+          },
         };
-        
+
         console.log(omisePayload);
         console.log("=====================================");
-        
+
         const successMessage = `
 🎉 Booking Created Successfully!
 
 📋 Booking Number: ${result.data.booking.bookingNumber}
-👤 Guest: ${completeBookingData.basicInfo.firstName} ${completeBookingData.basicInfo.lastName}
+👤 Guest: ${completeBookingData.basicInfo.firstName} ${
+          completeBookingData.basicInfo.lastName
+        }
 📧 Email: ${completeBookingData.basicInfo.email}
 💰 Total Amount: THB ${completeBookingData.priceBreakdown.totalPrice.toLocaleString()}
-💳 Payment Method: ${completeBookingData.paymentMethod.type === 'credit' ? 'Credit Card' : 'Cash'}
+💳 Payment Method: ${
+          completeBookingData.paymentMethod.type === "credit"
+            ? "Credit Card"
+            : "Cash"
+        }
 
-${completeBookingData.priceBreakdown.selectedSpecialRequests.length > 0 ? 
-  '🎁 Special Requests:\n' + 
-  completeBookingData.priceBreakdown.selectedSpecialRequests.map(req => 
-    `  • ${req.displayName}: +THB ${req.price}`
-  ).join('\n') + '\n' : ''
+${
+  completeBookingData.priceBreakdown.selectedSpecialRequests.length > 0
+    ? "🎁 Special Requests:\n" +
+      completeBookingData.priceBreakdown.selectedSpecialRequests
+        .map((req) => `  • ${req.displayName}: +THB ${req.price}`)
+        .join("\n") +
+      "\n"
+    : ""
 }
 ✅ Your booking has been confirmed!
-        `.trim();
-        
+      `.trim();
+
         alert(successMessage);
-        
-        router.push(`/booking-confirmation/${result.data.booking.bookingNumber}`);
-        
+
+        // ตรวจสอบก่อนว่ามี bookingNumber ก่อนที่จะ redirect
+        if (result.data?.booking?.bookingNumber) {
+          router.push(
+            `/booking-confirmation/${result.data.booking.bookingNumber}`
+          );
+        } else {
+          alert("การจองสำเร็จแล้ว แต่ไม่พบเลขที่การจอง กรุณาติดต่อเจ้าหน้าที่");
+          router.push("/"); // ส่งกลับไปที่หน้าแรก
+        }
       } else {
-        throw new Error(result.message || 'Failed to create booking');
+        throw new Error(result.message || "ไม่สามารถสร้างการจองได้");
       }
-      
     } catch (error) {
-      alert("An error occurred while creating your booking. Please try again.");
+      console.error("Booking error:", error);
+
+      // แสดงข้อความแจ้งเตือนที่เฉพาะเจาะจงมากขึ้น
+      let errorMessage = "เกิดข้อผิดพลาดในการจองห้องพัก: ";
+
+      if (error.message.includes("Foreign key constraint")) {
+        errorMessage += "ห้องพักที่เลือกไม่มีอยู่ในระบบ กรุณาเลือกห้องพักอื่น";
+      } else if (error.message.includes("404")) {
+        errorMessage += "ไม่พบหน้าที่ต้องการ กรุณาลองใหม่อีกครั้ง";
+      } else {
+        errorMessage += error.message || "กรุณาลองใหม่อีกครั้ง";
+      }
+
+      alert(errorMessage);
+
+      // ถ้าเป็นปัญหาเกี่ยวกับห้องพัก ให้กลับไปที่หน้าเลือกห้อง
+      if (
+        error.message.includes("Foreign key constraint") ||
+        error.message.includes("room") ||
+        error.message.includes("Room")
+      ) {
+        router.push("/rooms");
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -403,13 +505,17 @@ ${completeBookingData.priceBreakdown.selectedSpecialRequests.length > 0 ?
                     currentStep === 3 ? handleCompleteBooking : goToNextStep
                   }
                   className={`btn-primary px-8 py-4 cursor-pointer transition-all duration-200 hover:opacity-90 ${
-                    isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                    isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                   style={{
                     pointerEvents: isSubmitting ? "none" : "auto",
                   }}
                 >
-                  {isSubmitting ? "Processing..." : (currentStep === 3 ? "Confirm Booking" : "Next")}
+                  {isSubmitting
+                    ? "Processing..."
+                    : currentStep === 3
+                    ? "Confirm Booking"
+                    : "Next"}
                 </div>
               </footer>
             </div>
@@ -440,13 +546,17 @@ ${completeBookingData.priceBreakdown.selectedSpecialRequests.length > 0 ?
           <div
             onClick={currentStep === 3 ? handleCompleteBooking : goToNextStep}
             className={`btn-primary px-8 py-4 cursor-pointer transition-all duration-200 hover:opacity-90 ${
-              isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+              isSubmitting ? "opacity-50 cursor-not-allowed" : ""
             }`}
             style={{
               pointerEvents: isSubmitting ? "none" : "auto",
             }}
           >
-            {isSubmitting ? "Processing..." : (currentStep === 3 ? "Confirm Booking" : "Next")}
+            {isSubmitting
+              ? "Processing..."
+              : currentStep === 3
+              ? "Confirm Booking"
+              : "Next"}
           </div>
         </footer>
       </div>
