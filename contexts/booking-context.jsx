@@ -5,7 +5,7 @@ const BookingContext = createContext();
 
 export const BookingProvider = ({ children }) => {
   const router = useRouter();
-  const [countdown, setCountdown] = useState(120);
+  const [countdown, setCountdown] = useState(300);
   const [isCountdownActive, setIsCountdownActive] = useState(false);
   const [bookingData, setBookingData] = useState({
     roomData: null,
@@ -65,7 +65,7 @@ export const BookingProvider = ({ children }) => {
   });
 
   const startCountdown = () => {
-    setCountdown(120); 
+    setCountdown(300); 
     setIsCountdownActive(true);
   };
 
@@ -74,7 +74,7 @@ export const BookingProvider = ({ children }) => {
   };
 
   const resetCountdown = () => {
-    setCountdown(120); 
+    setCountdown(300); 
     setIsCountdownActive(false);
   };
 
@@ -108,7 +108,7 @@ export const BookingProvider = ({ children }) => {
   }, [isCountdownActive, countdown, router]);
 
   useEffect(() => {
-    if (bookingData.searchParams && bookingData.roomData && !isCountdownActive && countdown === 120) {
+    if (bookingData.searchParams && bookingData.roomData && !isCountdownActive && countdown === 300) {
       startCountdown();
     }
   }, [bookingData.searchParams, bookingData.roomData, isCountdownActive, countdown]);

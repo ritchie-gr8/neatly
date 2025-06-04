@@ -18,7 +18,7 @@ const BookingDetailSection = () => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    console.log("Current countdown:", countdown); // Debug countdown
+    console.log("Current countdown:", countdown); 
     
     if (countdown <= 0 && !isExpired && !isDeleting) {
       setIsExpired(true);
@@ -27,13 +27,12 @@ const BookingDetailSection = () => {
   }, [countdown, isExpired, isDeleting]);
 
   const handleBookingExpired = async () => {
-    if (isDeleting) return; // ป้องกันการเรียกซ้ำ
+    if (isDeleting) return; 
     
     setIsDeleting(true);
     console.log("Booking expired! Deleting booking data...");
 
     try {
-      // ดึง bookingId และ guestId จาก URL query
       const { bookingId, guestId } = router.query;
       
       if (!bookingId) {
@@ -107,10 +106,9 @@ const BookingDetailSection = () => {
   };
 
   const getCountdownColor = () => {
-    if (countdown <= 0) return "text-red-400 animate-pulse";
-    if (countdown > 60) return "text-green-200";
-    if (countdown > 30) return "text-yellow-200";
-    return "text-red-200 animate-pulse";
+    if (countdown <= 0) return "text-orange-700 animate-pulse";
+    if (countdown > 30) return "text-orange-700";
+    return "text-orange-700 animate-pulse";
   };
 
   const getCountdownText = () => {
@@ -120,7 +118,6 @@ const BookingDetailSection = () => {
     return formatCountdown(countdown);
   };
 
-  // แสดง loading state ขณะกำลังลบข้อมูล
   if (isDeleting) {
     return (
       <div>
@@ -255,7 +252,7 @@ const BookingDetailSection = () => {
               {countdown <= 0 ? 'Booking Expired' : 'Booking Detail'}
             </h2>
           </div>
-          <div className={`font-mono font-semibold ${getCountdownColor()}`}>
+          <div className={`font-inter font-semibold rounded-sm bg-orange-200 px-2 py-1 ${getCountdownColor()}`}>
             {getCountdownText()}
           </div>
         </div>
