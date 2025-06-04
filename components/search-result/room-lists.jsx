@@ -35,10 +35,41 @@ const RoomLists = () => {
         setError("Unable to connect to server");
       } else {
         setError("An unexpected error occurred");
+  const [maxCapacity, setMaxCapacity] = useState(10);
+
+  const {
+    checkIn,
+    checkOut,
+    rooms: roomCount,
+    guests: guestCount,
+  } = router.query;
+
+  // ย้ายฟังก์ชันมาไว้ข้างใน component
+  const calculateNights = (checkIn, checkOut) => {
+    const start = new Date(checkIn);
+    const end = new Date(checkOut);
+    const diffTime = Math.abs(end - start);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
+
+  const calculateTotalPrice = (pricePerNight, checkIn, checkOut) => {
+    const nights = calculateNights(checkIn, checkOut);
+    return parseFloat(pricePerNight) * nights;
+  };
+
+  const getMaxCapacityFromRooms = (roomsData) => {
+    if (!Array.isArray(roomsData) || roomsData.length === 0) return 0;
+
+    let maxCap = 0;
+    roomsData.forEach((room) => {
+      const capacity = room.roomType?.capacity || 0;
+      if (capacity > maxCap) {
+        maxCap = capacity;
       }
-    } finally {
-      setLoading(false);
-    }
+    });
+
+    return maxCap;
   };
 
   useEffect(() => {
@@ -147,6 +178,159 @@ const RoomLists = () => {
       console.log(error);
     }
   };
+      } catch (err) {
+        setError("Unable to load data. Please try again.");
+        setLoading(false);
+      }
+    };
+
+    fetchRooms();
+  }, []);
+
+  useEffect(() => {
+    if (!rooms.length) return;
+
+    if (!roomCount || !guestCount) {
+      setFilteredRooms(rooms);
+      return;
+    }
+
+    const numRooms = parseInt(roomCount, 10) || 1;
+    const numGuests = parseInt(guestCount, 10) || 1;
+
+    const filtered = rooms.filter((room) => {
+      const roomType = room.roomType || {};
+      const capacity = roomType.capacity || 0;
+
+      const guestsPerRoom = Math.ceil(numGuests / numRooms);
+
+      return capacity >= guestsPerRoom;
+    });
+
+    setFilteredRooms(filtered);
+  }, [rooms, roomCount, guestCount, maxCapacity]);
+
+  // Function to handle book now click - ปรับปรุงแล้ว
+  const handleBookNow = async (room) => {
+    try {
+      // ตรวจสอบข้อมูลพื้นฐานก่อน
+      if (!checkIn || !checkOut) {
+        alert('กรุณาเลือกวันที่เช็คอินและเช็คเอาท์');
+        return;
+      }
+
+      // ตรวจสอบว่าวันที่ถูกต้องหรือไม่
+      const checkInDate = new Date(checkIn);
+      const checkOutDate = new Date(checkOut);
+      
+      if (isNaN(checkInDate.getTime()) || isNaN(checkOutDate.getTime())) {
+        alert('รูปแบบวันที่ไม่ถูกต้อง');
+        return;
+      }
+
+      // ตรวจสอบว่า check-in date ต้องไม่เป็นอดีต (เทียบเฉพาะวันที่)
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const isSameOrAfterToday = (
+        checkInDate.getFullYear() > today.getFullYear() ||
+        (checkInDate.getFullYear() === today.getFullYear() && checkInDate.getMonth() > today.getMonth()) ||
+        (checkInDate.getFullYear() === today.getFullYear() && checkInDate.getMonth() === today.getMonth() && checkInDate.getDate() >= today.getDate())
+      );
+      if (!isSameOrAfterToday) {
+        alert('Check-in date cannot be in the past');
+        return;
+      }
+
+      if (checkInDate >= checkOutDate) {
+        alert('วันที่เช็คอินต้องมาก่อนวันที่เช็คเอาท์');
+        return;
+      }
+
+      // ตรวจสอบข้อมูลห้อง
+      if (!room || !room.id || !room.roomType) {
+        alert('ข้อมูลห้องไม่ถูกต้อง');
+        return;
+      }
+
+      const { actualRoomsNeeded, totalPricePerNight } = calculateRoomPricing(
+        room, 
+        guestCount, 
+        roomCount
+      );
+      
+      const nights = calculateNights(checkIn, checkOut);
+      const totalAmount = totalPricePerNight * nights;
+
+      // สร้างข้อมูลสำหรับส่งไป API พร้อมตรวจสอบทุกฟิลด์
+      const bookingData = {
+        roomId: parseInt(room.id) || room.id, // แปลงเป็น number ถ้าเป็น string
+        checkInDate: checkIn,
+        checkOutDate: checkOut,
+        adults: Math.max(1, parseInt(guestCount, 10) || 1), // ต้องมีอย่างน้อย 1 คน
+        rooms: Math.max(1, actualRoomsNeeded), // ต้องมีอย่างน้อย 1 ห้อง
+        totalAmount: Math.round(totalAmount * 100) / 100, // ปัดเศษให้เป็น 2 ตำแหน่ง
+        roomDetails: {
+          id: room.id,
+          roomType: room.roomType?.name || '',
+          capacity: room.roomType?.capacity || 1,
+          bedDescription: room.roomType?.bedType?.bedDescription || '',
+          roomSize: room.roomType?.roomSize || 0,
+          description: room.roomType?.description || '',
+          pricePerNight: room.roomType?.pricePerNight || 0,
+          promotionPrice: room.roomType?.promotionPrice || 0,
+          imageUrl: room.roomType?.roomImages?.[0]?.imageUrl || "https://placehold.co/600x400",
+          actualRoomsNeeded: actualRoomsNeeded,
+          totalPricePerNight: totalPricePerNight
+        }
+      };
+
+      // Log ข้อมูลเพื่อ debug (ลบออกในโปรดักชั่น)
+      console.log('Sending booking data:', bookingData);
+
+      // Call API to create booking
+      const response = await api.post('/payment/create-booking', bookingData);
+      
+      // เช็คการตอบกลับอย่างละเอียด
+      if (response.data && response.data.success && response.data.bookingId) {
+        // Navigate to payment with booking ID
+        router.push(`/payment?bookingId=${response.data.bookingId}`);
+      } else {
+        console.error('API Response:', response.data);
+        alert('เกิดข้อผิดพลาดในการสร้างการจอง: ไม่ได้รับ booking ID');
+      }
+      
+    } catch (error) {
+      console.error('Error creating booking:', error);
+      
+      // แสดง error message ที่ละเอียดขึ้น
+      if (error.response) {
+        // Server ตอบกลับ error
+        const status = error.response.status;
+        const message = error.response.data?.message || error.response.data?.error || 'Unknown error';
+        
+        console.error('API Error Response:', error.response.data);
+        
+        if (status === 400) {
+          alert(`ข้อมูลไม่ถูกต้อง: ${message}`);
+        } else if (status === 401) {
+          alert('กรุณาเข้าสู่ระบบก่อนทำการจอง');
+        } else if (status === 404) {
+          alert('ไม่พบห้องที่ต้องการจอง');
+        } else if (status === 409) {
+          // alert('ขออภัย ห้องนี้ถูกจองไปแล้ว กรุณาค้นหาใหม่');
+          window.location.reload();
+        } else {
+          alert(`เกิดข้อผิดพลาด (${status}): ${message}`);
+        }
+      } else if (error.request) {
+        // ไม่ได้รับการตอบกลับจาก server
+        alert('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต');
+      } else {
+        // Error อื่นๆ
+        alert('เกิดข้อผิดพลาดไม่คาดคิด กรุณาลองใหม่อีกครั้ง');
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -201,6 +385,13 @@ const RoomLists = () => {
             : pricePerNight;
         const totalPrice = calculateTotalPrice(finalPrice, nights, roomsNeeded);
 
+        // คำนวณราคาและจำนวนห้องที่ต้องจอง
+        const { actualRoomsNeeded, totalPricePerNight } = calculateRoomPricing(
+          room, 
+          guestCount, 
+          roomCount
+        );
+
         return (
           <section
             key={room.id || index}
@@ -239,6 +430,7 @@ const RoomLists = () => {
 
               <div className="w-full md:w-1/3 lg:w-1/3 flex flex-col items-end justify-between">
                 <div className="text-right w-full">
+                  {/* แสดงราคาต่อห้องต่อคืน */}
                   {promotionPrice && promotionPrice < pricePerNight ? (
                     <>
                       <p className="line-through text-sm md:text-base text-gray-500">
@@ -265,6 +457,14 @@ const RoomLists = () => {
                       {`Total ${nights} night(s) : THB ${formatPrice(
                         totalPrice
                       )}`}
+                      {`Total ${calculateNights(
+                        checkIn,
+                        checkOut
+                      )} night(s) : THB ${formatPrice(calculateTotalPrice(
+                        totalPricePerNight,
+                        checkIn,
+                        checkOut
+                      ))}`}
                     </p>
                   )}
                 </div>
@@ -277,6 +477,13 @@ const RoomLists = () => {
                     Room Detail
                   </Link>
 
+                  <button
+                    onClick={() => handleBookNow(room)}
+                    className="bg-orange-600 text-white px-8 py-3 sm:px-4 sm:py-2 md:px-6 md:py-3 rounded-sm text-base sm:text-sm md:text-base cursor-pointer whitespace-nowrap hover:bg-orange-500 transition-all duration-300 min-w-[130px] sm:min-w-0"
+                  >
+                    Book Now
+                  </button>
+                  
                   <button
                     onClick={() => handleBookNow(room)}
                     className="bg-orange-600 text-white px-8 py-3 sm:px-4 sm:py-2 md:px-6 md:py-3 rounded-sm text-base sm:text-sm md:text-base cursor-pointer whitespace-nowrap hover:bg-orange-500 transition-all duration-300 min-w-[130px] sm:min-w-0"
