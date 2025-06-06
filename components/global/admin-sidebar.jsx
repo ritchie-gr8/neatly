@@ -1,15 +1,29 @@
 import { adminMenu } from "@/constants/admin-menu";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LogOut } from "lucide-react";
 import { Sparkle } from "lucide-react";
 import { useRouter } from "next/router";
 import { useAuth } from "@/hooks/useAuth";
 import { PATHS } from "@/constants/paths";
+import Link from "next/link";
+
 
 const AdminSidebar = () => {
   const { logout } = useAuth();
   const router = useRouter();
   const { pathname } = router;
+  const [activeMenu, setActiveMenu] = useState("");
+
+
+  useEffect(() => {
+    const currentMenu = adminMenu.find(menu => 
+      pathname.startsWith(menu.path)
+    );
+    
+    if (currentMenu) {
+      setActiveMenu(currentMenu.path);
+    }
+  }, [pathname]);
 
   const handleSignOut = () => {
     logout();
@@ -17,7 +31,7 @@ const AdminSidebar = () => {
   };
 
   return (
-    <aside className="w-[240px] bg-green-800 h-full flex flex-col">
+    <aside className="w-[260px] bg-green-800 h-full flex flex-col pb-44">
       <div className="px-6 py-10 flex items-center flex-col gap-4 mb-10">
         <h1 className="text-h4 text-green-100 font-medium relative font-noto-serif">
           <Sparkle className="size-3 absolute top-1 -left-3 text-orange-500 fill-orange-500" />
@@ -26,24 +40,25 @@ const AdminSidebar = () => {
         <p className="text-green-400 font-normal">Admin Panel Control</p>
       </div>
 
-      <nav className="flex flex-col flex-1 justify-between">
+      <nav className="flex flex-col flex-1 justify-between ">
         <div>
           {adminMenu.map((menu) => (
-            <div
-              className={`flex items-center gap-3 px-6 py-5 text-base font-medium
-               cursor-pointer text-green-100 hover:bg-green-600 ${
-                 pathname === menu.path ? "bg-green-600" : ""
-               }`}
+            <Link 
+              href={menu.path}
               key={menu.id}
-              onClick={() => router.push(menu.path)}
+              className={`flex items-center gap-3 px-6 py-5 text-base font-medium
+               cursor-pointer text-green-100 hover:bg-green-600
+               transition-all duration-400 ease-in-out ${
+                 activeMenu === menu.path ? "bg-green-600 pl-12" : "pl-6"
+               }`}
             >
               <menu.icon size={16} />
               <span>{menu.title}</span>
-            </div>
+            </Link>
           ))}
         </div>
 
-        <div className="mb-44 pt-12">
+        <div className="pt-12">
           <div
             className="flex items-center gap-3 px-6 py-5 text-b1 font-medium
                cursor-pointer text-green-100 hover:bg-green-600"

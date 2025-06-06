@@ -483,10 +483,10 @@ const EditorMode = ({ setMode, selectedRoomTypeId, setLastAction }) => {
         isLoading={isLoading || isSubmitting}
         message={isSubmitting ? "Saving changes..." : "Loading room data..."}
       />
-      <div className="flex justify-between items-center mb-6 border-b border-brown-300 px-16 py-4 bg-util-white">
+      <div className="flex justify-between items-center mb-6 border-b border-brown-300 px-16 py-4 bg-white">
         <h5 className="text-h5 font-semibold text-gray-900">
           {selectedRoomTypeId ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 ">
               <ArrowLeft
                 onClick={() => setMode("view", null)}
                 className="size-4 cursor-pointer"

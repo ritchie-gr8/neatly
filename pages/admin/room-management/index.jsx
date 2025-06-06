@@ -586,8 +586,8 @@ const RoomManagement = () => {
     <AdminLayout>
       {mode === "view" ? (
         <>
-          <div className="flex justify-between items-center mb-6 border-b border-brown-300 px-16 py-4">
-            <h5 className="text-h5 font-semibold text-gray-900">
+          <div className="flex justify-between items-center mb-6 border-b border-brown-300 px-16 py-4 bg-white">
+            <h5 className="text-h5 font-semibold text-gray-900 ">
               Room Management
             </h5>
             <div className="flex items-center gap-4">
