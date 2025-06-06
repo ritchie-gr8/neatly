@@ -13,6 +13,7 @@ export const BookingProvider = ({ children }) => {
     loading: false,
     error: null,
     basicInfo: {
+      id: "",
       firstName: "",
       lastName: "",
       email: "",
@@ -165,7 +166,7 @@ export const BookingProvider = ({ children }) => {
       roomType: {
         id: queryParams.roomTypeId,
         name: queryParams.roomName || "Selected Room",
-        pricePerNight: parseFloat(queryParams.pricePerNight) || 1500,
+        pricePerNight: parseFloat(queryParams.pricePerNight) ,
         promotionPrice: queryParams.promotionPrice ? parseFloat(queryParams.promotionPrice) : null,
         capacity: parseInt(queryParams.capacity) || 2,
         bedType: {

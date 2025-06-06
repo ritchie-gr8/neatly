@@ -123,14 +123,15 @@ const RoomLists = () => {
       if (response.data && response.data.success) {
         // ถ้าสร้าง booking สำเร็จ ให้ redirect ไปหน้า payment พร้อมกับ booking ID
         const bookingId = response.data.data.booking.id;
-        const bookingNumber = response.data.data.booking.bookingNumber;
-  
+        const bookingNumber = response.data.data.booking.bookingNumber;      
         router.push({
           pathname: '/payment',
           query: {
+            guestId: response.data.data.guest.id,
             bookingId: bookingId,
             bookingNumber: bookingNumber,
             roomTypeId: room.roomType.id,
+            pricePerNight: room.roomType.isPromotion ? room.roomType.promotionPrice : room.roomType.pricePerNight,
             roomId: room.id,
             checkIn: checkIn,
             checkOut: checkOut,

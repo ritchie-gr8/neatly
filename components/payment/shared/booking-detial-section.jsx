@@ -18,8 +18,6 @@ const BookingDetailSection = () => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    console.log("Current countdown:", countdown); 
-    
     if (countdown <= 0 && !isExpired && !isDeleting) {
       setIsExpired(true);
       handleBookingExpired();

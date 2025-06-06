@@ -1,8 +1,5 @@
-// pages/api/booking/get-success-booking-data.js
-import { PrismaClient } from '../../../lib/generated/prisma';
-// หรือใช้ import prisma from '@/lib/prisma'; ถ้ามี global instance
+import { db } from "@/lib/prisma";
 
-const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -29,7 +26,7 @@ export default async function handler(req, res) {
       : { id: parseInt(bookingId) };
 
     // ดึงข้อมูล booking พร้อม relations
-    const booking = await prisma.booking.findFirst({
+    const booking = await db.booking.findFirst({
       where: whereCondition,
       include: {
         guest: true,
@@ -137,7 +134,5 @@ export default async function handler(req, res) {
       message: 'Failed to fetch booking data',
       error: error.message
     });
-  } finally {
-    await prisma.$disconnect();
   }
 }

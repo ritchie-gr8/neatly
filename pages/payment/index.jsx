@@ -12,7 +12,6 @@ import {
   validateSpecialRequests,
   validatePaymentMethod,
 } from "@/lib/validations/booking-validation";
-
 const PaymentPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -112,6 +111,7 @@ const PaymentPage = () => {
 
       const bookingPayload = {
         guest: {
+          id: router.query.guestId,
           firstName: completeBookingData.basicInfo.firstName,
           lastName: completeBookingData.basicInfo.lastName,
           email: completeBookingData.basicInfo.email,
@@ -120,6 +120,7 @@ const PaymentPage = () => {
           dateOfBirth: completeBookingData.basicInfo.dateOfBirth,
         },
         booking: {
+          id: parseInt(router.query.bookingId || -1),
           checkInDate: completeBookingData.bookingDetail.searchParams.checkIn,
           checkOutDate: completeBookingData.bookingDetail.searchParams.checkOut,
           adults: completeBookingData.bookingDetail.totalGuests,
@@ -137,12 +138,21 @@ const PaymentPage = () => {
         payment: {
           method: completeBookingData.paymentMethod.type,
           totalAmount: completeBookingData.priceBreakdown.totalPrice,
+          ...(completeBookingData.paymentMethod.type === 'credit' && {
+          card: {
+            name: completeBookingData.paymentMethod.creditCard.cardOwner,
+            number: completeBookingData.paymentMethod.creditCard.cardNumber.replace(/\s/g, ''),
+            expiration_month: completeBookingData.paymentMethod.creditCard.expiryDate.split('/')[0],
+            expiration_year: `20${completeBookingData.paymentMethod.creditCard.expiryDate.split('/')[1]}`,
+            security_code: completeBookingData.paymentMethod.creditCard.cvc,
+    }
+  })
         },
       };
 
       console.log("Sending booking payload:", bookingPayload);
 
-      const response = await fetch("/api/booking/post-booking-detail", {
+      const response = await fetch("/api/booking/create-booking", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -151,7 +161,6 @@ const PaymentPage = () => {
       });
 
       const result = await response.json();
-
       // ตรวจสอบสถานะการตอบกลับจาก API
       if (!response.ok) {
         throw new Error(
@@ -163,185 +172,10 @@ const PaymentPage = () => {
       }
 
       if (result.success) {
-        // ส่วนแสดงข้อมูลทั้งหมดสำหรับเพื่อนนำไปใช้กับ Omise (คงไว้เหมือนเดิม)
-        console.log("🎉 BOOKING CONFIRMED! Complete data for Omise:");
-        console.log("=====================================");
-
-        // 👤 Basic Information
-        console.log("👤 Basic Information:");
-        console.log({
-          firstName: completeBookingData.basicInfo.firstName,
-          lastName: completeBookingData.basicInfo.lastName,
-          email: completeBookingData.basicInfo.email,
-          phone: completeBookingData.basicInfo.phone,
-          country: completeBookingData.basicInfo.country,
-          dateOfBirth: completeBookingData.basicInfo.dateOfBirth,
-        });
-
-        // 💳 Payment Method
-        console.log("💳 Payment Method:");
-        console.log({
-          type: completeBookingData.paymentMethod.type,
-          creditCard:
-            completeBookingData.paymentMethod.type === "credit"
-              ? {
-                  cardNumber:
-                    completeBookingData.paymentMethod.creditCard.cardNumber,
-                  cardOwner:
-                    completeBookingData.paymentMethod.creditCard.cardOwner,
-                  expiryDate:
-                    completeBookingData.paymentMethod.creditCard.expiryDate,
-                  cvc: completeBookingData.paymentMethod.creditCard.cvc,
-                }
-              : null,
-        });
-
-        // 🏨 Booking Details
-        console.log("🏨 Booking Details:");
-        console.log({
-          bookingNumber: result.data.booking.bookingNumber,
-          bookingId: result.data.booking.id,
-          guestId: result.data.guest.id,
-          roomId: completeBookingData.bookingDetail.roomData.id,
-          roomTypeId: completeBookingData.bookingDetail.roomData.roomType.id,
-          roomName: completeBookingData.bookingDetail.roomData.roomType.name,
-          checkIn: completeBookingData.bookingDetail.searchParams.checkIn,
-          checkOut: completeBookingData.bookingDetail.searchParams.checkOut,
-          adults: completeBookingData.bookingDetail.totalGuests,
-          rooms: completeBookingData.bookingDetail.totalRooms,
-          nights: completeBookingData.bookingDetail.nights,
-        });
-
-        // ✨ Special Requests
-        console.log("✨ Special Requests:");
-        console.log({
-          standardRequests:
-            completeBookingData.specialRequests.standardRequests,
-          specialRequests: completeBookingData.specialRequests.specialRequests,
-          additionalRequest:
-            completeBookingData.specialRequests.additionalRequest,
-          selectedRequests:
-            completeBookingData.priceBreakdown.selectedSpecialRequests,
-        });
-
-        // 💰 Price Breakdown
-        console.log("💰 Price Breakdown:");
-        console.log({
-          pricePerNight: completeBookingData.priceBreakdown.pricePerNight,
-          basePrice: completeBookingData.priceBreakdown.basePrice,
-          specialRequestsPrice:
-            completeBookingData.priceBreakdown.specialRequestsPrice,
-          totalPrice: completeBookingData.priceBreakdown.totalPrice,
-        });
-
-        // 📦 Complete Raw Data
-        console.log("📦 Complete Raw Data:");
-        console.log(completeBookingData);
-
-        // 🎯 Formatted data สำหรับ Omise API
-        console.log("🎯 Formatted data for Omise API:");
-        const omisePayload = {
-          // Customer Info
-          customer: {
-            firstName: completeBookingData.basicInfo.firstName,
-            lastName: completeBookingData.basicInfo.lastName,
-            email: completeBookingData.basicInfo.email,
-            phone: completeBookingData.basicInfo.phone,
-            country: completeBookingData.basicInfo.country,
-            dateOfBirth: completeBookingData.basicInfo.dateOfBirth,
-          },
-
-          // Payment Info
-          payment: {
-            amount: Math.round(
-              completeBookingData.priceBreakdown.totalPrice * 100
-            ), // Omise ใช้หน่วยสตางค์
-            currency: "THB",
-            method: completeBookingData.paymentMethod.type,
-            card:
-              completeBookingData.paymentMethod.type === "credit"
-                ? {
-                    number:
-                      completeBookingData.paymentMethod.creditCard.cardNumber,
-                    name: completeBookingData.paymentMethod.creditCard
-                      .cardOwner,
-                    expiration_month:
-                      completeBookingData.paymentMethod.creditCard.expiryDate?.split(
-                        "/"
-                      )[0],
-                    expiration_year:
-                      completeBookingData.paymentMethod.creditCard.expiryDate?.split(
-                        "/"
-                      )[1],
-                    security_code:
-                      completeBookingData.paymentMethod.creditCard.cvc,
-                  }
-                : null,
-          },
-
-          // Booking Info
-          booking: {
-            bookingNumber: result.data.booking.bookingNumber,
-            bookingId: result.data.booking.id,
-            guestId: result.data.guest.id,
-            roomId: completeBookingData.bookingDetail.roomData.id,
-            roomTypeId: completeBookingData.bookingDetail.roomData.roomType.id,
-            checkIn: completeBookingData.bookingDetail.searchParams.checkIn,
-            checkOut: completeBookingData.bookingDetail.searchParams.checkOut,
-            adults: completeBookingData.bookingDetail.totalGuests,
-            rooms: completeBookingData.bookingDetail.totalRooms,
-            nights: completeBookingData.bookingDetail.nights,
-            specialRequests:
-              completeBookingData.priceBreakdown.selectedSpecialRequests,
-          },
-
-          // Metadata for reference
-          metadata: {
-            roomName: completeBookingData.bookingDetail.roomData.roomType.name,
-            pricePerNight: completeBookingData.priceBreakdown.pricePerNight,
-            basePrice: completeBookingData.priceBreakdown.basePrice,
-            specialRequestsPrice:
-              completeBookingData.priceBreakdown.specialRequestsPrice,
-            totalPrice: completeBookingData.priceBreakdown.totalPrice,
-          },
-        };
-
-        console.log(omisePayload);
-        console.log("=====================================");
-
-        const successMessage = `
-🎉 Booking Created Successfully!
-
-📋 Booking Number: ${result.data.booking.bookingNumber}
-👤 Guest: ${completeBookingData.basicInfo.firstName} ${
-          completeBookingData.basicInfo.lastName
-        }
-📧 Email: ${completeBookingData.basicInfo.email}
-💰 Total Amount: THB ${completeBookingData.priceBreakdown.totalPrice.toLocaleString()}
-💳 Payment Method: ${
-          completeBookingData.paymentMethod.type === "credit"
-            ? "Credit Card"
-            : "Cash"
-        }
-
-${
-  completeBookingData.priceBreakdown.selectedSpecialRequests.length > 0
-    ? "🎁 Special Requests:\n" +
-      completeBookingData.priceBreakdown.selectedSpecialRequests
-        .map((req) => `  • ${req.displayName}: +THB ${req.price}`)
-        .join("\n") +
-      "\n"
-    : ""
-}
-✅ Your booking has been confirmed!
-      `.trim();
-
-        alert(successMessage);
-
         // ตรวจสอบก่อนว่ามี bookingNumber ก่อนที่จะ redirect
         if (result.data?.booking?.bookingNumber) {
           router.push(
-            `/booking-confirmation/${result.data.booking.bookingNumber}`
+            `/payment-success?bookingNumber=${result.data.booking.bookingNumber}`
           );
         } else {
           alert("การจองสำเร็จแล้ว แต่ไม่พบเลขที่การจอง กรุณาติดต่อเจ้าหน้าที่");
