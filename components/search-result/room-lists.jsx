@@ -1,95 +1,165 @@
+import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
+import api from "@/lib/axios";
 import Image from "next/image";
 import Link from "next/link";
-import api from "@/lib/axios";
-import { useRouter } from "next/router";
 import { formatPrice } from "@/lib/utils";
 
 const RoomLists = () => {
   const router = useRouter();
-  const [rooms, setRooms] = useState([]);
-  const [filteredRooms, setFilteredRooms] = useState([]);
+  const { checkIn, checkOut, rooms, guests } = router.query;
+  const [availableRooms, setAvailableRooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [maxCapacity, setMaxCapacity] = useState(10);
 
-  const {
-    checkIn,
-    checkOut,
-    rooms: roomCount,
-    guests: guestCount,
-  } = router.query;
+  const fetchAvailableRooms = async (searchParams) => {
+    try {
+      setLoading(true);
+      setError(null);
 
-  const getMaxCapacityFromRooms = (roomsData) => {
-    if (!Array.isArray(roomsData) || roomsData.length === 0) return 0;
+      const response = await api.get("/rooms/get-available-room", {
+        params: searchParams,
+      });
 
-    let maxCap = 0;
-    roomsData.forEach((room) => {
-      const capacity = room.roomType?.capacity || 0;
-      if (capacity > maxCap) {
-        maxCap = capacity;
+      if (response.data && response.data.success) {
+        setAvailableRooms(response.data.rooms || []);
+      } else {
+        setError("No available rooms found");
       }
-    });
-
-    return maxCap;
+    } catch (err) {
+      if (err.response) {
+        const status = err.response.status;
+        const errorData = err.response.data;
+        setError(`Error ${status}: ${errorData.message || "Unknown error"}`);
+      } else if (err.request) {
+        setError("Unable to connect to server");
+      } else {
+        setError("An unexpected error occurred");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    const fetchRooms = async () => {
-      try {
-        setLoading(true);
-        const response = await api.get("/rooms/get-rooms");
+    if (router.isReady && checkIn && checkOut && rooms && guests) {
+      const searchParams = {
+        checkIn,
+        checkOut,
+        rooms: parseInt(rooms),
+        guests: parseInt(guests),
+      };
 
-        if (response.data) {
-          const fetchedData = response.data || [];
-          const roomsArray = fetchedData.rooms;
-          setRooms(roomsArray);
-          setMaxCapacity(fetchedData.maxCapacity);
-        } else {
-          setRooms([]);
-        }
+      fetchAvailableRooms(searchParams);
+    } else {
+      if (router.isReady) {
         setLoading(false);
-      } catch (err) {
-        setError("Unable to load data. Please try again.");
-        setLoading(false);
+        setError("Search parameters incomplete");
       }
+    }
+  }, [router.isReady, checkIn, checkOut, rooms, guests]);
+
+  const calculateNights = (checkInDate, checkOutDate) => {
+    const start = new Date(checkInDate);
+    const end = new Date(checkOutDate);
+    const diffTime = Math.abs(end - start);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
+
+  const calculateTotalPrice = (pricePerNight, nights, roomsNeeded) => {
+    return pricePerNight * nights * roomsNeeded;
+  };
+
+  const handleBookNow = async (room) => {
+    try {
+      const nights = calculateNights(checkIn, checkOut);
+      const roomsNeeded = parseInt(rooms) || 1;
+      const pricePerNight =
+        room.roomType.promotionPrice &&
+        room.roomType.promotionPrice < room.roomType.pricePerNight
+          ? room.roomType.promotionPrice
+          : room.roomType.pricePerNight;
+      const totalAmount = calculateTotalPrice(
+        pricePerNight,
+        nights,
+        roomsNeeded
+      );
+
+      // Mock ข้อมูล Guest ก่อน (จะอัพเดทภายหลัง)
+    const mockGuestData = {
+      firstName: "John",
+      lastName: "Doe", 
+      email: "john.doe@example.com",
+      phone: "0812345678",
+      country: "Thailand",
+      dateOfBirth: "1990-01-01"
     };
 
-    fetchRooms();
-  }, []);
+      const bookingData = {
+        guest: mockGuestData,
+        booking: {
+          checkInDate: checkIn,
+          checkOutDate: checkOut,
+          adults: parseInt(guests),
+          additionalRequests: "", // หรือจาก form
+          totalAmount: totalAmount,
+        },
+        bookingRoom: {
+          roomId: room.id,
+          roomTypeId: room.roomType.id,
+          pricePerNight: pricePerNight,
+        },
+        specialRequests: [], // array ของ special requests ถ้ามี
+        payment: {
+          totalAmount: totalAmount,
+          method: "credit", // default หรือจาก user selection
+        },
+      };
 
-  useEffect(() => {
-    if (!rooms.length) return;
+      // เรียก API สร้าง booking
+      const response = await api.post("/booking/post-booking-detail", bookingData);
 
-    if (!roomCount || !guestCount) {
-      setFilteredRooms(rooms);
-      return;
+      if (response.data && response.data.success) {
+        // ถ้าสร้าง booking สำเร็จ ให้ redirect ไปหน้า payment พร้อมกับ booking ID
+        const bookingId = response.data.data.booking.id;
+        const bookingNumber = response.data.data.booking.bookingNumber;      
+        router.push({
+          pathname: '/payment',
+          query: {
+            guestId: response.data.data.guest.id,
+            bookingId: bookingId,
+            bookingNumber: bookingNumber,
+            roomTypeId: room.roomType.id,
+            pricePerNight: room.roomType.isPromotion ? room.roomType.promotionPrice : room.roomType.pricePerNight,
+            roomId: room.id,
+            checkIn: checkIn,
+            checkOut: checkOut,
+            adults: parseInt(guests),
+            rooms: parseInt(rooms),
+            totalAmount: totalAmount
+          }
+        });
+      } else {
+        throw new Error(response.data.message || "Failed to create booking");
+      }
+
+    } catch (error) {
+      console.log(error);
     }
-
-    const numRooms = parseInt(roomCount, 10) || 1;
-    const numGuests = parseInt(guestCount, 10) || 1;
-
-    const filtered = rooms.filter((room) => {
-      const roomType = room.roomType || {};
-      const capacity = roomType.capacity || 0;
-
-      const guestsPerRoom = Math.ceil(numGuests / numRooms);
-
-      return capacity >= guestsPerRoom;
-    });
-
-    setFilteredRooms(filtered);
-  }, [rooms, roomCount, guestCount, maxCapacity]);
+  };
 
   if (loading) {
-    return <div className="text-center py-10">Loading data...</div>;
+    return (
+      <div className="text-center py-20 text-gray-500 ">Loading data...</div>
+    );
   }
 
   if (error) {
     return <div className="text-center py-10 text-red-500">{error}</div>;
   }
 
-  if (filteredRooms.length === 0 && rooms.length > 0) {
+  if (availableRooms.length === 0) {
     return (
       <div className="text-center py-10">
         <h2 className="text-xl font-semibold mb-2">
@@ -105,15 +175,9 @@ const RoomLists = () => {
     );
   }
 
-  if (filteredRooms.length === 0) {
-    return (
-      <div className="text-center py-10">Can not find room information.</div>
-    );
-  }
-
   return (
     <div>
-      {filteredRooms.map((room, index) => {
+      {availableRooms.map((room, index) => {
         const roomType = room.roomType || {};
         const bedType = roomType.bedType || {};
         const roomImages = roomType.roomImages || [];
@@ -129,6 +193,14 @@ const RoomLists = () => {
         const description = roomType.description || "No description available";
         const pricePerNight = roomType.pricePerNight || 0;
         const promotionPrice = roomType.promotionPrice || 0;
+
+        const nights = calculateNights(checkIn, checkOut);
+        const roomsNeeded = parseInt(rooms) || 1;
+        const finalPrice =
+          promotionPrice && promotionPrice < pricePerNight
+            ? promotionPrice
+            : pricePerNight;
+        const totalPrice = calculateTotalPrice(finalPrice, nights, roomsNeeded);
 
         return (
           <section
@@ -191,14 +263,9 @@ const RoomLists = () => {
 
                   {checkIn && checkOut && (
                     <p className="mt-2 text-sm text-gray-700">
-                      {`Total ${calculateNights(
-                        checkIn,
-                        checkOut
-                      )} night(s) : THB ${formatPrice(calculateTotalPrice(
-                        promotionPrice || pricePerNight,
-                        checkIn,
-                        checkOut
-                      ))}`}
+                      {`Total ${nights} night(s) : THB ${formatPrice(
+                        totalPrice
+                      )}`}
                     </p>
                   )}
                 </div>
@@ -210,22 +277,13 @@ const RoomLists = () => {
                   >
                     Room Detail
                   </Link>
-                  <Link
-                    href={{
-                      pathname: `/booking/${room.id || index}`,
-                      query: {
-                        checkIn,
-                        checkOut,
-                        rooms: roomCount,
-                        guests: guestCount,
-                      },
-                    }}
-                    className="w-auto sm:w-auto"
+
+                  <button
+                    onClick={() => handleBookNow(room)}
+                    className="bg-orange-600 text-white px-8 py-3 sm:px-4 sm:py-2 md:px-6 md:py-3 rounded-sm text-base sm:text-sm md:text-base cursor-pointer whitespace-nowrap hover:bg-orange-500 transition-all duration-300 min-w-[130px] sm:min-w-0"
                   >
-                    <button className="bg-orange-600 text-white px-8 py-3 sm:px-4 sm:py-2 md:px-6 md:py-3 rounded-sm text-base sm:text-sm md:text-base cursor-pointer whitespace-nowrap hover:bg-orange-500 transition-all duration-300 min-w-[130px] sm:min-w-0">
-                      Book Now
-                    </button>
-                  </Link>
+                    Book Now
+                  </button>
                 </div>
               </div>
             </div>
@@ -234,19 +292,6 @@ const RoomLists = () => {
       })}
     </div>
   );
-
-  function calculateNights(checkIn, checkOut) {
-    const start = new Date(checkIn);
-    const end = new Date(checkOut);
-    const diffTime = Math.abs(end - start);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  }
-
-  function calculateTotalPrice(pricePerNight, checkIn, checkOut) {
-    const nights = calculateNights(checkIn, checkOut);
-    return parseFloat(pricePerNight) * nights;
-  }
 };
 
 export default RoomLists;
