@@ -19,7 +19,7 @@ const ViewMode = ({
 }) => {
   return (
     <>
-      <div className="flex justify-between items-center mb-6 border-b border-brown-300 px-16 py-4">
+      <div className="flex justify-between items-center mb-6 border-b border-brown-300 px-16 py-4 bg-white">
         <h5 className="text-h5 font-semibold text-gray-900">Room & Property</h5>
         <div className="flex items-center gap-4">
           <div className="relative w-[320px] text-gray-900 text-b1">
