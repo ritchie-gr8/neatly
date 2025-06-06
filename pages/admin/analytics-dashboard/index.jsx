@@ -80,7 +80,7 @@ const AnalyticDashboard = () => {
   const fetchCurrentStatus = async () => {
     try {
       setStatLoading(true);
-      // const { data } = await api.get("/admin/analytics/stats");
+      // const { data } = await api.get("/admin/analytics/status");
       // const { lastMonth, thisMonth } = data;
       const lastMonth = { booking: 70, sales: 50000, users: 70, visitors: 400 };
       const thisMonth = { booking: 76, sales: 58829, users: 66, visitors: 459 };
@@ -128,7 +128,7 @@ const AnalyticDashboard = () => {
   const fetchPieChartData = async () => {
     try {
       setPieLoading(true);
-      const month = monthMap[pieChartMonth];
+        
       // const response = await api.get(`/admin/analytics/pie-chart?month=${month}`);
       // const data = response.data;
 

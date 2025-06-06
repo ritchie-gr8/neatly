@@ -34,6 +34,7 @@ const RoomAvailability = ({ data, month, onChangeMonth, isLoading }) => {
                 <SelectItem value="this">This month</SelectItem>
                 <SelectItem value="last">Last month</SelectItem>
                 <SelectItem value="last2">Last 2 months</SelectItem>
+                <SelectItem value="today">Today</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { Sparkle } from "lucide-react";
 
 const dotVariants = {
   bounce: (i) => ({
@@ -15,11 +14,17 @@ const dotVariants = {
 };
 
 const sizeClasses = {
+  xs: {
+    text: "text-md",
+    dot: "text-xl",
+    gap: "gap-1",
+    py: "py-2",
+  },
   sm: {
     text: "text-lg",
     dot: "text-2xl",
     gap: "gap-2",
-    py: "py-4",
+    py: "py-6",
   },
   md: {
     text: "text-2xl",
@@ -35,12 +40,12 @@ const sizeClasses = {
   },
 };
 
-const Loading = ({ text = "Now Loading", size = "lg" }) => {
+const Loading = ({ text = "Now Loading", size = "lg", className }) => {
   const classes = sizeClasses[size] || sizeClasses.lg;
 
   return (
     <div className={`col-span-full flex justify-center items-center ${classes.py}`}>
-      <div className={`flex flex-col items-center ${classes.gap}`}>
+      <div className={`flex flex-col items-center ${classes.gap} ${className}`}>
         <span className={`text-orange-500 font-semibold flex gap-1 items-end ${classes.text}`}>
           {text}
           {[0, 1, 2].map((i) => (
