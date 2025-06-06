@@ -24,6 +24,7 @@ const publicRoutes = [
   "/api/chatbot/response/message",
   "/api/chat",
   "/api/chatbot",
+  "/api/hotel-info",
 ];
 
 const protectedRoutes = ["/admin", "/api/admin"];

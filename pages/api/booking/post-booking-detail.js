@@ -14,14 +14,15 @@ function generateBookingNumber() {
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ 
+    return res.status(405).json({
       success: false,
-      message: 'Method not allowed' 
+      message: 'Method not allowed'
     });
   }
 
   try {
     const {
+      userId,
       guest,
       booking,
       bookingRoom,
@@ -31,20 +32,21 @@ export default async function handler(req, res) {
 
     // บันทึกข้อมูลที่ได้รับเพื่อดีบัก
     console.log('Received data:', JSON.stringify({
+      userId,
       guest,
       booking,
       bookingRoom,
       payment
     }, null, 2));
 
-    if (!guest || !booking || !bookingRoom || !payment) {
+    if (!userId || !guest || !booking || !bookingRoom || !payment) {
       return res.status(400).json({
         success: false,
         message: 'Missing required data',
-        received: { guest: !!guest, booking: !!booking, bookingRoom: !!bookingRoom, payment: !!payment }
+        received: { userId: !!userId, guest: !!guest, booking: !!booking, bookingRoom: !!bookingRoom, payment: !!payment }
       });
     }
-    
+
     // ตรวจสอบว่ามี roomId และ roomTypeId ที่ถูกต้องหรือไม่
     if (!bookingRoom.roomId || !bookingRoom.roomTypeId) {
       return res.status(400).json({
@@ -57,7 +59,7 @@ export default async function handler(req, res) {
     // แปลงค่าให้เป็น integer ที่ถูกต้อง
     const roomId = parseInt(bookingRoom.roomId);
     const roomTypeId = parseInt(bookingRoom.roomTypeId);
-    
+
     // ตรวจสอบความถูกต้องของค่า
     if (isNaN(roomId) || isNaN(roomTypeId)) {
       return res.status(400).json({
@@ -71,7 +73,7 @@ export default async function handler(req, res) {
     const roomExists = await prisma.room.findUnique({
       where: { id: roomId }
     });
-    
+
     if (!roomExists) {
       return res.status(404).json({
         success: false,
@@ -96,6 +98,7 @@ export default async function handler(req, res) {
       // 2. สร้าง Booking
       const newBooking = await tx.booking.create({
         data: {
+          userId: userId,
           bookingNumber: generateBookingNumber(),
           guestId: newGuest.id,
           checkInDate: new Date(booking.checkInDate),
@@ -157,10 +160,10 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Detailed error creating booking:', error);
-    
+
     // กำหนดสถานะ HTTP ที่เหมาะสมกับประเภทของข้อผิดพลาด
     let statusCode = 500;
-    
+
     if (error.code === 'P2003') {
       // Foreign key constraint error
       statusCode = 400;
@@ -168,7 +171,7 @@ export default async function handler(req, res) {
       // Unique constraint error
       statusCode = 409;
     }
-    
+
     const errorResponse = {
       success: false,
       message: 'Failed to create booking',
@@ -177,7 +180,7 @@ export default async function handler(req, res) {
 
     if (error.code) {
       errorResponse.prismaCode = error.code;
-      
+
       // เพิ่มข้อความแสดงข้อผิดพลาดที่เข้าใจง่ายขึ้น
       if (error.code === 'P2003' && error.meta?.field_name.includes('room_id')) {
         errorResponse.message = 'ห้องพักที่เลือกไม่มีอยู่ในระบบ กรุณาเลือกห้องพักอื่น';

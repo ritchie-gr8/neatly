@@ -4,7 +4,7 @@ import { Plus, X } from "lucide-react";
 import React, { useEffect } from "react";
 
 const ImageUploader = React.forwardRef(function ImageUploader(
-  { imageUrl, onChange, width = 167, height = 167 },
+  { imageUrl, onChange, width = 167, height = 167, isContain = false },
   ref
 ) {
   const [image, setImage] = React.useState(imageUrl);
@@ -57,7 +57,7 @@ const ImageUploader = React.forwardRef(function ImageUploader(
       >
         <div className="bg-gray-200 group-hover:bg-gray-300 rounded-sm w-full h-full flex flex-col items-center justify-center gap-2 overflow-hidden">
           {image ? (
-            <img src={image} alt="" className="w-full h-full object-cover" />
+            <img src={image} alt="" className={`${isContain ? "object-contain" : "object-cover"} w-full h-full`} />
           ) : (
             <>
               <Plus className="size-4 text-orange-500" />

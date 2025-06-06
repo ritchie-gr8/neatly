@@ -7,6 +7,7 @@ import {
 import useEmblaCarousel from "embla-carousel-react";
 import { cn } from "@/lib/utils";
 import { FaArrowRight } from "react-icons/fa6";
+import Link from "next/link";
 
 const EmblaCarousel = (props) => {
   const { slides, options, flex = 85, roomTypes } = props;
@@ -24,43 +25,43 @@ const EmblaCarousel = (props) => {
       <div className="embla__viewport" ref={emblaRef}>
         <div className="embla__container">
           {roomTypes &&
-            roomTypes.map((roomType, idx) => (
-              <div
-                className={cn(
-                  "embla__slide",
-                  `2xl:flex-[0_0_30%] xl:flex-[0_0_40%] lg:flex-[0_0_50%] md:flex-[0_0_60%] flex-[0_0_100%]`
-                )}
-                key={idx}
-              >
+            roomTypes.map((roomType) => (
+              <Link href={`/rooms/${roomType.id}`} key={`room-${roomType.id}`}>
                 <div
-                  key={roomType.id}
-                  className={`h-[340px] w-[548px] relative overflow-hidden cursor-pointer mx-auto`}
-                  data-aos="fade-up"
+                  className={cn(
+                    "embla__slide",
+                    `2xl:flex-[0_0_30%] xl:flex-[0_0_40%] lg:flex-[0_0_50%] md:flex-[0_0_60%] flex-[0_0_100%]`
+                  )}
                 >
-                  <img
-                    src={roomType.defaultImage}
-                    alt={roomType.name}
-                    className="absolute inset-0 w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/30 hover:bg-black/10 transition duration-300" />
-                  <div className="flex flex-col absolute left-6 bottom-6 md:left-12 md:bottom-12 xl:left-18 xl:bottom-18 z-10 lg:gap-6 gap-3 text-white">
-                    <h1 className="text-h4 md:text-[32px] line-clamp-1">
-                      {roomType.name}
-                    </h1>
-                    <span className="flex text-base items-center justify-start gap-2">
-                      Explore Room
-                      <FaArrowRight size="18" />
-                    </span>
+                  <div
+                    className={`h-[340px] w-[548px] relative overflow-hidden cursor-pointer mx-auto`}
+                    data-aos="fade-up"
+                  >
+                    <img
+                      src={roomType.defaultImage}
+                      alt={roomType.name}
+                      className="absolute inset-0 w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/30 hover:bg-black/10 transition duration-300" />
+                    <div className="flex flex-col absolute left-6 bottom-6 md:left-12 md:bottom-12 xl:left-18 xl:bottom-18 z-10 lg:gap-6 gap-3 text-white">
+                      <h1 className="text-h4 md:text-[32px] line-clamp-1">
+                        {roomType.name}
+                      </h1>
+                      <span className="flex text-base items-center justify-start gap-2">
+                        Explore Room
+                        <FaArrowRight size="18" />
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           {slides &&
             slides.map((index) => (
               <div
                 className={`embla__slide embla__slide_room_images`}
-                key={index}
+                key={`room-${index}`}
               >
                 {/* <div className="embla__slide__number">{index + 1}</div> */}
                 <img

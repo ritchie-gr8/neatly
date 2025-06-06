@@ -58,6 +58,7 @@ const CreditCardForm = () => {
             id="cardNumber"
             value={creditCardData.cardNumber}
             onChange={handleCreditCardChange}
+            maxLength={16}
             placeholder="888 8888 8 88 88"
             className={cn(
               "mb-1 py-3 pl-3 pr-4 border rounded-sm w-full text-black",
@@ -99,6 +100,7 @@ const CreditCardForm = () => {
               id="expiryDate"
               value={creditCardData.expiryDate}
               onChange={handleCreditCardChange}
+              maxLength={5}
               placeholder="11/26"
               className={cn(
                 "py-3 pl-3 pr-4 border rounded-sm w-full text-black mb-1",
@@ -118,6 +120,7 @@ const CreditCardForm = () => {
               id="cvc"
               value={creditCardData.cvc}
               onChange={handleCreditCardChange}
+              maxLength={4}
               placeholder="888"
               className={cn(
                 "py-3 pl-3 pr-4 border rounded-sm w-full text-black mb-1",

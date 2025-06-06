@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 import { PATHS } from "@/constants/paths";
 import {
   Popover,
@@ -19,6 +19,8 @@ import { useAuth } from "@/hooks/useAuth";
 //icons
 import { Sparkle } from "lucide-react";
 import { LogOut, User, BriefcaseBusiness, Menu } from "lucide-react";
+import { useState, useEffect } from "react";
+import api from "@/lib/axios";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -29,20 +31,47 @@ const Navbar = () => {
     { href: "#rooms", label: "Rooms & Suits" },
   ];
 
+  const [hotelInfo, setHotelInfo] = useState(null);
+
+  useEffect(() => {
+    const fetchHotelInfo = async () => {
+      try {
+        const response = await api.get("/hotel-info");
+        const data = response.data;
+        setHotelInfo(data);
+      } catch (error) {
+        console.error("Error fetching hotel information:", error);
+      }
+    };
+
+    fetchHotelInfo();
+  }, []);
+
   return (
     <div className="w-full md:h-16 h-12 bg-white border-b fixed z-50">
       <div className="w-full h-full px-6 lg:px-12 xl:px-30 2xl:px-60 mx-auto flex items-center justify-between">
         {/* Left bar */}
-        <div className="flex items-center gap-12 pl-5">
+        <div className="flex items-center gap-12">
           <Link
             href="/"
             className="md:text-h4 text-2xl text-green-700 font-black relative font-noto-serif"
           >
-            <Sparkle
-              className="md:size-4 size-2 absolute md:top-1 md:-left-5 top-0.5 -left-2 text-orange-500 fill-orange-500"
-              title="Neatly logo"
-            />
-            NEATLY
+            {hotelInfo && hotelInfo?.hotelUrl ? (
+              <img
+                src={hotelInfo?.hotelUrl}
+                alt="hotel-logo"
+                className="w[94px] md:w-[140px] h-[25px] md:h-[45px] object-contain"
+                title="Neatly logo"
+              />
+            ) : (
+              <>
+                <Sparkle
+                  className="md:size-4 size-2 absolute md:top-1 md:-left-5 top-0.5 -left-2 text-orange-500 fill-orange-500"
+                  title="Neatly logo"
+                />{" "}
+                NEATLY
+              </>
+            )}
           </Link>
 
           <div className="hidden lg:flex text-gray-900 gap-12 text-base">
@@ -127,7 +156,7 @@ const Navbar = () => {
         </div>
 
         {/* Right bar --- Mobile */}
-        
+
         <div className="lg:hidden">
           <Sheet>
             <SheetTrigger asChild>
