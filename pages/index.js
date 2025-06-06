@@ -24,6 +24,7 @@ import testimonials from "@/constants/testimonials";
 import services from "@/constants/services";
 import sliderImages from "@/constants/slider-home";
 import { FaArrowRight } from "react-icons/fa6";
+import Link from "next/link";
 
 export const metadata = {
   title: "Neatly",
@@ -34,6 +35,7 @@ export const metadata = {
 export default function Home() {
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [roomTypes, setRoomTypes] = useState([]);
+  const [hotelInfo, setHotelInfo] = useState({});
   const [isMobile, setIsMobile] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -84,6 +86,20 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const fetchHotelInfo = async () => {
+      try {
+        const response = await api.get("/hotel-info");
+        const data = response.data;
+        console.log(data);
+        setHotelInfo(data);
+      } catch (error) {
+        console.error("Error fetching hotel information:", error);
+      }
+    };
+    fetchHotelInfo();
+  }, []);
+
   const rooms = useMemo(() => {
     return roomTypes.map((room, i) => ({
       ...room,
@@ -130,48 +146,34 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Second Box --- Hotel Master*/}
-          <section className="w-full h-full py-12 md:py-30" id="about">
-            <div className="px-6 lg:px-12 xl:px-30 2xl:px-60">
-              <h1
-                className="text-green-800 text-4xl md:text-6xl lg:text-7xl font-light pb-6 md:pb-12"
-                data-aos={isMobile ? "fade-up" : "fade-right"}
-              >
-                Neatly Hotel
-              </h1>
-              <div
-                className="text-gray-700 space-y-4 md:space-y-6 pb-12 md:pb-30 px-6 md:px-12 lg:px-18 xl:px-30"
-                data-aos={isMobile ? "fade-up" : "fade-left"}
-                data-aos-delay="150"
-              >
-                <p>
-                  Set in Bangkok, Thailand. Neatly Hotel offers 5-star
-                  accommodation with an outdoor pool, kids, club, sports
-                  facilities and a fitness centre. There is also a spa, an
-                  indoor pool and saunas.
-                </p>
-                <p>
-                  All units at the hotel are equipped with a seating area, a
-                  flat-screen TV with satellite channels, a dining area and a
-                  private bathroom with free toiletries, a bathtub and a
-                  hairdryer. Every room in Neatly Hotel features a furnished
-                  balcony. Some rooms are equipped with a coffee machine.
-                </p>
-                <p>
-                  Free WiFi and entertainment facilities are available at
-                  property and also rentals are provided to explore the area.
-                </p>
-              </div>
+        {/* Second Box --- Hotel Master*/}
+        <section className="w-full h-full py-12 md:py-30" id="about">
+          <div className="px-6 lg:px-12 xl:px-30 2xl:px-60">
+            <h1
+              className="text-green-800 text-4xl md:text-6xl lg:text-7xl font-light pb-6 md:pb-12"
+              data-aos={isMobile ? "fade-up" : "fade-right"}
+            >
+              {hotelInfo && hotelInfo.hotelName}
+            </h1>
+            <div
+              className="text-gray-700 space-y-4 md:space-y-6 pb-12 md:pb-30 px-6 md:px-12 lg:px-18 xl:px-30"
+              data-aos={isMobile ? "fade-up" : "fade-left"}
+              data-aos-delay="150"
+            >
+              <p className="whitespace-pre-line leading-8">
+                {hotelInfo && hotelInfo.hotelDescription}
+              </p>
             </div>
-            <div>
-              <ImageSlider
-                images={sliderImages}
-                itemFlex="30%"
-                aspect="3/4"
-                button
-              />
-            </div>
-          </section>
+          </div>
+          <div>
+            <ImageSlider
+              images={sliderImages}
+              itemFlex="30%"
+              aspect="3/4"
+              button
+            />
+          </div>
+        </section>
 
           {/* Third Box --- Service & Facilities */}
           <section className="w-full bg-green-700 text-white" id="services">
@@ -198,23 +200,23 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Fourth Box --- Rooms & Suits*/}
-          <section className="bg-util-bg" id="rooms">
-            <div className="lg:py-30 py-12">
-              <h1
-                className="text-center text-green-800 lg:text-7xl text-5xl lg:pb-24 pb-12"
-                data-aos="fade-up"
-              >
-                Rooms & Suits
-              </h1>
-              <div className="px-0 lg:px-12 xl:px-30 2xl:px-60">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                  {isLoading ? (
-                    <Loading />
-                  ) : (
-                    rooms.slice(0, 6).map((room) => (
+        {/* Fourth Box --- Rooms & Suits*/}
+        <section className="bg-util-bg" id="rooms">
+          <div className="lg:py-30 py-12">
+            <h1
+              className="text-center text-green-800 lg:text-7xl text-5xl lg:pb-24 pb-12"
+              data-aos="fade-up"
+            >
+              Rooms & Suits
+            </h1>
+            <div className="px-0 lg:px-12 xl:px-30 2xl:px-60">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                {isLoading ? (
+                  <Loading />
+                ) : (
+                  rooms.slice(0, 6).map((room) => (
+                    <Link href={`/rooms/${room.id}`} key={`room-${room.id}`}>
                       <div
-                        key={room.id}
                         className={`${room.colSpan} ${room.rowSpan} ${room.height} relative overflow-hidden cursor-pointer`}
                         data-aos="fade-up"
                       >
@@ -236,12 +238,13 @@ export default function Home() {
                           </span>
                         </div>
                       </div>
-                    ))
-                  )}
-                </div>
+                    </Link>
+                  ))
+                )}
               </div>
             </div>
-          </section>
+          </div>
+        </section>
 
           {/* Fifth Box --- Our Customer Says */}
           <section className="flex flex-col px-6 lg:px-12 xl:px-30 2xl:px-60 lg:py-30 py-12 bg-green-200">

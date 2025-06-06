@@ -4,6 +4,7 @@ import RoomGuestSelector from "../search-result/room-guest-selector";
 import { useRouter } from "next/router";
 import { format } from "date-fns";
 import api from "@/lib/axios";
+import Loading from "../global/loading";
 
 const SearchRoom = ({
   initialRoomTypeId = null,
@@ -68,7 +69,6 @@ const SearchRoom = ({
     });
 
     router.push(`/search-result?${queryParams.toString()}`);
-    setLoading(false);
   };
 
   const disableCheckoutDates = (date) => {
@@ -79,7 +79,9 @@ const SearchRoom = ({
     <div
       className={`bg-white shadow-lg rounded-sm w-full gap-6 md:gap-10 h-full p-4 text-gray-900 pt-8
         flex flex-col md:flex-row md:flex-wrap md:justify-center md:items-end md:p-16 lg:flex-nowrap ${
-          pageType === "search-result" ? "md:py-10" : "md:p-16 2xl:w-[1200px] 2xl:mx-auto"
+          pageType === "search-result"
+            ? "md:py-10"
+            : "md:p-16 2xl:w-[1200px] 2xl:mx-auto"
         }`}
     >
       <div className="-translate-y-2.5 flex-1 md:max-w-[240px]">
@@ -120,18 +122,22 @@ const SearchRoom = ({
       </div>
 
       <div className=" -translate-y-2.5 flex-1 md:max-w-[240px]">
-        <button
-          className={`w-full py-3 md:py-3 md:px-6 rounded-sm cursor-pointer ${
-            pageType === "landing-page"
-              ? "text-white bg-orange-500 hover:bg-orange-400"
-              : "text-orange-500 hover:text-white hover:bg-orange-500 border border-orange-500"
-          }`}
-          onClick={handleSearch}
-          pageType="search-result"
-          disabled={loading}
-        >
-          {loading ? "Loading..." : "Search"}
-        </button>
+        {loading ? (
+          <Loading />
+        ) : (
+          <button
+            className={`w-full py-3 md:py-3 md:px-6 rounded-sm cursor-pointer ${
+              pageType === "landing-page"
+                ? "text-white bg-orange-500 hover:bg-orange-400"
+                : "text-orange-500 hover:text-white hover:bg-orange-500 border border-orange-500"
+            }`}
+            onClick={handleSearch}
+            pageType="search-result"
+            disabled={loading}
+          >
+            Search
+          </button>
+        )}
       </div>
     </div>
   );

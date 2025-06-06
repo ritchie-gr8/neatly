@@ -72,7 +72,7 @@ const RoomDetailPage = () => {
       showFooter={true}
     >
       <div className="mx-auto bg-util-bg flex flex-col">
-        {loading ? (
+        {loading || !roomType ? (
           <div className="h-fit flex flex-col">
             {/* Skeleton for image carousel */}
             <div className="w-full pt-0 md:pt-20">
@@ -154,7 +154,7 @@ const RoomDetailPage = () => {
           </div>
         ) : (
           roomType && (
-            <div className="h-fit flex flex-col">
+            <div className="h-fit flex flex-col bg-util-bg">
               {roomImages.length > 0 && (
                 <div className="w-full pt-0 md:pt-20">
                   <EmblaCarousel slides={roomImages} options={{ loop: true }} />
@@ -212,7 +212,18 @@ const RoomDetailPage = () => {
                     </div>
 
                     {/* Book Now Button */}
-                    <Button className="btn-primary rounded-sm py-2 px-6 w-[120px]">
+                    <Button
+                      className="btn-primary rounded-sm py-2 px-6 w-[120px]"
+                      onClick={() =>
+                        router.push(
+                          `/search-result?checkIn=${
+                            new Date().toISOString().split("T")[0]
+                          }&checkOut=${
+                            new Date().toISOString().split("T")[0]
+                          }&rooms=1&guests=1`
+                        )
+                      }
+                    >
                       Book Now
                     </Button>
                   </div>

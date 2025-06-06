@@ -4,6 +4,8 @@ import api from "@/lib/axios";
 import Image from "next/image";
 import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
+
 
 const RoomLists = () => {
   const router = useRouter();
@@ -11,6 +13,7 @@ const RoomLists = () => {
   const [availableRooms, setAvailableRooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { user } = useAuth();
 
   const fetchAvailableRooms = async (searchParams) => {
     try {
@@ -89,7 +92,7 @@ const RoomLists = () => {
       // Mock ข้อมูล Guest ก่อน (จะอัพเดทภายหลัง)
     const mockGuestData = {
       firstName: "John",
-      lastName: "Doe", 
+      lastName: "Doe",
       email: "john.doe@example.com",
       phone: "0812345678",
       country: "Thailand",
@@ -97,6 +100,7 @@ const RoomLists = () => {
     };
 
       const bookingData = {
+        userId: user.id,
         guest: mockGuestData,
         booking: {
           checkInDate: checkIn,
@@ -123,7 +127,7 @@ const RoomLists = () => {
       if (response.data && response.data.success) {
         // ถ้าสร้าง booking สำเร็จ ให้ redirect ไปหน้า payment พร้อมกับ booking ID
         const bookingId = response.data.data.booking.id;
-        const bookingNumber = response.data.data.booking.bookingNumber;      
+        const bookingNumber = response.data.data.booking.bookingNumber;
         router.push({
           pathname: '/payment',
           query: {
@@ -151,7 +155,7 @@ const RoomLists = () => {
 
   if (loading) {
     return (
-      <div className="text-center py-20 text-gray-500 ">Loading data...</div>
+      <div className="text-center py-20 text-gray-500 h-[calc(100vh-200px)]">Loading data...</div>
     );
   }
 

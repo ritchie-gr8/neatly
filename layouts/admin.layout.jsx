@@ -5,9 +5,9 @@ import { AdminChatbotProvider } from "@/contexts/admin-chatbot-context";
 const AdminLayout = ({ children }) => {
   return (
     <AdminChatbotProvider>
-      <div className="flex h-screen bg-gray-100">
+      <div className="flex bg-gray-100 h-screen">
         <AdminSidebar />
-        <div className="flex-1 overflow-y-auto h-full">{children}</div>
+        <div className="flex-1 overflow-y-auto">{children}</div>
       </div>
     </AdminChatbotProvider>
   );
