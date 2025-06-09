@@ -19,7 +19,7 @@ import { toast } from "sonner";
 import { ROLES } from "@/constants/roles";
 import { PATHS } from "@/constants/paths";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import Loading from "@/components/global/loading";
 
 const loginSchema = z.object({
   identifier: z.string().min(2, "Username or email is required"),
@@ -119,10 +119,12 @@ const SignInPage = () => {
                 disabled={loading}
               >
                 {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Logging in...
-                  </>
+                  <Loading size="xs" customClasses={{
+                    text: "text-base",
+                    dot: "text-xl",
+                    gap: "gap-1",
+                    py: "py-0",
+                  }} />
                 ) : (
                   "Log In"
                 )}

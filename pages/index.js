@@ -215,28 +215,28 @@ export default function Home() {
                   <Loading />
                 ) : (
                   rooms.slice(0, 6).map((room) => (
-                    <Link href={`/rooms/${room.id}`} key={`room-${room.id}`}>
-                      <div
-                        className={`${room.colSpan} ${room.rowSpan} ${room.height} relative overflow-hidden cursor-pointer`}
-                        data-aos="fade-up"
-                      >
-                        <img
-                          src={room.defaultImage}
-                          alt={room.name}
-                          fill
-                          className="absolute inset-0 w-full h-full object-cover"
-                          loading="lazy"
-                        />
-                        <div className="absolute inset-0 bg-black/30 hover:bg-black/10 transition duration-300" />
-                        <div className="flex flex-col absolute left-6 bottom-6 md:left-12 md:bottom-12 xl:left-18 xl:bottom-18 z-10 lg:gap-6 gap-3 text-white">
-                          <h1 className="md:text-4xl lg:text-5xl text-3xl">
-                            {room.name}
-                          </h1>
-                          <span className="flex text-xl items-center justify-start gap-2">
-                            Explore Room
-                            <FaArrowRight size="18" />
-                          </span>
-                        </div>
+                    <Link
+                      key={room.id}
+                      href={`/rooms/${room.id}`}
+                      className={`${room.colSpan} ${room.rowSpan} ${room.height} relative overflow-hidden cursor-pointer`}
+                      data-aos="fade-up"
+                    >
+                      <img
+                        src={room.defaultImage}
+                        alt={room.name}
+                        fill
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-black/30 hover:bg-black/10 transition duration-300" />
+                      <div className="flex flex-col absolute left-6 bottom-6 md:left-12 md:bottom-12 xl:left-18 xl:bottom-18 z-10 lg:gap-6 gap-3 text-white">
+                        <h1 className="md:text-4xl lg:text-5xl text-3xl">
+                          {room.name}
+                        </h1>
+                        <span className="flex text-xl items-center justify-start gap-2">
+                          Explore Room
+                          <FaArrowRight size="18" />
+                        </span>
                       </div>
                     </Link>
                   ))

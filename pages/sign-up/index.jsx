@@ -30,6 +30,7 @@ import {
 import CustomDatePicker from "@/components/global/date-picker";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Loading from "@/components/global/loading";
 
 const signUpSchema = z
   .object({
@@ -420,11 +421,16 @@ const SignUpPage = () => {
               />
               <Button
                 type="submit"
-                className="mt-5 btn-primary max-w-[446px] w-full max-h-12"
+                className="mt-5 btn-primary max-w-[446px] w-full max-h-12 text-ora"
                 disabled={isLoading}
               >
                 {isLoading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loading size="xs" customClasses={{
+                    text: "text-sm !text-orange-300",
+                    dot: "text-xl",
+                    gap: "gap-1",
+                    py: "py-0 -translate-y-1",
+                  }} />
                 ) : (
                   "Register"
                 )}
@@ -433,6 +439,9 @@ const SignUpPage = () => {
           </Form>
         </div>
       </div>
+      <Button onClick={() => setIsLoading(false)}>
+        test
+      </Button>
     </DefaultLayout>
   );
 };

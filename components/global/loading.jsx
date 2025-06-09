@@ -40,8 +40,14 @@ const sizeClasses = {
   },
 };
 
-const Loading = ({ text = "Now Loading", size = "lg", className }) => {
-  const classes = sizeClasses[size] || sizeClasses.lg;
+const Loading = ({ text = "Now Loading", size = "lg", customClasses = null, className }) => {
+  let classes = sizeClasses[size] || sizeClasses.lg;
+  if (customClasses) {
+    classes = {
+      ...classes,
+      ...customClasses,
+    };
+  }
 
   return (
     <div className={`col-span-full flex justify-center items-center ${classes.py}`}>

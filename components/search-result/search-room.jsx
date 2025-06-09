@@ -43,6 +43,8 @@ const SearchRoom = ({
       if (guests) {
         setGuestCount(parseInt(guests, 10));
       }
+
+      setLoading(false);
     }
   }, [router.isReady, router.query, pageType]);
 
@@ -123,7 +125,15 @@ const SearchRoom = ({
 
       <div className=" -translate-y-2.5 flex-1 md:max-w-[240px]">
         {loading ? (
-          <Loading />
+          <Loading
+            size="sm"
+            customClasses={{
+              text: "text-lg",
+              dot: "text-2xl",
+              gap: "gap-2",
+              py: "pb-2",
+            }}
+          />
         ) : (
           <button
             className={`w-full py-3 md:py-3 md:px-6 rounded-sm cursor-pointer ${

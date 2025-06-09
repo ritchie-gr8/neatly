@@ -5,9 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
+import { Skeleton } from "../ui/skeleton";
 
-
-const RoomLists = () => {
+const RoomLists = ({ setIsBooking }) => {
   const router = useRouter();
   const { checkIn, checkOut, rooms, guests } = router.query;
   const [availableRooms, setAvailableRooms] = useState([]);
@@ -76,6 +76,7 @@ const RoomLists = () => {
 
   const handleBookNow = async (room) => {
     try {
+      setIsBooking(true);
       const nights = calculateNights(checkIn, checkOut);
       const roomsNeeded = parseInt(rooms) || 1;
       const pricePerNight =
@@ -90,14 +91,14 @@ const RoomLists = () => {
       );
 
       // Mock ข้อมูล Guest ก่อน (จะอัพเดทภายหลัง)
-    const mockGuestData = {
-      firstName: "John",
-      lastName: "Doe",
-      email: "john.doe@example.com",
-      phone: "0812345678",
-      country: "Thailand",
-      dateOfBirth: "1990-01-01"
-    };
+      const mockGuestData = {
+        firstName: "John",
+        lastName: "Doe",
+        email: "john.doe@example.com",
+        phone: "0812345678",
+        country: "Thailand",
+        dateOfBirth: "1990-01-01",
+      };
 
       const bookingData = {
         userId: user.id,
@@ -122,32 +123,36 @@ const RoomLists = () => {
       };
 
       // เรียก API สร้าง booking
-      const response = await api.post("/booking/post-booking-detail", bookingData);
+      const response = await api.post(
+        "/booking/post-booking-detail",
+        bookingData
+      );
 
       if (response.data && response.data.success) {
         // ถ้าสร้าง booking สำเร็จ ให้ redirect ไปหน้า payment พร้อมกับ booking ID
         const bookingId = response.data.data.booking.id;
         const bookingNumber = response.data.data.booking.bookingNumber;
         router.push({
-          pathname: '/payment',
+          pathname: "/payment",
           query: {
             guestId: response.data.data.guest.id,
             bookingId: bookingId,
             bookingNumber: bookingNumber,
             roomTypeId: room.roomType.id,
-            pricePerNight: room.roomType.isPromotion ? room.roomType.promotionPrice : room.roomType.pricePerNight,
+            pricePerNight: room.roomType.isPromotion
+              ? room.roomType.promotionPrice
+              : room.roomType.pricePerNight,
             roomId: room.id,
             checkIn: checkIn,
             checkOut: checkOut,
             adults: parseInt(guests),
             rooms: parseInt(rooms),
-            totalAmount: totalAmount
-          }
+            totalAmount: totalAmount,
+          },
         });
       } else {
         throw new Error(response.data.message || "Failed to create booking");
       }
-
     } catch (error) {
       console.log(error);
     }
@@ -155,7 +160,31 @@ const RoomLists = () => {
 
   if (loading) {
     return (
-      <div className="text-center py-20 text-gray-500 h-[calc(100vh-200px)]">Loading data...</div>
+      <div className="flex flex-col gap-4 p-0 md:p-10">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-12">
+          <Skeleton className="h-64 w-full md:flex-1/3 bg-gray-400" />
+          <div className="hidden md:flex flex-col justify-between gap-2 flex-2/3">
+            <div className="flex flex-col gap-2">
+              <Skeleton className="h-6 w-full bg-gray-400" />
+              <Skeleton className="h-6 w-1/2 bg-gray-400 self-end" />
+              <Skeleton className="h-6 w-1/2 bg-gray-400 self-end" />
+            </div>
+            <div className="flex gap-2">
+              <Skeleton className="h-12 w-1/2 bg-gray-400 self-end" />
+              <Skeleton className="h-12 w-1/2 bg-gray-400 self-end" />
+            </div>
+          </div>
+          <div className="flex flex-col md:hidden gap-2 p-4">
+            <Skeleton className="h-6 w-full bg-gray-400" />
+            <Skeleton className="h-6 w-1/2 bg-gray-400 self-end" />
+            <Skeleton className="h-6 w-1/2 bg-gray-400 self-end" />
+            <div className="flex gap-2">
+              <Skeleton className="h-12 w-1/2 bg-gray-400 self-end" />
+              <Skeleton className="h-12 w-1/2 bg-gray-400 self-end" />
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -163,7 +192,7 @@ const RoomLists = () => {
     return <div className="text-center py-10 text-red-500">{error}</div>;
   }
 
-  if (availableRooms.length === 0) {
+  if (availableRooms.length === 0 && !loading) {
     return (
       <div className="text-center py-10">
         <h2 className="text-xl font-semibold mb-2">
@@ -276,7 +305,7 @@ const RoomLists = () => {
 
                 <div className="flex flex-row mt-6 mb-2 md:mt-0 md:mb-0 w-full justify-between items-center md:space-x-4">
                   <Link
-                    href={`/room-detail/${room.id || index}`}
+                    href={`/rooms/${room.roomType.id}`}
                     className="text-orange-500 font-semibold whitespace-nowrap text-base sm:text-sm md:text-base"
                   >
                     Room Detail

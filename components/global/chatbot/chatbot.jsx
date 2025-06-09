@@ -453,7 +453,7 @@ const ChatbotPopup = ({ className }) => {
   }, []);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50" ref={chatWrapperRef}>
+    <div className="fixed bottom-12 right-6 z-50" ref={chatWrapperRef}>
       {isOpen && (
         <Card className="mb-4 w-80 shadow-lg rounded-lg overflow-hidden bg-white py-0 gap-0">
           {/* Header */}
