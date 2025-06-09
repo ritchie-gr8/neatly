@@ -1,4 +1,3 @@
-// pages/api/refund-booking.js
 import { db } from "@/lib/prisma";
 
 const omise = require('omise')({
@@ -12,111 +11,168 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { chargeId, reason, bookingId } = req.body;
+    const { bookingId, reason } = req.body;
 
     // Validate required fields
-    if (!chargeId) {
+    if (!bookingId) {
       return res.status(400).json({ 
         success: false, 
-        error: 'Charge ID is required for refund' 
+        error: 'Booking ID is required' 
       });
     }
 
-    // Step 1: Get the original charge to verify it exists and get details
-    console.log('Retrieving original charge:', chargeId);
-    const originalCharge = await omise.charges.retrieve(chargeId);
+    console.log(`Processing refund for booking ID: ${bookingId}`);
 
-    if (!originalCharge) {
-      return res.status(404).json({
-        success: false,
-        error: 'Charge not found'
-      });
-    }
-
-    if (originalCharge.status !== 'successful') {
-      return res.status(400).json({
-        success: false,
-        error: 'Cannot refund unsuccessful charge'
-      });
-    }
-
-    // Always refund the full amount
-    const fullRefundAmount = originalCharge.amount;
-
-    // Step 2: Create the refund for full amount
-    console.log('Creating full refund for charge:', chargeId, 'Amount:', fullRefundAmount);
-    const refund = await omise.charges.createRefund(chargeId, {
-      amount: fullRefundAmount, // Full amount (already in smallest currency unit)
-      reason: reason || 'Customer requested refund',
-      metadata: {
-        booking_id: bookingId,
-        refund_reason: reason,
-        refund_date: new Date().toISOString(),
-        refund_type: 'full_refund',
-        original_amount: originalCharge.amount,
+    // Step 1: Get booking and payment information
+    const bookingData = await db.booking.findUnique({
+      where: { id: parseInt(bookingId) },
+      include: {
+        guest: true,
+        bookingRooms: {
+          include: {
+            room: true
+          }
+        },
+        bookingAddons: true,
+        payments: {
+          where: {
+            paymentStatus: 'PAID'
+          }
+        }
       }
     });
 
-    console.log('Refund created:', refund.id, 'Status:', refund.status);
-
-    // Step 3: Check refund status
-    if (refund.status === 'succeeded') {
-      // Here you would typically:
-      // 1. Update booking status in database
-      // 2. Send refund confirmation email
-      // 3. Update room availability if needed
-      // 4. Log the refund for accounting
-
-      console.log('Full refund successful!', {
-        refundId: refund.id,
-        chargeId: chargeId,
-        refundAmount: refund.amount / 100,
-        currency: refund.currency,
-        bookingId: bookingId,
-      });
-
-      return res.status(200).json({
-        success: true,
-        refundId: refund.id,
-        chargeId: chargeId,
-        refundAmount: refund.amount / 100,
-        currency: refund.currency,
-        status: refund.status,
-        bookingId: bookingId,
-        refundType: 'full_refund',
-        originalAmount: originalCharge.amount / 100,
-        message: 'Full refund processed successfully',
-        estimatedProcessingTime: '3-5 business days'
-      });
-
-    } else if (refund.status === 'pending') {
-      return res.status(200).json({
-        success: true,
-        refundId: refund.id,
-        chargeId: chargeId,
-        refundAmount: refund.amount / 100,
-        currency: refund.currency,
-        status: refund.status,
-        bookingId: bookingId,
-        refundType: 'full_refund',
-        originalAmount: originalCharge.amount / 100,
-        message: 'Full refund is being processed',
-        estimatedProcessingTime: '3-5 business days'
-      });
-
-    } else {
-      console.log('Refund failed:', refund.failure_code, refund.failure_message);
-      
-      return res.status(400).json({
+    if (!bookingData) {
+      return res.status(404).json({
         success: false,
-        error: refund.failure_message || 'Refund failed',
-        failureCode: refund.failure_code,
-        refundId: refund.id
+        error: 'Booking not found'
       });
     }
 
+    if (bookingData.bookingStatus === 'CANCELLED') {
+      return res.status(400).json({
+        success: false,
+        error: 'Booking is already cancelled'
+      });
+    }
+
+    const payment = bookingData.payments[0];
+    if (!payment) {
+      return res.status(404).json({
+        success: false,
+        error: 'No paid payment found for this booking'
+      });
+    }
+
+    let refund = null;
+
+    // Step 2: Process refund based on payment method
+    if (payment.paymentMethod === 'CREDIT_CARD' && payment.omiseChargeId && !payment.omiseChargeId.startsWith('cash_')) {
+      console.log('Processing Omise refund...');
+      
+      try {
+        // Create refund through Omise
+        refund = await omise.refunds.create(payment.omiseChargeId, {
+          amount: payment.amount * 100, // Convert to satang
+          reason: reason || 'Booking cancellation'
+        });
+
+        console.log('Omise refund created:', refund.id, 'Status:', refund.status);
+      } catch (omiseError) {
+        console.error('Omise refund error:', omiseError);
+        return res.status(400).json({
+          success: false,
+          error: 'Failed to process refund through payment gateway',
+          details: omiseError.message
+        });
+      }
+    } else {
+      console.log('Cash payment - no gateway refund needed');
+      // For cash payments, create a mock refund object
+      refund = {
+        id: `cash_refund_${Date.now()}`,
+        status: 'succeeded',
+        amount: payment.amount * 100
+      };
+    }
+
+    // Step 3: Update database in transaction
+    const result = await db.$transaction(async (tx) => {
+      // 3.1: Delete BookingAddons
+      if (bookingData.bookingAddons.length > 0) {
+        await tx.bookingAddon.deleteMany({
+          where: {
+            bookingId: parseInt(bookingId)
+          }
+        });
+        console.log(`Deleted ${bookingData.bookingAddons.length} booking addons`);
+      }
+
+      // 3.2: Delete BookingRooms
+      if (bookingData.bookingRooms.length > 0) {
+        await tx.bookingRoom.deleteMany({
+          where: {
+            bookingId: parseInt(bookingId)
+          }
+        });
+        console.log(`Deleted ${bookingData.bookingRooms.length} booking rooms`);
+      }
+
+      // 3.3: Update Payment record to CANCEL status (keep the record)
+      const updatedPayment = await tx.payment.update({
+        where: { id: payment.id },
+        data: {
+          paymentStatus: 'CANCEL',
+          notes: `${payment.notes || ''} | Refunded: ${refund.id} | Reason: ${reason || 'Booking cancellation'}`,
+          updatedAt: new Date()
+        }
+      });
+
+      // 3.4: Update Booking status to CANCELLED
+      const updatedBooking = await tx.booking.update({
+        where: { id: parseInt(bookingId) },
+        data: {
+          bookingStatus: 'CANCELLED',
+          updatedAt: new Date()
+        }
+      });
+
+      return {
+        booking: updatedBooking,
+        payment: updatedPayment,
+        refund: refund
+      };
+    });
+
+    console.log('Refund processed successfully:', {
+      bookingId: result.booking.id,
+      paymentId: result.payment.id,
+      refundId: refund.id,
+      status: refund.status
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        bookingId: result.booking.id,
+        refundId: refund.id,
+        amount: refund.amount / 100,
+        currency: 'thb',
+        status: refund.status,
+        message: 'Booking cancelled and refund processed successfully',
+        booking: {
+          bookingNumber: result.booking.bookingNumber,
+          status: result.booking.bookingStatus,
+          guest: {
+            name: `${bookingData.guest.firstName} ${bookingData.guest.lastName}`,
+            email: bookingData.guest.email
+          }
+        }
+      }
+    });
+
   } catch (error) {
-    console.error('Refund processing error:', error);
+    console.error('Refund processing error:', error.message);
     
     // Handle different types of errors
     if (error.code) {
@@ -127,7 +183,7 @@ export default async function handler(req, res) {
         code: error.code,
       });
     } else {
-      // General error
+      // General error (including database errors)
       return res.status(500).json({
         success: false,
         error: 'Internal server error',
@@ -137,18 +193,36 @@ export default async function handler(req, res) {
   }
 }
 
-// Helper function to get refund status
-export async function getRefundStatus(chargeId, refundId) {
+// Optional: Add a webhook handler for refund status updates
+export async function handleRefundWebhook(req, res) {
   try {
-    const refund = await omise.charges.retrieveRefund(chargeId, refundId);
-    return {
-      success: true,
-      refund: refund
-    };
+    const event = req.body;
+    
+    console.log('Received refund webhook:', event.key, event.data.object);
+    
+    // Handle different event types
+    switch (event.key) {
+      case 'refund.create':
+        console.log('Refund created:', event.data.id);
+        
+        // Update payment notes with refund confirmation
+        await db.payment.updateMany({
+          where: {
+            omiseChargeId: event.data.charge
+          },
+          data: {
+            notes: db.raw(`CONCAT(COALESCE(notes, ''), ' | Refund webhook confirmed: ${event.data.id}')`)
+          }
+        });
+        break;
+        
+      default:
+        console.log('Unhandled refund event type:', event.key);
+    }
+    
+    return res.status(200).json({ received: true });
   } catch (error) {
-    return {
-      success: false,
-      error: error.message
-    };
+    console.error('Refund webhook error:', error);
+    return res.status(500).json({ error: 'Refund webhook processing failed' });
   }
 }
