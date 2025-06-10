@@ -12,7 +12,20 @@ export default async function handler(req, res) {
   }
 
   try {
+    const { user_id } = req.query;
+
+    if (!user_id) {
+      return errorResponse({
+        res,
+        message: "User ID is required",
+        status: HTTP_STATUS.BAD_REQUEST,
+      });
+    }
+
     const bookings = await db.booking.findMany({
+      where: {
+        userId: parseInt(user_id),
+      },
       include: {
         guest: {
           select: {
@@ -21,19 +34,18 @@ export default async function handler(req, res) {
             email: true,
           },
         },
-
         bookingRooms: {
           include: {
             roomType: {
               select: {
-                name: true, 
-                promotionPrice: true, 
+                name: true,
+                promotionPrice: true,
                 roomImages: {
                   where: {
-                    imageDefault: true, 
+                    imageDefault: true,
                   },
                   select: {
-                    imageUrl: true, 
+                    imageUrl: true,
                   },
                   take: 1,
                 },
@@ -41,7 +53,6 @@ export default async function handler(req, res) {
             },
           },
         },
-
         payments: {
           select: {
             paymentMethod: true,
@@ -49,7 +60,6 @@ export default async function handler(req, res) {
           },
           take: 1,
         },
-
         bookingAddons: {
           select: {
             addonName: true,
@@ -58,12 +68,12 @@ export default async function handler(req, res) {
           },
         },
       },
-
       orderBy: {
-        createdAt: "desc", 
+        createdAt: "desc",
       },
     });
 
+    // Format ข้อมูล
     const formattedBookings = bookings.map((booking) => {
       const addonTotal = booking.bookingAddons.reduce(
         (sum, addon) => sum + Number(addon.price) * addon.quantity,
@@ -76,30 +86,28 @@ export default async function handler(req, res) {
       );
 
       return {
-        name: booking.bookingRooms[0]?.roomType?.name || "Unknown", 
-        booking_id: booking.id, 
+        name: booking.bookingRooms[0]?.roomType?.name || "Unknown",
+        booking_id: booking.id,
         room_type_id: booking.bookingRooms[0]?.roomTypeId,
         image_url:
-          booking.bookingRooms[0]?.roomType?.roomImages[0]?.imageUrl || null, 
-        created_at: booking.createdAt, 
-        check_in_date: booking.checkInDate, 
-        check_out_date: booking.checkOutDate, 
-        adults: booking.adults, 
+          booking.bookingRooms[0]?.roomType?.roomImages[0]?.imageUrl || null,
+        created_at: booking.createdAt,
+        check_in_date: booking.checkInDate,
+        check_out_date: booking.checkOutDate,
+        adults: booking.adults,
         promotion_price:
-          booking.bookingRooms[0]?.roomType?.promotionPrice || 0,
-        total_amount: booking.totalAmount, 
+          Number(booking.bookingRooms[0]?.roomType?.promotionPrice) || 0,
+        total_amount: Number(booking.totalAmount),
         additional_requests: booking.additionalRequests,
-        payment_method: booking.payments[0]?.paymentMethod || null, 
-        special_requests_total: addonTotal, 
-
+        payment_method: booking.payments[0]?.paymentMethod || null,
+        special_requests_total: addonTotal,
         booking_number: booking.bookingNumber,
         booking_status: booking.bookingStatus,
         guest_name: `${booking.guest.firstName} ${booking.guest.lastName}`,
         nights: nights,
         room_count: booking.bookingRooms.length,
-
         addons: booking.bookingAddons.map((addon) => ({
-          name: addon.addonName,
+          addon_name: addon.addonName,
           quantity: addon.quantity,
           price: Number(addon.price),
           total: Number(addon.price) * addon.quantity,
@@ -107,12 +115,11 @@ export default async function handler(req, res) {
       };
     });
 
-    return successResponse({
-      res,
+    return res.status(200).json({
+      success: true,
       message: "Booking data retrieved successfully",
       data: formattedBookings,
       count: formattedBookings.length,
-      status: HTTP_STATUS.OK,
     });
   } catch (error) {
     console.error("Error fetching bookings:", error.message);

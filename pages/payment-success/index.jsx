@@ -218,13 +218,13 @@ const index = () => {
             </div>
           </Link>
           
-          <Link href={`/booking-detail/${bookingInfo.bookingNumber}`}>
+          <Link href="/booking-history">
             <div className="hidden md:flex px-8 pt-6 items-center justify-center text-orange-500 hover:underline">
               Check Booking Detail
             </div>
           </Link>
 
-          <Link href={`/booking-detail/${bookingInfo.bookingNumber}`}>
+          <Link href="/booking-history">
             <div className="md:hidden px-8 py-6 flex items-center justify-center text-orange-500 hover:underline">
               Check Booking Detail
             </div>
