@@ -11,7 +11,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { bookingId, reason } = req.body;
+    const { bookingId } = req.body;
 
     // Validate required fields
     if (!bookingId) {
@@ -66,15 +66,15 @@ export default async function handler(req, res) {
 
     let refund = null;
 
-    // Step 2: Process refund based on payment method
+    // Step 2: Process refund based on payment method using chargeId from payment data
     if (payment.paymentMethod === 'CREDIT_CARD' && payment.omiseChargeId && !payment.omiseChargeId.startsWith('cash_')) {
-      console.log('Processing Omise refund...');
+      console.log('Processing Omise refund with chargeId:', payment.omiseChargeId);
       
       try {
-        // Create refund through Omise
+        // Create refund through Omise using chargeId from payment data
         refund = await omise.refunds.create(payment.omiseChargeId, {
           amount: payment.amount * 100, // Convert to satang
-          reason: reason || 'Booking cancellation'
+          reason: 'User requested refund'
         });
 
         console.log('Omise refund created:', refund.id, 'Status:', refund.status);
@@ -96,9 +96,9 @@ export default async function handler(req, res) {
       };
     }
 
-    // Step 3: Update database in transaction
+    // Step 3: Update database in transaction - delete related data and update statuses
     const result = await db.$transaction(async (tx) => {
-      // 3.1: Delete BookingAddons
+      // 3.1: Delete BookingAddons (similar to create-booking process)
       if (bookingData.bookingAddons.length > 0) {
         await tx.bookingAddon.deleteMany({
           where: {
@@ -108,7 +108,7 @@ export default async function handler(req, res) {
         console.log(`Deleted ${bookingData.bookingAddons.length} booking addons`);
       }
 
-      // 3.2: Delete BookingRooms
+      // 3.2: Delete BookingRooms (similar to create-booking process)
       if (bookingData.bookingRooms.length > 0) {
         await tx.bookingRoom.deleteMany({
           where: {
@@ -118,17 +118,17 @@ export default async function handler(req, res) {
         console.log(`Deleted ${bookingData.bookingRooms.length} booking rooms`);
       }
 
-      // 3.3: Update Payment record to CANCEL status (keep the record)
+      // 3.3: Update Payment record to REFUNDED status (keep the record for audit)
       const updatedPayment = await tx.payment.update({
         where: { id: payment.id },
         data: {
-          paymentStatus: 'CANCEL',
-          notes: `${payment.notes || ''} | Refunded: ${refund.id} | Reason: ${reason || 'Booking cancellation'}`,
+          paymentStatus: 'REFUNDED',
+          notes: `${payment.notes || ''} | Refunded: ${refund.id} | User requested refund`,
           updatedAt: new Date()
         }
       });
 
-      // 3.4: Update Booking status to CANCELLED
+      // 3.4: Update Booking status to CANCELLED (not delete, just update status)
       const updatedBooking = await tx.booking.update({
         where: { id: parseInt(bookingId) },
         data: {
