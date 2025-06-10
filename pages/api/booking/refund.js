@@ -67,34 +67,41 @@ export default async function handler(req, res) {
     let refund = null;
 
     // Step 2: Process refund based on payment method using chargeId from payment data
-    if (payment.paymentMethod === 'CREDIT_CARD' && payment.omiseChargeId && !payment.omiseChargeId.startsWith('cash_')) {
-      console.log('Processing Omise refund with chargeId:', payment.omiseChargeId);
-      
-      try {
-        // Create refund through Omise using chargeId from payment data
-        refund = await omise.refunds.create(payment.omiseChargeId, {
-          amount: payment.amount * 100, // Convert to satang
-          reason: 'User requested refund'
-        });
-
-        console.log('Omise refund created:', refund.id, 'Status:', refund.status);
-      } catch (omiseError) {
-        console.error('Omise refund error:', omiseError);
-        return res.status(400).json({
-          success: false,
-          error: 'Failed to process refund through payment gateway',
-          details: omiseError.message
-        });
+if (payment.paymentMethod === 'CREDIT_CARD' && payment.omiseChargeId && !payment.omiseChargeId.startsWith('cash_')) {
+  console.log('Processing Omise refund with chargeId:', payment.omiseChargeId);
+  
+  try {
+    // Create refund through Omise using chargeId from payment data
+    refund = await omise.charges.createRefund(payment.omiseChargeId, {
+      amount: payment.amount * 100, // Convert to satang (Thai currency smallest unit)
+      reason: 'Customer requested refund',
+      metadata: {
+        booking_id: bookingId,
+        refund_reason: 'User requested refund',
+        refund_date: new Date().toISOString(),
+        refund_type: 'full_refund',
+        original_amount: payment.amount * 100,
       }
-    } else {
-      console.log('Cash payment - no gateway refund needed');
-      // For cash payments, create a mock refund object
-      refund = {
-        id: `cash_refund_${Date.now()}`,
-        status: 'succeeded',
-        amount: payment.amount * 100
-      };
-    }
+    });
+
+    console.log('Omise refund created:', refund.id, 'Status:', refund.status);
+  } catch (omiseError) {
+    console.error('Omise refund error:', omiseError);
+    return res.status(400).json({
+      success: false,
+      error: 'Failed to process refund through payment gateway',
+      details: omiseError.message
+    });
+  }
+} else {
+  console.log('Cash payment - no gateway refund needed');
+  // For cash payments, create a mock refund object
+  refund = {
+    id: `cash_refund_${Date.now()}`,
+    status: 'succeeded',
+    amount: payment.amount * 100
+  };
+}
 
     // Step 3: Update database in transaction - delete related data and update statuses
     const result = await db.$transaction(async (tx) => {
