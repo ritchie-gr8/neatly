@@ -35,7 +35,7 @@ export default async function handler(req, res) {
     });
 
     const config = { responseMimeType: "text/plain" };
-    const model = "gemini-2.0-flash-lite";
+    const model = "gemini-2.0-flash";
     const contents = [
       {
         role: "user",
