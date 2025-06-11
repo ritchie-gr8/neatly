@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import AdminLayout from "@/layouts/admin.layout";
 import CustomPagination from "@/components/ui/custom-pagination";
 import { useDebouce } from "@/hooks/useDebounce";
+import { RiH4 } from 'react-icons/ri';
 
 const CustomerBookingPage = () => {
   // State management
@@ -142,7 +143,7 @@ const CustomerBookingPage = () => {
 
     return (
       <AdminLayout>
-        <div className="flex justify-between items-center mb-6 border-b border-brown-300 px-16 py-4 bg-white">
+        <div className="flex justify-between items-center py-6 mb-6 border-b border-brown-300 px-16 bg-white">
           <div className="flex items-center gap-2">
             <Button
               variant="ghost"
@@ -152,17 +153,19 @@ const CustomerBookingPage = () => {
             >
               <ArrowLeft size={20} />
             </Button>
-            <h5 className="text-h5 font-semibold text-gray-900">
+            <h4 className="text-h5 font-semibold text-gray-900">
               {selectedBooking.guest.firstName} {selectedBooking.guest.lastName}
-            </h5>
+            </h4>
+            <h4 className="text-h5 text-gray-900">
+              {roomDetails.roomType?.name}
+            </h4>
           </div>
         </div>
 
-        <Card className="mx-16 p-6 rounded-none">
-          <CardContent className="p-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Left Column */}
-              <div className="space-y-6">
+        <Card className="mx-16 px-20 rounded-none">
+          <CardContent className="p-0 ">
+            <div className="grid grid-cols-1 gap-8 ">
+              <div className="space-y-6 pr-20 py-6">
                 <div>
                   <h3 className="text-sm font-medium text-gray-500 mb-2">Customer name</h3>
                   <p className="text-gray-900">{selectedBooking.guest.firstName} {selectedBooking.guest.lastName}</p>
@@ -187,10 +190,7 @@ const CustomerBookingPage = () => {
                   <h3 className="text-sm font-medium text-gray-500 mb-2">Bed type</h3>
                   <p className="text-gray-900">{roomDetails.roomType?.bedType?.bedDescription}</p>
                 </div>
-              </div>
 
-              {/* Right Column */}
-              <div className="space-y-6">
                 <div>
                   <h3 className="text-sm font-medium text-gray-500 mb-2">Check-in</h3>
                   <p className="text-gray-900">{formatDate(selectedBooking.checkInDate)}</p>
@@ -210,18 +210,15 @@ const CustomerBookingPage = () => {
                   <h3 className="text-sm font-medium text-gray-500 mb-2">Booking date</h3>
                   <p className="text-gray-900">{formatDate(selectedBooking.createdAt)}</p>
                 </div>
+                </div>
               </div>
-            </div>
-
             {/* Payment Info */}
-            <div className="mt-8 pt-6 border-t border-gray-200">
+            <div className="bg-gray-50 rounded-lg p-4">
               {selectedBooking.payments?.[0] && (
-                <div className="flex justify-end mb-4">
-                  <div className="flex items-center space-x-2 text-sm text-gray-500">
-                    <span>Payment success via</span>
-                    <CreditCard className="w-4 h-4" />
-                    <span>{selectedBooking.payments[0].paymentMethod.replace('_', ' ')} - {selectedBooking.payments[0].transactionId}</span>
-                  </div>
+                <div className="flex items-center justify-end space-x-2 text-sm text-gray-500 mb-4">
+                  <span>Payment success via</span>
+                  <CreditCard className="w-4 h-4" />
+                  <span>{selectedBooking.payments[0].paymentMethod.replace('_', ' ')} - {selectedBooking.payments[0].transactionId}</span>
                 </div>
               )}
 
