@@ -8,32 +8,12 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
 } from "recharts";
 import CustomDatePicker from "@/components/global/date-picker";
 import useInViewFetch from "@/hooks/useInViewFetch";
 import Loading from "@/components/global/loading";
-
-const data = [
-  { month: "January", revenue: 31000, date: new Date("2024-01-01") },
-  { month: "February", revenue: 28000, date: new Date("2024-02-01") },
-  { month: "March", revenue: 35000, date: new Date("2024-03-01") },
-  { month: "April", revenue: 42000, date: new Date("2024-04-01") },
-  { month: "May", revenue: 12800, date: new Date("2024-05-01") },
-  { month: "June", revenue: 45000, date: new Date("2024-06-01") },
-  { month: "July", revenue: 48000, date: new Date("2024-07-01") },
-  { month: "August", revenue: 50000, date: new Date("2024-08-01") },
-  { month: "September", revenue: 47000, date: new Date("2024-09-01") },
-  { month: "October", revenue: 72000, date: new Date("2024-10-01") },
-  { month: "November", revenue: 49000, date: new Date("2024-11-01") },
-  { month: "December", revenue: 53000, date: new Date("2024-12-01") },
-  { month: "January", revenue: 40000, date: new Date("2025-01-01") },
-  { month: "February", revenue: 15000, date: new Date("2025-02-01") },
-  { month: "March", revenue: 55000, date: new Date("2025-03-01") },
-  { month: "April", revenue: 65000, date: new Date("2025-04-01") },
-  { month: "May", revenue: 30000, date: new Date("2025-05-01") },
-  { month: "June", revenue: 2000, date: new Date("2025-06-01") },
-];
+import api from "@/lib/axios";
+import dayjs from "dayjs";
 
 const today = new Date();
 const currentYear = today.getFullYear();
@@ -70,17 +50,24 @@ const RevenueTrend = () => {
   const fetchData = useCallback(async () => {
     try {
       setIsLoading(true);
-      // const response = await api.get(`/admin/analytics/revenue-trend?start=${startDate}&end=${endDate}`);
-      // const result = response.data;
-      const filtered = data
-        .filter((item) => item.date >= startDate && item.date <= endDate)
-        .map((item) => ({
+      const response = await api.get("/admin/analytics/revenue-trend", {
+        params: {
+          start: startDate.toISOString(),
+          end: endDate.toISOString(),
+        },
+      });
+
+      const filteredData = response.data.result.map((item) => {
+        // parse '2025-06' as a date
+        const date = dayjs(item.month, 'YYYY-MM');
+        // format as 'MMMMYY' e.g. 'June25'
+        const label = date.format('MMMMYY');
+        return {
           ...item,
-          label: `${item.date.toLocaleString("default", {
-            month: "short",
-          })}${item.date.getFullYear().toString().slice(-2)}`,
-        }));
-      setFilteredData(filtered);
+          label,
+        };
+      });
+      setFilteredData(filteredData);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -91,7 +78,10 @@ const RevenueTrend = () => {
   const ref = useInViewFetch(fetchData);
 
   return (
-    <div ref={ref} className="bg-white rounded-lg shadow w-full pl-10 pr-10 pb-12 pt-4">
+    <div
+      ref={ref}
+      className="bg-white rounded-lg shadow w-full pl-10 pr-10 pb-12 pt-4"
+    >
       <div className="flex justify-between items-center mb-6">
         <p className="text-h5 font-semibold text-gray-600">Revenue Trend</p>
         <div className="flex items-center gap-4 text-md text-gray-600">
@@ -156,7 +146,6 @@ const RevenueTrend = () => {
             />
             <XAxis
               dataKey="label"
-              
               axisLine={false}
               tickLine={false}
               tick={({ x, y, payload, index }) => {
