@@ -34,13 +34,19 @@ const AnalyticDashboard = () => {
       const { lastMonth, thisMonth } = data;
 
       const calculateChange = (last, current) => {
-        const change = last === 0 ? 100 : ((current - last) / last) * 100;
+        let change;
+        if (last === 0) {
+          change = current === 0 ? 0 : 100;
+        } else {
+          change = ((current - last) / last) * 100;
+        }
         return {
           value: current,
-          change: `${Math.abs(change).toFixed(1)}%`,
+          change: `${Math.abs(change).toFixed(0)}%`,
           isPositive: change >= 0,
         };
       };
+      
 
       const stats = [
         {
@@ -117,7 +123,7 @@ const AnalyticDashboard = () => {
   }, [pieChartMonth]);
 
   return (
-    <AdminLayout>
+    <AdminLayout title="Analytics Dashboard">
       {/* ------------------------ Header ------------------------ */}
       <div className="flex justify-between items-center mb-6 border-b border-brown-300 px-16 py-[19px] bg-white">
         <h5 className="text-h5 font-semibold text-gray-900">

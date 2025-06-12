@@ -189,7 +189,7 @@ const RevenueTrend = () => {
                 if (active && payload && payload.length) {
                   return (
                     <div className="bg-white border border-gray-200 rounded shadow p-2 text-sm text-gray-800">
-                      <p>{label}</p>
+                      <p className="font-bold">{label}</p>
                       <p>Revenue: ${payload[0].value.toLocaleString()}</p>
                     </div>
                   );

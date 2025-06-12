@@ -40,6 +40,9 @@ const GET = async (req, res) => {
     // Get bookings that overlap with the target month
     const bookings = await db.booking.findMany({
       where: {
+        bookingStatus: {
+          in: ["CONFIRMED", "CHECKED_IN", "CHECKED_OUT"],
+        },
         OR: [
           {
             checkInDate: {

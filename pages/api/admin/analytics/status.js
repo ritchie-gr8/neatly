@@ -30,17 +30,24 @@ const GET = async (req, res) => {
           checkInDate: {
             gte: startOfThisMonth,
           },
+          bookingStatus: {
+            in: ["CONFIRMED", "CHECKED_IN", "CHECKED_OUT"],
+          },
         },
         select: {
           totalAmount: true,
           guestId: true,
         },
       }),
+
       db.booking.findMany({
         where: {
           checkInDate: {
             gte: startOfLastMonth,
             lt: endOfLastMonth,
+          },
+          bookingStatus: {
+            in: ["CONFIRMED", "CHECKED_IN", "CHECKED_OUT"],
           },
         },
         select: {

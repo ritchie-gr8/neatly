@@ -69,6 +69,9 @@ const GET = async (req, res) => {
       where: {
         checkInDate: { gte: start },
         checkOutDate: { lte: end },
+        bookingStatus: {
+          in: ["CONFIRMED", "CHECKED_IN"],
+        },
       },
       include: {
         bookingRooms: {

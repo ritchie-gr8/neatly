@@ -37,6 +37,9 @@ const GET = async (req, res) => {
     const totalRooms = allRooms.length;
 
     if (pieChartMonth === "today") {
+      const startOfToday = dayjs().startOf("day").toDate();
+      const endOfToday = dayjs().endOf("day").toDate();
+
       // OCCUPIED today
       const occupiedRooms = await db.room.findMany({
         where: {
@@ -47,7 +50,13 @@ const GET = async (req, res) => {
       // BOOKED today
       const bookedToday = await db.booking.findMany({
         where: {
-          checkInDate: { gte: today },
+          checkInDate: {
+            gte: startOfToday,
+            lte: endOfToday,
+          },
+          bookingStatus: {
+            in: ["CONFIRMED"],
+          },
         },
         select: { id: true },
       });
@@ -89,6 +98,9 @@ const GET = async (req, res) => {
             checkOutDate: { gte: startDate, lte: endDate },
           },
         ],
+        bookingStatus: {
+          in: ["CONFIRMED", "CHECKED_IN", "CHECKED_OUT"],
+        },
       },
       select: {
         checkInDate: true,
@@ -112,7 +124,7 @@ const GET = async (req, res) => {
       if (duration > 0) {
         occupiedDays += duration;
       }
-    }); 
+    });
 
     const totalRoomDays = totalRooms * daysInMonth;
     const availableDays = totalRoomDays - occupiedDays;

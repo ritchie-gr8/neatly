@@ -38,7 +38,7 @@ const GET = async (req, res) => {
           lte: endDate,
         },
         bookingStatus: {
-          in: ["CONFIRMED", "CHECKED_IN"],
+          in: ["CONFIRMED", "CHECKED_IN", "CHECKED_OUT"],
         },
       },
       select: {

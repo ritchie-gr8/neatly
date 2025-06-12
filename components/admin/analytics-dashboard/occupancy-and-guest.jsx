@@ -308,8 +308,8 @@ const OccupancyAndGuest = () => {
                   if (active && payload && payload.length) {
                     return (
                       <div className="bg-white border border-gray-200 rounded shadow p-2 text-sm text-gray-800">
-                        <p>{label}</p>
-                        <p>Booking: {payload[0].payload.booking}</p>
+                        <p className="font-bold">{label}</p>
+                        <p>Occupancy: {payload[0].payload.booking}</p>
                       </div>
                     );
                   }
@@ -382,7 +382,7 @@ const OccupancyAndGuest = () => {
                   if (active && payload && payload.length) {
                     return (
                       <div className="bg-white border border-gray-200 rounded shadow p-2 text-sm text-gray-800">
-                        <p className="font-semibold">{label}</p>
+                        <p className="font-bold">{label}</p>
                         {payload.map((entry, index) => {
                           const roomType = entry.name;
                           const raw = entry.payload[`${roomType}Raw`] ?? 0;
@@ -392,7 +392,7 @@ const OccupancyAndGuest = () => {
                               key={index}
                               className="flex justify-between gap-2"
                             >
-                              <span>{roomType}</span>
+                              <span>{roomType}:</span>
                               <span>{raw}</span>
                             </div>
                           );
