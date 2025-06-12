@@ -193,7 +193,7 @@ const ChatbotPopup = ({ className }) => {
     addMessage(SENDER.USER, trimmedMessage);
     setInputValue("");
 
-    console.log("handoffSessionId", handoffSessionId);
+    // console.log("handoffSessionId", handoffSessionId);
     if (handoffSessionId) return;
 
     setIsTyping(true);

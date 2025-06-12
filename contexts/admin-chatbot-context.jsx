@@ -143,7 +143,6 @@ export const AdminChatbotProvider = ({ children }) => {
       // Navigate to chat page with session id
       router.push(`/admin/chat?sessionId=${session.sessionId}`);
     } catch (error) {
-      console.error("Error joining chat:", error);
       toast({
         title: "Error",
         description: "Failed to join chat session",
@@ -192,10 +191,6 @@ export const AdminChatbotProvider = ({ children }) => {
 export const useAdminChatbot = () => {
   const context = useContext(AdminChatbotContext);
   if (!context) {
-    console.warn(
-      "useAdminChatbot was used outside of AdminChatbotProvider - using dummy values"
-    );
-    // Return dummy values to prevent crashes
     return {
       pendingSessions: [],
       loading: false,

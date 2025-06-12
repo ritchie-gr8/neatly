@@ -120,8 +120,8 @@ export function ChatbotResponseProvider({ children, initialData }) {
       }
     }
 
-    console.log(formData);
-    console.log(newErrors);
+    // console.log(formData);
+    // console.log(newErrors);
     setErrors(newErrors);
     return isValid;
   };

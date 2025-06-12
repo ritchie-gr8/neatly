@@ -82,7 +82,6 @@ const ChatbotPage = () => {
       try {
         const response = await api.delete(`/admin/chatbot/response?id=${id}`);
         if (response.data.success) {
-          console.log(response.data);
           toast.success("Response deleted successfully");
           setResponseList((prev) => prev.filter((_, i) => i !== index));
         }
