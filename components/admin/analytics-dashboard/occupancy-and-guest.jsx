@@ -74,7 +74,7 @@ const OccupancyAndGuest = () => {
         params: { startDate, endDate, viewBy },
       });
       const { monthlyData, aggregatedGuest, aggregatedPayment } = response.data;
-      // console.log("monthlyData", monthlyData);
+      console.log("monthlyData", monthlyData);
 
       let flattened;
 
