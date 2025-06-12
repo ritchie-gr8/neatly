@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { user_id } = req.query;
+    const { user_id, page = 1, limit = 5 } = req.query;
 
     if (!user_id) {
       return errorResponse({
@@ -21,6 +21,16 @@ export default async function handler(req, res) {
         status: HTTP_STATUS.BAD_REQUEST,
       });
     }
+
+    const currentPage = parseInt(page);
+    const itemsPerPage = parseInt(limit);
+    const skip = (currentPage - 1) * itemsPerPage;
+
+    const totalCount = await db.booking.count({
+      where: {
+        userId: parseInt(user_id),
+      },
+    });
 
     const bookings = await db.booking.findMany({
       where: {
@@ -71,9 +81,10 @@ export default async function handler(req, res) {
       orderBy: {
         createdAt: "desc",
       },
+      skip: skip,
+      take: itemsPerPage,
     });
 
-    // Format ข้อมูล
     const formattedBookings = bookings.map((booking) => {
       const addonTotal = booking.bookingAddons.reduce(
         (sum, addon) => sum + Number(addon.price) * addon.quantity,
@@ -115,10 +126,22 @@ export default async function handler(req, res) {
       };
     });
 
+    const totalPages = Math.ceil(totalCount / itemsPerPage);
+    const hasNext = currentPage < totalPages;
+    const hasPrev = currentPage > 1;
+
     return res.status(200).json({
       success: true,
       message: "Booking data retrieved successfully",
       data: formattedBookings,
+      pagination: {
+        currentPage: currentPage,
+        totalPages: totalPages,
+        totalItems: totalCount,
+        itemsPerPage: itemsPerPage,
+        hasNext: hasNext,
+        hasPrev: hasPrev,
+      },
       count: formattedBookings.length,
     });
   } catch (error) {

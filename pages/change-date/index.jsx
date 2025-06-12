@@ -24,6 +24,9 @@ const index = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [validationError, setValidationError] = useState("");
+  const [showToast, setShowToast] = useState(false);
+
   const fetchBookingDetail = async () => {
     try {
       setLoading(true);
@@ -42,7 +45,7 @@ const index = () => {
       }
     } catch (err) {
       console.error("Error fetching booking detail:", err);
-      setError("เกิดข้อผิดพลาดในการดึงข้อมูล");
+      setError("Failed to fetch data");
     } finally {
       setLoading(false);
     }
@@ -56,12 +59,18 @@ const index = () => {
 
   const handleCheckInDateChange = (date) => {
     setCheckInDate(date);
+    setValidationError("");
 
     if (date >= checkOutDate) {
       const nextDay = new Date(date);
       nextDay.setDate(nextDay.getDate() + 1);
       setCheckOutDate(nextDay);
     }
+  };
+
+  const handleCheckOutDateChange = (date) => {
+    setCheckOutDate(date);
+    setValidationError("");
   };
 
   const disableCheckoutDates = (date) => {
@@ -71,47 +80,96 @@ const index = () => {
   const handleConfirmDateChange = async () => {
     try {
       setIsUpdating(true);
+      setValidationError("");
+      setError(null);
 
       const requestData = {
         booking_id: booking_id,
-        check_in_date: checkInDate.toISOString().split("T")[0], // แปลงเป็น YYYY-MM-DD
-        check_out_date: checkOutDate.toISOString().split("T")[0], // แปลงเป็น YYYY-MM-DD
+        check_in_date: checkInDate.toISOString().split("T")[0],
+        check_out_date: checkOutDate.toISOString().split("T")[0],
       };
 
-      const response = await api.put("/booking/update-dates", requestData);
+      const response = await api.put("/update-date", requestData);
 
       if (response.data.success) {
-        router.push("/booking-history");
+        setShowToast(true);
+        setTimeout(() => {
+          router.push("/booking-history");
+        }, 1500);
+      } else if (response.data.validation_error) {
+        setValidationError(response.data.message);
+      } else {
+        setError(response.data.message || "Failed to update data");
       }
     } catch (error) {
-      console.error("เกิดข้อผิดพลาดในการส่งข้อมูล:", error);
+      console.error("Error sending data:", error);
+
+      if (error.response?.status === 404) {
+        setError(error.response.data?.message || "Booking not found");
+      } else if (error.response?.status >= 500) {
+        setError("Server error. Please try again later.");
+      } else {
+        setError("Failed to update data. Please try again.");
+      }
     } finally {
       setIsUpdating(false);
     }
   };
 
+  const Toast = ({ show, message, onClose }) => {
+    useEffect(() => {
+      if (show) {
+        const timer = setTimeout(() => {
+          onClose();
+        }, 3000);
+        return () => clearTimeout(timer);
+      }
+    }, [show, onClose]);
+
+    if (!show) return null;
+
+    return (
+      <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center">
+        <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fillRule="evenodd"
+            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+            clipRule="evenodd"
+          />
+        </svg>
+        {message}
+      </div>
+    );
+  };
+
   return (
     <DefaultLayout title="Change Check-in and Check-out Date">
+      {/* Toast */}
+      <Toast
+        show={showToast}
+        message="Date changed successfully!"
+        onClose={() => setShowToast(false)}
+      />
       <div className="bg-util-bg w-full  h-full md:px-40">
         <h1 className="text-green-800 text-h3 px-4 pt-10 pb-6">
           Change Check-in and Check-out Date
         </h1>
         {loading ? (
-          <div className="flex justify-center items-center h-64">
+          <div className="flex justify-center items-center h-screen">
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
-              <p className="text-gray-600">กำลังโหลดข้อมูล...</p>
+              <p className="text-gray-600 ">Loading...</p>
             </div>
           </div>
         ) : error ? (
           <div className="flex justify-center items-center h-64">
             <div className="text-center">
-              <p className="text-red-600 mb-4">เกิดข้อผิดพลาด: {error}</p>
+              <p className="text-red-600 mb-4">Error: {error}</p>
               <button
                 onClick={fetchBookingDetail}
                 className="btn-primary px-6 py-2"
               >
-                ลองใหม่
+                Try Again
               </button>
             </div>
           </div>
@@ -193,6 +251,13 @@ const index = () => {
                     />
                   </div>
                 </div>
+
+                {/* แสดง Validation Error */}
+                {validationError && (
+                  <div className="mt-2 text-red-500 text-sm font-inter">
+                    {validationError}
+                  </div>
+                )}
               </div>
 
               <div className="flex flex-col pb-10 md:flex-row md:justify-between items-center w-full border-b-2 border-gray-300">
@@ -208,7 +273,9 @@ const index = () => {
                     triggerButton={
                       isUpdating ? "Updating..." : "Confirm Change Date"
                     }
-                    triggerButtonClass={`btn-primary px-8 py-4 w-full md:w-auto text-center font-open-sans font-semibold ${isUpdating ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    triggerButtonClass={`btn-primary px-8 py-4 w-full md:w-auto text-center font-open-sans font-semibold ${
+                      isUpdating ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                     title="Change Date"
                     message="Are you sure you want to change your check-in and check-out date?"
                     confirmText="Yes, I want to change"

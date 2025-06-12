@@ -59,7 +59,7 @@ const ReuseModal = ({
           className="fixed inset-0 flex items-center justify-center z-50"
           style={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}
         >
-          <div className="bg-white rounded-sm p-6 max-w-sm md:max-w-lg w-full mx-4 shadow-xl">
+          <div className="bg-white rounded-sm p-6 max-w-sm md:max-w-xl w-full mx-4 shadow-xl">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-gray-800 font-inter">
                 {title}

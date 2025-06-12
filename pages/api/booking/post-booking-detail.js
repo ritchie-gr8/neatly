@@ -1,4 +1,3 @@
-// ไฟล์ pages/api/booking/post-booking-detail.js (เวอร์ชันแก้ไขเพิ่มเติม)
 import { PrismaClient } from '../../../lib/generated/prisma';
 
 const prisma = new PrismaClient();
@@ -30,7 +29,6 @@ export default async function handler(req, res) {
       payment
     } = req.body;
 
-    // บันทึกข้อมูลที่ได้รับเพื่อดีบัก
     console.log('Received data:', JSON.stringify({
       userId,
       guest,
@@ -47,7 +45,6 @@ export default async function handler(req, res) {
       });
     }
 
-    // ตรวจสอบว่ามี roomId และ roomTypeId ที่ถูกต้องหรือไม่
     if (!bookingRoom.roomId || !bookingRoom.roomTypeId) {
       return res.status(400).json({
         success: false,
@@ -56,11 +53,9 @@ export default async function handler(req, res) {
       });
     }
 
-    // แปลงค่าให้เป็น integer ที่ถูกต้อง
     const roomId = parseInt(bookingRoom.roomId);
     const roomTypeId = parseInt(bookingRoom.roomTypeId);
 
-    // ตรวจสอบความถูกต้องของค่า
     if (isNaN(roomId) || isNaN(roomTypeId)) {
       return res.status(400).json({
         success: false,
@@ -69,7 +64,6 @@ export default async function handler(req, res) {
       });
     }
 
-    // ตรวจสอบว่ามีห้องพักนี้อยู่จริงหรือไม่ (ก่อนเริ่ม transaction)
     const roomExists = await prisma.room.findUnique({
       where: { id: roomId }
     });
@@ -83,7 +77,6 @@ export default async function handler(req, res) {
     }
 
     const result = await prisma.$transaction(async (tx) => {
-      // 1. สร้าง Guest
       const newGuest = await tx.guest.create({
         data: {
           firstName: guest.firstName,
@@ -95,7 +88,6 @@ export default async function handler(req, res) {
         }
       });
 
-      // 2. สร้าง Booking
       const newBooking = await tx.booking.create({
         data: {
           userId: userId,
@@ -106,11 +98,10 @@ export default async function handler(req, res) {
           adults: parseInt(booking.adults),
           additionalRequests: booking.additionalRequests || null,
           totalAmount: parseFloat(booking.totalAmount),
-          bookingStatus: 'PENDING'
+          bookingStatus: 'CONFIRMED'
         }
       });
 
-      // 3. สร้าง BookingRoom
       const newBookingRoom = await tx.bookingRoom.create({
         data: {
           bookingId: newBooking.id,
@@ -120,7 +111,6 @@ export default async function handler(req, res) {
         }
       });
 
-      // 4. สร้าง BookingAddon สำหรับ special requests (ถ้ามี)
       if (specialRequests && specialRequests.length > 0) {
         const addons = specialRequests.map(request => ({
           bookingId: newBooking.id,
@@ -134,7 +124,6 @@ export default async function handler(req, res) {
         });
       }
 
-      // 5. สร้าง Payment record
       const newPayment = await tx.payment.create({
         data: {
           bookingId: newBooking.id,

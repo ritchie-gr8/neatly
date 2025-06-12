@@ -15,7 +15,9 @@ export default async function handler(req, res) {
     const booking = await db.booking.findFirst({
       where: {
         id: parseInt(id),
-        bookingStatus: 'CONFIRMED'  
+        bookingStatus: {
+          in: ['CONFIRMED', 'CANCELLED']
+        }
       },
       include: {
         bookingRooms: { 
