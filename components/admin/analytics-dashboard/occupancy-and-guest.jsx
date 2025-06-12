@@ -34,10 +34,11 @@ const janThisYear = new Date(today.getFullYear(), 0, 1);
 const OccupancyAndGuest = () => {
   const [startDate, setStartDate] = useState(janThisYear);
   const [endDate, setEndDate] = useState(today);
-  const [filteredData, setFilteredData] = useState([]);
+  const [rawData, setRawData] = useState([]);
+  const [processedData, setProcessedData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [viewBy, setViewBy] = useState("overall");
-  const [viewByApplied, setViewByApplied] = useState("overall"); 
+  const [viewByApplied, setViewByApplied] = useState("overall");
   const [guestVisit, setGuestVisit] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState([]);
 
@@ -70,13 +71,50 @@ const OccupancyAndGuest = () => {
     try {
       setIsLoading(true);
       const response = await api.get("/admin/analytics/occupancy-and-guest", {
-        params: { startDate, endDate, viewBy }, // example params
+        params: { startDate, endDate, viewBy },
       });
       const { monthlyData, aggregatedGuest, aggregatedPayment } = response.data;
+      // console.log("monthlyData", monthlyData);
 
-      console.log("response", response);
+      let flattened;
 
-      setFilteredData(monthlyData);
+      if (viewBy === "overall") {
+        // Use bookingRaw and bookingPercent directly
+        flattened = monthlyData.map((item) => ({
+          month: item.month,
+          booking: item.bookingRaw,
+          bookingPercent: item.bookingPercent,
+        }));
+      } else if (viewBy === "roomtypes") {
+        // For each month, flatten the roomTypeRaw and roomTypePercent into keys like DeluxeRaw, DeluxePercent
+        flattened = monthlyData.map((item) => {
+          const flatData = { month: item.month };
+
+          // Flatten roomTypeRaw: { Deluxe: 5 } => DeluxeRaw: 5
+          for (const [roomType, rawValue] of Object.entries(
+            item.roomTypeRaw || {}
+          )) {
+            flatData[`${roomType}Raw`] = rawValue;
+          }
+
+          // Flatten roomTypePercent: { Deluxe: 100 } => DeluxePercent: 100
+          for (const [roomType, percentValue] of Object.entries(
+            item.roomTypePercent || {}
+          )) {
+            flatData[`${roomType}`] = percentValue;
+          }
+
+          return flatData;
+        });
+      } else {
+        // fallback to empty array if needed
+        flattened = [];
+      }
+
+      // console.log("flattened", flattened);
+
+      setProcessedData(flattened);
+      setRawData(monthlyData);
       setGuestVisit(aggregatedGuest);
       setPaymentMethod(aggregatedPayment);
     } catch (error) {
@@ -87,6 +125,18 @@ const OccupancyAndGuest = () => {
   }, [startDate, endDate, viewBy]);
 
   const ref = useInViewFetch(fetchData);
+
+  const containerWidth = 60;
+  const categoriesCount = processedData.length;
+  const maxBarSize = 12;
+  const minBarSize = 6;
+
+  const calculatedBarSize = containerWidth / categoriesCount;
+
+  const dynamicBarSize = Math.max(
+    minBarSize,
+    Math.min(maxBarSize, calculatedBarSize)
+  );
 
   return (
     <div
@@ -198,7 +248,7 @@ const OccupancyAndGuest = () => {
           // ----------------------------- Overall Chart -----------------------------
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart
-              data={filteredData}
+              data={processedData}
               margin={{ top: 10, right: 10, left: 20, bottom: 20 }}
             >
               <defs>
@@ -217,7 +267,7 @@ const OccupancyAndGuest = () => {
                 axisLine={false}
                 tickLine={false}
                 tick={({ x, y, payload, index }) => {
-                  const total = filteredData.length;
+                  const total = processedData.length;
                   let textAnchor = "middle";
                   let xPosition = x;
 
@@ -268,7 +318,7 @@ const OccupancyAndGuest = () => {
               />
               <Area
                 type="monotone"
-                dataKey="booking"
+                dataKey="bookingPercent"
                 stroke="#EC632A"
                 strokeWidth={3}
                 fill="url(#colorRevenue)"
@@ -281,7 +331,7 @@ const OccupancyAndGuest = () => {
         ) : (
           //----------------------------- Roomtypes Chart -----------------------------
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={filteredData}>
+            <BarChart data={processedData}>
               <CartesianGrid
                 vertical={false}
                 horizontal={true}
@@ -291,51 +341,103 @@ const OccupancyAndGuest = () => {
                 dataKey="month"
                 axisLine={false}
                 tickLine={false}
-                tick={{ dy: 12 }}
+                tick={({ x, y, payload, index }) => {
+                  const total = processedData.length;
+                  let textAnchor = "middle";
+                  let xPosition = x;
+
+                  if (index === 0) {
+                    textAnchor = "start";
+                  } else if (index === total - 1) {
+                    textAnchor = "end";
+                    xPosition = x + 12;
+                  }
+
+                  const fontSize = total <= 4 ? 16 : total <= 6 ? 14 : 12;
+
+                  return (
+                    <text
+                      x={xPosition}
+                      y={y + 18}
+                      textAnchor={textAnchor}
+                      dominantBaseline="middle"
+                      fontSize={fontSize}
+                      fill="#6B7280"
+                    >
+                      {payload.value}
+                    </text>
+                  );
+                }}
               />
               <YAxis
+                domain={[0, 100]}
                 tickFormatter={(value) => `${value}%`}
                 tick={{ dx: -55, textAnchor: "start" }}
                 axisLine={false}
                 tickLine={false}
               />
-              <Tooltip cursor={{ fill: 'rgba(0, 0, 0, 0.04)' }} />
+              <Tooltip
+                cursor={{ fill: "rgba(0, 0, 0, 0.04)" }}
+                content={({ active, payload, label }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <div className="bg-white border border-gray-200 rounded shadow p-2 text-sm text-gray-800">
+                        <p className="font-semibold">{label}</p>
+                        {payload.map((entry, index) => {
+                          const roomType = entry.name;
+                          const raw = entry.payload[`${roomType}Raw`] ?? 0;
 
+                          return (
+                            <div
+                              key={index}
+                              className="flex justify-between gap-2"
+                            >
+                              <span>{roomType}</span>
+                              <span>{raw}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
 
               <Bar
                 dataKey="Superior Garden View"
                 fill="#F97316"
-                barSize={12}
+                barSize={dynamicBarSize}
                 radius={[8, 8, 8, 8]}
               />
               <Bar
                 dataKey="Deluxe"
                 fill="#465C50"
-                barSize={12}
+                barSize={dynamicBarSize}
                 radius={[8, 8, 8, 8]}
               />
               <Bar
                 dataKey="Superior"
                 fill="#E5A5A5"
-                barSize={12}
+                barSize={dynamicBarSize}
                 radius={[8, 8, 8, 8]}
               />
               <Bar
                 dataKey="Supreme"
                 fill="#F5DA81"
-                barSize={12}
+                barSize={dynamicBarSize}
                 radius={[8, 8, 8, 8]}
               />
               <Bar
                 dataKey="Premier Sea View"
                 fill="#60A5FA"
-                barSize={12}
+                barSize={dynamicBarSize}
                 radius={[8, 8, 8, 8]}
               />
               <Bar
                 dataKey="Suit"
                 fill="#A78BFA"
-                barSize={12}
+                barSize={dynamicBarSize}
                 radius={[8, 8, 8, 8]}
               />
             </BarChart>
@@ -393,7 +495,13 @@ const OccupancyAndGuest = () => {
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
-                  <div className="font-bold text-black translate-y-6 -translate-x-4">
+                  <div
+                    className={cn(
+                      "font-bold text-black translate-y-6 -translate-x-4",
+                      item.percent < 10 && "pr-2",
+                      item.percent === 0 && "pr-4"
+                    )}
+                  >
                     {item.percent}%
                   </div>
                 </div>
@@ -419,7 +527,7 @@ const OccupancyAndGuest = () => {
               ))
             : paymentMethod.map((item, index) => (
                 <div key={index} className="flex items-center gap-4">
-                  <div className="w-full">
+                  <div className="w-full ">
                     <ResponsiveContainer width="98%" height={24}>
                       <div className="text-black font-semibold">
                         {item.type}
@@ -447,7 +555,13 @@ const OccupancyAndGuest = () => {
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
-                  <div className="font-bold text-black translate-y-6 -translate-x-4">
+                  <div
+                    className={cn(
+                      "font-bold text-black translate-y-6 -translate-x-4",
+                      item.percent < 10 && "pr-2",
+                      item.percent === 0 && "pr-4"
+                    )}
+                  >
                     {item.percent}%
                   </div>
                 </div>

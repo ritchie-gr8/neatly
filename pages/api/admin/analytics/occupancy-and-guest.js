@@ -166,27 +166,65 @@ const GET = async (req, res) => {
       if (viewBy === "overall") {
         data.push({
           month: value.month,
-          booking: value.booking,
+          bookingRaw: value.booking,
           guestRaw,
           paymentRaw,
         });
       } else {
         // Transform roomTypeMap into object with keys as room types and counts as values
-        const roomTypeObj = {};
+        const roomTypeRaw = {};
         for (const [type, count] of value.roomTypeMap.entries()) {
-          roomTypeObj[type] = count;
+          roomTypeRaw[type] = count;
         }
         data.push({
           month: value.month,
-          ...roomTypeObj, // spread the room type counts as keys
+          roomTypeRaw,
           guestRaw,
           paymentRaw,
         });
       }
     }
 
-    // Sort data by date ascending
+    // Sort data by month date ascending
     data.sort((a, b) => a.month.localeCompare(b.month));
+
+    // Calculate max values for normalization
+    let maxBookingRaw = 0;
+    let maxRoomTypeCount = 0;
+
+    if (viewBy === "overall") {
+      maxBookingRaw = Math.max(...data.map((d) => d.bookingRaw || 0));
+    } else {
+      for (const d of data) {
+        for (const count of Object.values(d.roomTypeRaw || {})) {
+          if (count > maxRoomTypeCount) maxRoomTypeCount = count;
+        }
+      }
+    }
+
+     // Add percentage fields normalized to max values
+     const monthlyData = data.map((d) => {
+      if (viewBy === "overall") {
+        return {
+          month: d.month,
+          bookingRaw: d.bookingRaw,
+          bookingPercent:
+            maxBookingRaw > 0 ? Math.round((d.bookingRaw / maxBookingRaw) * 100) : 0,
+        };
+      } else {
+        // Calculate roomTypePercent normalized by maxRoomTypeCount
+        const roomTypePercent = {};
+        for (const [type, count] of Object.entries(d.roomTypeRaw || {})) {
+          roomTypePercent[type] =
+            maxRoomTypeCount > 0 ? Math.round((count / maxRoomTypeCount) * 100) : 0;
+        }
+        return {
+          month: d.month,
+          roomTypeRaw: d.roomTypeRaw,
+          roomTypePercent,
+        };
+      }
+    });
 
     // Aggregate and transform guest and payment data for percentages
     const aggregatedGuestRaw = aggregateCounts(data.map((d) => d.guestRaw));
@@ -198,7 +236,7 @@ const GET = async (req, res) => {
     return successResponse({
       res,
       data: {
-        monthlyData: data, // Monthly stats with raw counts
+        monthlyData: monthlyData, // Monthly stats with raw counts
         aggregatedGuest: guestPercent, // Aggregated guest visit percentages
         aggregatedPayment: paymentPercent, // Aggregated payment method percentages
       },

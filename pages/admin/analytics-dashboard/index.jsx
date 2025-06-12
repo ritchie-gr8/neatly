@@ -79,6 +79,7 @@ const AnalyticDashboard = () => {
   
       const response = await api.get(`/admin/analytics/piechart?month=${pieChartMonth}`);
       const data = response.data.data;
+      console.log("data",data)
   
       setPieChartData(data);
     } catch (error) {
