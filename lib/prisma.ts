@@ -7,23 +7,29 @@ declare global {
 let prisma: PrismaClient;
 
 if (process.env.NODE_ENV === "production") {
-  prisma = new PrismaClient({});
+  prisma = new PrismaClient({
+    log: ['error'],
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
+  });
 } else {
   if (!globalThis.prismaClientInstance) {
     console.log("Development: Creating new PrismaClient instance.");
-    globalThis.prismaClientInstance = new PrismaClient({});
+    globalThis.prismaClientInstance = new PrismaClient({
+      log: ['query', 'info', 'warn', 'error'],
+    });
   }
   prisma = globalThis.prismaClientInstance;
 }
 
 if (process.env.NODE_ENV === "development") {
   const exitHandlerSymbol = Symbol.for("prismaExitHandlerAttached");
-
   if (!globalThis[exitHandlerSymbol]) {
     process.on("beforeExit", async () => {
-      console.log(
-        "Prisma client disconnecting via beforeExit hook (development)..."
-      );
+      console.log("Prisma client disconnecting...");
       if (globalThis.prismaClientInstance) {
         await globalThis.prismaClientInstance.$disconnect();
         console.log("Prisma client disconnected.");
