@@ -77,6 +77,12 @@ const RoomLists = ({ setIsBooking }) => {
   const handleBookNow = async (room) => {
     try {
       setIsBooking(true);
+
+      if (!user) {
+        router.push("/sign-in");
+        return;
+      }
+
       const nights = calculateNights(checkIn, checkOut);
       const roomsNeeded = parseInt(rooms) || 1;
       const pricePerNight =

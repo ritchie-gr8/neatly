@@ -106,7 +106,7 @@ const SearchRoom = ({
         />
       </div>
 
-      <div className="flex-1 md:max-w-[240px] z-50 w-full">
+      <div className="flex-1 md:max-w-[240px] w-full">
         <div className="-translate-y-2.5 ">
           <label
             htmlFor="rooms-guests"
