@@ -1,40 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# NEATLY Hotel Management System 🏨
 
-## Getting Started
+A modern, full-featured hotel management system built with Next.js, designed to streamline hotel operations with intelligent chatbot support and real-time communication capabilities.
 
-First, run the development server:
+![Demo](https://res.cloudinary.com/dhyyl3snm/image/upload/v1749737296/Screenshot_2025-06-12_210721_sn5kef.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🌟 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Core Functionality
+- **Room Management**: Comprehensive room booking, availability tracking, and reservation management
+- **Guest Management**: Complete guest profile management and booking history
+- **Payment Processing**: Secure payment integration with Omise payment gateway and refund processing
+- **Real-time Updates**: Live updates using Supabase real-time capabilities
+- **Authentication**: JWT Cookies Based Token
+- **Data Analytics**: Comprehensive analytics dashboard with chart visualization
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+### AI-Powered Customer Support
+- **Intelligent Chatbot**: Gemini AI-powered chatbot that detects user intentions and provides contextual responses
+- **Pre-defined Responses**: Curated response system for common hotel inquiries
+- **Human Handoff**: Seamless transition to admin support when the chatbot cannot resolve queries
+- **Real-time Chat**: Live communication between guests and hotel staff via Supabase Realtime
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+### Data Analytics & Reporting
+- **Interactive Dashboard**: Comprehensive analytics dashboard with real-time data visualization
+- **Revenue Analytics**: Revenue trends, booking patterns, and financial insights
+- **Occupancy Tracking**: Room occupancy rates and availability analytics
+- **Guest Analytics**: Guest demographics and booking behavior analysis
+- **Performance Metrics**: Key performance indicators (KPIs) and business metrics
+- **Visual Charts**: Interactive charts and graphs using Recharts library
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+### User Experience
+- **Responsive Design**: Modern UI built with shadcn/ui components and Tailwind CSS
+- **Intuitive Interface**: User-friendly design for both guests and hotel staff
+- **Mobile Optimized**: Full functionality across all device types
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Tech Stack
 
-## Learn More
+### Frontend
+- **Framework**: Next.js (Page Router)
+- **Styling**: Tailwind CSS + shadcn/ui components
+- **UI Components**: shadcn/ui for consistent, accessible design
+- **Data Visualization**: Recharts for interactive charts and analytics
 
-To learn more about Next.js, take a look at the following resources:
+### Backend & Database
+- **ORM**: Prisma for type-safe database operations
+- **Database**: Supabase (PostgreSQL)
+- **Real-time**: Supabase Realtime for live features
+- **API**: Next.js API routes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+### AI & Communication
+- **AI Model**: Gemini AI for natural language processing
+- **Real-time Chat**: Supabase Broadcast for instant messaging
+- **Intent Detection**: AI-powered conversation understanding
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+### Payment & Integration
+- **Payment Gateway**: Omise for secure payment processing
+- **Authentication**: JWT Cookies Based Token
