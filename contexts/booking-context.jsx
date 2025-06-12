@@ -66,7 +66,7 @@ export const BookingProvider = ({ children }) => {
   });
 
   const startCountdown = () => {
-    setCountdown(300); 
+    setCountdown(300);
     setIsCountdownActive(true);
   };
 
@@ -75,7 +75,7 @@ export const BookingProvider = ({ children }) => {
   };
 
   const resetCountdown = () => {
-    setCountdown(300); 
+    setCountdown(300);
     setIsCountdownActive(false);
   };
 
@@ -87,7 +87,7 @@ export const BookingProvider = ({ children }) => {
 
   useEffect(() => {
     let timer;
-    
+
     if (isCountdownActive && countdown > 0) {
       timer = setInterval(() => {
         setCountdown(prev => {
@@ -158,8 +158,8 @@ export const BookingProvider = ({ children }) => {
   };
 
   const setBookingFromQuery = (queryParams) => {
-    console.log("📋 Setting booking data from query:", queryParams);
-    
+    // console.log("📋 Setting booking data from query:", queryParams);
+
     // รับข้อมูลห้องจาก query parameters โดยตรง
     const roomData = {
       id: queryParams.roomId,
@@ -184,7 +184,7 @@ export const BookingProvider = ({ children }) => {
       loading: false,
     }));
 
-    console.log("✅ Room data set from query:", roomData);
+    // console.log("✅ Room data set from query:", roomData);
   };
 
   const calculateNights = (checkIn, checkOut) => {

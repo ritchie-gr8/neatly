@@ -22,7 +22,7 @@ const CancelSuccess = () => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
       weekday: "short",
-      day: "2-digit", 
+      day: "2-digit",
       month: "short",
       year: "numeric",
     });
@@ -45,7 +45,7 @@ const CancelSuccess = () => {
 
   return (
     <DefaultLayout title="Cancellation Success">
-      <div className="bg-util-bg w-full h-screen md:px-96 md:pt-20">
+      <div className="bg-util-bg w-full h-screen sm:px-28 lg:px-96 md:pt-20">
         <div className="bg-green-800 md:rounded-t-sm py-10 px-4">
           <h1 className="text-white text-h3 text-center">
             The Cancellation is Complete

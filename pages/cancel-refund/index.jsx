@@ -7,25 +7,23 @@ import api from "@/lib/axios";
 
 const CancelRefundPage = () => {
   const router = useRouter();
-  
+
   const [bookingData, setBookingData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   const { bookingId, type } = router.query;
   const isRefund = type === 'refund';
-  
+
   useEffect(() => {
     const fetchBookingData = async () => {
       if (!bookingId) return;
 
       try {
         setLoading(true);
-        console.log("Fetching booking data for ID:", bookingId);
 
         const response = await api.get(`/request-refund/${bookingId}`);
-        console.log("booking data:", response.data);
-        
+
         const foundBooking = response.data;
 
         if (foundBooking) {
@@ -76,7 +74,7 @@ const CancelRefundPage = () => {
       setLoading(true);
 
       let response;
-      
+
       if (isRefund) {
         response = await api.post("/booking/refund", {
           bookingId: parseInt(bookingData?.bookingId),
@@ -117,19 +115,19 @@ const CancelRefundPage = () => {
         }
       } else {
         setError(response.data.error || "Processing failed");
+        setLoading(false);
       }
     } catch (err) {
       console.error("Error processing:", err);
       setError(err.response?.data?.error || "Failed to process");
-    } finally {
       setLoading(false);
     }
   };
 
   const pageTitle = isRefund ? "Request a Refund" : "Cancel Booking";
   const totalLabel = isRefund ? "Total Refund" : "Total Amount";
-  const buttonText = isRefund 
-    ? "Cancel and Refund this Booking" 
+  const buttonText = isRefund
+    ? "Cancel and Refund this Booking"
     : "Cancel this Booking";
   const loadingText = isRefund ? "Processing refund..." : "Cancelling...";
 
@@ -191,12 +189,12 @@ const CancelRefundPage = () => {
   return (
     <DefaultLayout title={pageTitle}>
       <div className="bg-util-bg w-full h-screen md:px-40">
-        <h1 className="text-green-800 text-h3 md:text-h2 px-4 pt-10 md:pt-20 pb-6">
+        <h1 className="text-green-800 text-h3 md:text-h2 px-4 md:px-0 pt-10 md:pt-20 pb-6">
           {pageTitle}
         </h1>
 
         {!isRefund && (
-          <div className="mx-4 mb-6 p-4 bg-red-50 border border-red-200 rounded-md">
+          <div className="mx-4 mb-6 p-4 md:mx-0 bg-red-50 border border-red-200 rounded-md">
             <p className="text-red-600 text-sm">
               * Cancellation of this booking will not be able to request a refund
             </p>

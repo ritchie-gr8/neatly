@@ -15,7 +15,7 @@ const index = () => {
       try {
         // ดึง bookingNumber จาก URL (เช่น /payment-success/BK250604799353)
         const { bookingNumber } = router.query;
-        
+
         if (!bookingNumber) {
           throw new Error('Booking number is required');
         }
@@ -48,7 +48,7 @@ const index = () => {
     const options = {
       weekday: "short",
       day: "numeric",
-      month: "short", 
+      month: "short",
       year: "numeric",
     };
     return date.toLocaleDateString("en-US", options);
@@ -76,7 +76,7 @@ const index = () => {
   if (loading) {
     return (
       <DefaultLayout title="Payment Success">
-        <div className="bg-white md:bg-util-bg w-full min-h-screen md:px-96 md:pt-20 md:pb-36">
+        <div className="bg-white md:bg-util-bg w-full min-h-screen sm:px-28 lg:px-96 md:pt-20 md:pb-36">
           <div className="flex items-center justify-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
             <span className="ml-4 text-gray-600">Loading booking details...</span>
@@ -89,7 +89,7 @@ const index = () => {
   if (error) {
     return (
       <DefaultLayout title="Payment Success">
-        <div className="bg-white md:bg-util-bg w-full min-h-screen md:px-96 md:pt-20 md:pb-36">
+        <div className="bg-white md:bg-util-bg w-full min-h-screen sm:px-28 lg:px-96 md:pt-20 md:pb-36">
           <div className="text-center py-20">
             <h2 className="text-xl font-semibold text-red-600 mb-4">Error</h2>
             <p className="text-gray-600 mb-8">{error}</p>
@@ -105,7 +105,7 @@ const index = () => {
   if (!bookingData) {
     return (
       <DefaultLayout title="Payment Success">
-        <div className="bg-white md:bg-util-bg w-full min-h-screen md:px-96 md:pt-20 md:pb-36">
+        <div className="bg-white md:bg-util-bg w-full min-h-screen sm:px-28 lg:px-96 md:pt-20 md:pb-36">
           <div className="text-center py-20">
             <h2 className="text-xl font-semibold text-gray-600 mb-4">Booking Not Found</h2>
             <p className="text-gray-600 mb-8">The booking information could not be found.</p>
@@ -122,7 +122,7 @@ const index = () => {
 
   return (
     <DefaultLayout title="Payment Success">
-      <div className="bg-white md:bg-util-bg w-full min-h-screen md:px-96 md:pt-20 md:pb-36">
+      <div className="bg-white md:bg-util-bg w-full min-h-screen sm:px-28 lg:px-96 md:pt-20 md:pb-36">
         {/* Header */}
         <div className="px-6 py-10 bg-green-800 md:rounded-t-sm flex flex-col items-center justify-center text-center">
           <p className="text-white font-noto-serif text-h3">
@@ -217,7 +217,7 @@ const index = () => {
               Back to Home
             </div>
           </Link>
-          
+
           <Link href="/booking-history">
             <div className="hidden md:flex px-8 pt-6 items-center justify-center text-orange-500 hover:underline">
               Check Booking Detail
@@ -229,7 +229,7 @@ const index = () => {
               Check Booking Detail
             </div>
           </Link>
-          
+
           <Link href="/">
             <div className="hidden md:flex btn-primary px-8 py-4 items-center justify-center">
               Back to Home

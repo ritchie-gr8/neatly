@@ -16,14 +16,14 @@ import { validateField } from "@/lib/validations/booking-validation";
 
 const BasicInfoForm = () => {
   const { user } = useAuth();
-  const { 
-    bookingData, 
-    updateBasicInfo, 
-    validationErrors, 
-    setValidationErrorsForSection 
+  const {
+    bookingData,
+    updateBasicInfo,
+    validationErrors,
+    setValidationErrorsForSection
   } = useBooking();
   const [isInitialized, setIsInitialized] = useState(false);
-  
+
   // ใช้ข้อมูลจาก Context เป็นหลัก
   const formData = bookingData.basicInfo || {};
   const currentErrors = validationErrors?.basicInfo || {};
@@ -48,7 +48,7 @@ const BasicInfoForm = () => {
 
   const validateSingleField = (fieldName, value) => {
     const error = validateField(fieldName, value, formData);
-    
+
     setValidationErrorsForSection('basicInfo', {
       ...currentErrors,
       [fieldName]: error
@@ -58,15 +58,15 @@ const BasicInfoForm = () => {
   useEffect(() => {
     if (user && !isInitialized) {
       if (!hasDataInContext()) {
-        console.log("Loading initial user data from auth context:", {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          phone: user.phone,
-          dateOfBirth: user.dateOfBirth,
-          country: user.country
-        });
-        
+        // console.log("Loading initial user data from auth context:", {
+        //   firstName: user.firstName,
+        //   lastName: user.lastName,
+        //   email: user.email,
+        //   phone: user.phone,
+        //   dateOfBirth: user.dateOfBirth,
+        //   country: user.country
+        // });
+
         const userData = {
           firstName: user.firstName || "",
           lastName: user.lastName || "",
@@ -75,14 +75,14 @@ const BasicInfoForm = () => {
           dateOfBirth: parseDate(user.dateOfBirth),
           country: user.country || "",
         };
-        
+
         updateBasicInfo(userData);
       } else {
-        console.log("Using existing modified data from context:", formData);
+        // console.log("Using existing modified data from context:", formData);
       }
       setIsInitialized(true);
     }
-  }, [user, isInitialized, updateBasicInfo]); 
+  }, [user, isInitialized, updateBasicInfo]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -95,8 +95,8 @@ const BasicInfoForm = () => {
     updateBasicInfo({
       dateOfBirth: date
     });
-    
-   
+
+
     validateSingleField('dateOfBirth', date);
   };
 
@@ -104,8 +104,8 @@ const BasicInfoForm = () => {
     updateBasicInfo({
       country: value
     });
-    
-    
+
+
     validateSingleField('country', value);
   };
 
@@ -120,8 +120,8 @@ const BasicInfoForm = () => {
           <label>First name</label>
           <input
             id="firstName"
-            name="firstName" 
-            value={formData.firstName || ""} 
+            name="firstName"
+            value={formData.firstName || ""}
             onChange={handleInputChange}
             className={cn(
               "mb-1 py-3 pl-3 pr-4 border rounded-sm w-full text-black",
@@ -138,8 +138,8 @@ const BasicInfoForm = () => {
           <label>Last name</label>
           <input
             id="lastName"
-            name="lastName" 
-            value={formData.lastName || ""} 
+            name="lastName"
+            value={formData.lastName || ""}
             onChange={handleInputChange}
             placeholder="Cho"
             className={cn(
@@ -157,7 +157,7 @@ const BasicInfoForm = () => {
           <label>Email</label>
           <input
             id="email"
-            name="email" 
+            name="email"
             value={formData.email || ""}
             onChange={handleInputChange}
             placeholder="kate.cho@gmail.com"
@@ -176,8 +176,8 @@ const BasicInfoForm = () => {
           <label>Phone number</label>
           <input
             id="phone"
-            name="phone" 
-            value={formData.phone || ""} 
+            name="phone"
+            value={formData.phone || ""}
             onChange={handleInputChange}
             placeholder="088 888 8888"
             className={cn(

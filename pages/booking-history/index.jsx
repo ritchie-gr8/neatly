@@ -86,10 +86,10 @@ const index = () => {
 
   const handleCancelBooking = (booking) => {
     if (canRefund(booking.check_in_date)) {
-    router.push(`/cancel-refund?bookingId=${booking.booking_id}&type=refund`);
-  } else if (isWithin24HoursBeforeCheckIn(booking.check_in_date)) {
-    router.push(`/cancel-refund?bookingId=${booking.booking_id}&type=cancel`);
-  }
+      router.push(`/cancel-refund?bookingId=${booking.booking_id}&type=refund`);
+    } else if (isWithin24HoursBeforeCheckIn(booking.check_in_date)) {
+      router.push(`/cancel-refund?bookingId=${booking.booking_id}&type=cancel`);
+    }
   };
 
   const fetchBookings = async (page = 1) => {
@@ -152,8 +152,8 @@ const index = () => {
   if (!user) {
     return (
       <DefaultLayout title="Booking History" showFooter={true}>
-        <div className="bg-util-bg w-full h-full md:px-40">
-          <h1 className="text-green-800 text-h3 px-4 pt-10 md:pt-20 pb-6 md:pb-16">
+        <div className="bg-util-bg w-full h-[calc(100vh-64px)] md:px-40">
+          <h1 className="text-green-800 text-h3 px-4 md:px-0 pt-10 md:pt-20 pb-6 md:pb-16">
             Booking History
           </h1>
           <div className="flex justify-center items-center h-64">
@@ -170,8 +170,8 @@ const index = () => {
   if (loading) {
     return (
       <DefaultLayout title="Booking History" showFooter={true}>
-        <div className="bg-util-bg w-full h-full md:px-40 ">
-          <h1 className="text-green-800 text-h3 px-4 pt-10 md:pt-20 pb-6 md:pb-16">
+        <div className="bg-util-bg w-full h-[calc(100vh-64px)] md:px-40 ">
+          <h1 className="text-green-800 text-h3 px-4 md:px-0 pt-10 md:pt-20 pb-6 md:pb-16">
             Booking History
           </h1>
           <div className="flex justify-center items-center h-64">
@@ -188,8 +188,8 @@ const index = () => {
   if (error) {
     return (
       <DefaultLayout title="Booking History" showFooter={true}>
-        <div className="bg-util-bg w-full h-full md:px-40">
-          <h1 className="text-green-800 text-h3 px-4 pt-10 md:pt-20 pb-6 md:pb-16">
+        <div className="bg-util-bg w-full h-[calc(100vh-64px)] md:px-40">
+          <h1 className="text-green-800 text-h3 px-4 md:px-0 pt-10 md:pt-20 pb-6 md:pb-16">
             Booking History
           </h1>
           <div className="flex justify-center items-center h-64">
@@ -211,12 +211,12 @@ const index = () => {
   return (
     <DefaultLayout title="Booking History" showFooter={true}>
       <div className="bg-util-bg w-full h-full md:px-40 pb-20">
-        <h1 className="text-green-800 text-h3 px-4 pt-10 md:pt-20 pb-6 md:pb-16">
+        <h1 className="text-green-800 text-h3 px-4 md:px-0 pt-10 md:pt-20 pb-6 md:pb-16">
           Booking History
         </h1>
 
         {bookings.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="text-center py-12 h-[calc(100vh-64px)]">
             <p className="text-gray-600">No booking history found</p>
           </div>
         ) : (
@@ -229,13 +229,20 @@ const index = () => {
                     alt={booking.name}
                     width={400}
                     height={300}
-                    className="w-full md:w-96 h-60 md:h-60 object-cover rounded-sm flex-shrink-0"
+                    className={`w-full md:w-96 h-60 md:h-60 object-cover rounded-sm flex-shrink-0 ${
+                      booking.booking_status === "CANCELLED" ? "grayscale" : ""
+                    }`}
                   />
 
-                  <div className="px-4 md:pl-12 pt-4 pb-6 md:w-full">
+                  <div className="px-4 md:pl-12 pt-4 pb-6 md:w-full md:px-0">
                     <div className="md:flex md:w-full md:justify-between md:items-center">
                       <h2 className="text-black text-h4 font-inter font-semibold">
-                        {booking.name}
+                        {booking.name}{" "}
+                        {booking.booking_status === "CANCELLED" && (
+                          <span className="text-red-500 font-medium text-sm">
+                            (Cancelled)
+                          </span>
+                        )}
                       </h2>
                       <p className="text-b1 text-gray-600 mt-1 font-inter">
                         Booking date: {formatDate(booking.created_at)}
@@ -402,12 +409,12 @@ const index = () => {
                           triggerButtonClass="md:px-0 px-4 py-6 text-orange-500 hover:underline font-open-sans font-semibold cursor-pointer"
                           title="Cancel Booking"
                           message={
-                            canRefund(booking.check_in_date)
+                            canRefund(booking.check_in_date) && booking.payment_method === "CREDIT_CARD"
                               ? "Are you sure you would like to cancel this booking?"
                               : "Cancellation of the booking now will not be able to request a refund. Are you sure you would like to cancel this booking?"
                           }
                           confirmText={
-                            canRefund(booking.check_in_date)
+                            canRefund(booking.check_in_date) && booking.payment_method === "CREDIT_CARD"
                               ? "Yes, I want to cancel and request refund"
                               : "Yes, I want to cancel"
                           }
@@ -419,11 +426,11 @@ const index = () => {
                       </div>
                     )}
 
-                    <div className="flex items-center justify-end w-full mb-4 md:mb-0">
+                    <div className="flex items-center justify-center md:justify-end w-full mb-4 md:mb-0 gap-14">
                       {shouldShowRoomDetailButton(booking.check_in_date) && (
                         <Link
                           href={`/rooms/${booking.room_type_id}`}
-                          className="md:pr-14 px-8 md:px-0 text-orange-500 hover:underline font-open-sans font-semibold cursor-pointer"
+                          className="px-8 md:px-0 text-orange-500 hover:underline font-open-sans font-semibold cursor-pointer"
                         >
                           Room Detail
                         </Link>

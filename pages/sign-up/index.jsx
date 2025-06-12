@@ -165,7 +165,7 @@ const SignUpPage = () => {
     }
 
     try {
-      const { data: user } = await authApi.signup(data);
+      const { user } = await authApi.signup(data);
 
       if (user) {
         toast.success("Register successfully");
@@ -188,7 +188,7 @@ const SignUpPage = () => {
   };
 
   return (
-    <DefaultLayout title="Sign Up | Neatly">
+    <DefaultLayout title="Sign Up">
       <div className="bg-[url('/images/auth/signup-bg.jpg')] bg-cover bg-center h-full flex items-center justify-center">
         <div className="h-full sm:h-fit bg-util-bg w-full max-w-5xl mx-auto px-4 py-10 sm:p-20 sm:mx-40 sm:my-16">
           <h2 className="text-h2 text-green-800 mb-10 sm:mb-16 font-medium">
@@ -213,6 +213,7 @@ const SignUpPage = () => {
                           placeholder="Enter your first name"
                           className="placeholder:text-gray-600 bg-util-white"
                           disabled={isLoading}
+                          maxLength={50}
                         />
                       </FormControl>
                       <FormMessage className="text-xs" />
@@ -231,6 +232,7 @@ const SignUpPage = () => {
                           placeholder="Enter your last name"
                           className="placeholder:text-gray-600 bg-util-white"
                           disabled={isLoading}
+                          maxLength={50}
                         />
                       </FormControl>
                       <FormMessage className="text-xs" />
@@ -249,6 +251,7 @@ const SignUpPage = () => {
                           placeholder="Enter your username"
                           className="placeholder:text-gray-600 bg-util-white"
                           disabled={isLoading}
+                          maxLength={50}
                         />
                       </FormControl>
                       <FormMessage className="text-xs" />
@@ -267,6 +270,7 @@ const SignUpPage = () => {
                           placeholder="Enter your email"
                           className="placeholder:text-gray-600 bg-util-white"
                           disabled={isLoading}
+                          maxLength={255}
                         />
                       </FormControl>
                       <FormMessage className="text-xs" />
@@ -286,6 +290,7 @@ const SignUpPage = () => {
                           placeholder="Enter your password"
                           className="placeholder:text-gray-600 bg-util-white"
                           disabled={isLoading}
+                          maxLength={72}
                         />
                       </FormControl>
                       <FormMessage className="text-xs" />
@@ -305,6 +310,7 @@ const SignUpPage = () => {
                           placeholder="Confirm your password"
                           className="placeholder:text-gray-600 bg-util-white"
                           disabled={isLoading}
+                          maxLength={72}
                         />
                       </FormControl>
                       <FormMessage className="text-xs" />
@@ -323,6 +329,7 @@ const SignUpPage = () => {
                           placeholder="Enter your phone number"
                           className="placeholder:text-gray-600 bg-util-white"
                           disabled={isLoading}
+                          maxLength={10}
                         />
                       </FormControl>
                       <FormMessage className="text-xs" />
@@ -439,9 +446,6 @@ const SignUpPage = () => {
           </Form>
         </div>
       </div>
-      <Button onClick={() => setIsLoading(false)}>
-        test
-      </Button>
     </DefaultLayout>
   );
 };

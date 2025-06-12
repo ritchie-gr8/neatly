@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import dayjs from "dayjs";
 import DefaultLayout from "@/layouts/default.layout";
 import api from "@/lib/axios";
 import { Separator } from "@/components/ui/separator";
@@ -68,7 +69,7 @@ const RoomDetailPage = () => {
 
   return (
     <DefaultLayout
-      title={roomType ? `${roomType.name} | Neatly` : "Room Details | Neatly"}
+      title={roomType ? `${roomType.name}` : "Room Details"}
       showFooter={true}
     >
       <div className="mx-auto bg-util-bg flex flex-col">
@@ -167,7 +168,7 @@ const RoomDetailPage = () => {
                   {roomType.name}
                 </h2>
 
-                <div className="flex flex-col md:flex-row justify-between md:gap-20">
+                <div className="flex flex-col md:flex-row justify-between md:gap-14">
                   <div className="flex flex-col gap-6 justify-between">
                     <p className="text-b1 text-gray-700">
                       Rooms ({roomType.roomSize}sqm) with full garden views,{" "}
@@ -192,13 +193,13 @@ const RoomDetailPage = () => {
 
                   <div className="mt-10 md:text-right flex md:flex-col items-center justify-between md:mt-0">
                     {/* Price Section */}
-                    <div className="mb-6">
+                    <div className="w-full mb-6">
                       {roomType.isPromotion && roomType.promotionPrice ? (
                         <div>
                           <p className="text-gray-700 line-through">
                             THB {formatPrice(roomType.pricePerNight, false)}
                           </p>
-                          <p className="text-[24px] font-semibold text-gray-900">
+                          <p className="text-[24px] font-semibold text-[#E12D2D]">
                             THB {formatPrice(roomType.promotionPrice, false)}
                           </p>
                         </div>
@@ -213,16 +214,14 @@ const RoomDetailPage = () => {
 
                     {/* Book Now Button */}
                     <Button
-                      className="btn-primary rounded-sm py-2 px-6 w-[120px]"
-                      onClick={() =>
+                      className="btn-primary rounded-sm py-2 px-6 w-[120px] md:ml-[50px]"
+                      onClick={() => {
+                        const today = dayjs().format('YYYY-MM-DD');
+                        const tomorrow = dayjs().add(1, 'day').format('YYYY-MM-DD');
                         router.push(
-                          `/search-result?checkIn=${
-                            new Date().toISOString().split("T")[0]
-                          }&checkOut=${
-                            new Date().toISOString().split("T")[0]
-                          }&rooms=1&guests=1`
+                          `/search-result?checkIn=${today}&checkOut=${tomorrow}&rooms=1&guests=1`
                         )
-                      }
+                      }}
                     >
                       Book Now
                     </Button>

@@ -8,68 +8,68 @@ export const ConfirmBookingProvider = ({ children }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
 
   const confirmBooking = (bookingData) => {
-    console.log("🎉 BOOKING CONFIRMED! Complete data for Omise:");
-    console.log("=====================================");
-    
+    // console.log("🎉 BOOKING CONFIRMED! Complete data for Omise:");
+    // console.log("=====================================");
+
     // Basic Information
-    console.log("👤 Basic Information:");
-    console.log({
-      firstName: bookingData.basicInfo.firstName,
-      lastName: bookingData.basicInfo.lastName,
-      email: bookingData.basicInfo.email,
-      phone: bookingData.basicInfo.phone,
-      country: bookingData.basicInfo.country,
-      dateOfBirth: bookingData.basicInfo.dateOfBirth
-    });
+    // console.log("👤 Basic Information:");
+    // console.log({
+    //   firstName: bookingData.basicInfo.firstName,
+    //   lastName: bookingData.basicInfo.lastName,
+    //   email: bookingData.basicInfo.email,
+    //   phone: bookingData.basicInfo.phone,
+    //   country: bookingData.basicInfo.country,
+    //   dateOfBirth: bookingData.basicInfo.dateOfBirth
+    // });
 
     // Payment Method
-    console.log("💳 Payment Method:");
-    console.log({
-      type: bookingData.paymentMethod.type,
-      creditCard: bookingData.paymentMethod.type === 'credit' ? {
-        cardNumber: bookingData.paymentMethod.creditCard.cardNumber,
-        cardOwner: bookingData.paymentMethod.creditCard.cardOwner,
-        expiryDate: bookingData.paymentMethod.creditCard.expiryDate,
-        cvc: bookingData.paymentMethod.creditCard.cvc
-      } : null
-    });
+    // console.log("💳 Payment Method:");
+    // console.log({
+    //   type: bookingData.paymentMethod.type,
+    //   creditCard: bookingData.paymentMethod.type === 'credit' ? {
+    //     cardNumber: bookingData.paymentMethod.creditCard.cardNumber,
+    //     cardOwner: bookingData.paymentMethod.creditCard.cardOwner,
+    //     expiryDate: bookingData.paymentMethod.creditCard.expiryDate,
+    //     cvc: bookingData.paymentMethod.creditCard.cvc
+    //   } : null
+    // });
 
     // Booking Details
-    console.log("🏨 Booking Details:");
-    console.log({
-      roomId: bookingData.bookingDetail.roomData.id,
-      roomTypeId: bookingData.bookingDetail.roomData.roomType.id,
-      roomName: bookingData.bookingDetail.roomData.roomType.name,
-      checkIn: bookingData.bookingDetail.searchParams.checkIn,
-      checkOut: bookingData.bookingDetail.searchParams.checkOut,
-      adults: bookingData.bookingDetail.totalGuests,
-      rooms: bookingData.bookingDetail.totalRooms,
-      nights: bookingData.bookingDetail.nights
-    });
+    // console.log("🏨 Booking Details:");
+    // console.log({
+    //   roomId: bookingData.bookingDetail.roomData.id,
+    //   roomTypeId: bookingData.bookingDetail.roomData.roomType.id,
+    //   roomName: bookingData.bookingDetail.roomData.roomType.name,
+    //   checkIn: bookingData.bookingDetail.searchParams.checkIn,
+    //   checkOut: bookingData.bookingDetail.searchParams.checkOut,
+    //   adults: bookingData.bookingDetail.totalGuests,
+    //   rooms: bookingData.bookingDetail.totalRooms,
+    //   nights: bookingData.bookingDetail.nights
+    // });
 
-    // Special Requests
-    console.log("✨ Special Requests:");
-    console.log({
-      standardRequests: bookingData.specialRequests.standardRequests,
-      specialRequests: bookingData.specialRequests.specialRequests,
-      additionalRequest: bookingData.specialRequests.additionalRequest,
-      selectedRequests: bookingData.priceBreakdown.selectedSpecialRequests
-    });
+    // // Special Requests
+    // console.log("✨ Special Requests:");
+    // console.log({
+    //   standardRequests: bookingData.specialRequests.standardRequests,
+    //   specialRequests: bookingData.specialRequests.specialRequests,
+    //   additionalRequest: bookingData.specialRequests.additionalRequest,
+    //   selectedRequests: bookingData.priceBreakdown.selectedSpecialRequests
+    // });
 
-    // Price Breakdown
-    console.log("💰 Price Breakdown:");
-    console.log({
-      pricePerNight: bookingData.priceBreakdown.pricePerNight,
-      basePrice: bookingData.priceBreakdown.basePrice,
-      specialRequestsPrice: bookingData.priceBreakdown.specialRequestsPrice,
-      totalPrice: bookingData.priceBreakdown.totalPrice
-    });
+    // // Price Breakdown
+    // console.log("💰 Price Breakdown:");
+    // console.log({
+    //   pricePerNight: bookingData.priceBreakdown.pricePerNight,
+    //   basePrice: bookingData.priceBreakdown.basePrice,
+    //   specialRequestsPrice: bookingData.priceBreakdown.specialRequestsPrice,
+    //   totalPrice: bookingData.priceBreakdown.totalPrice
+    // });
 
-    // Complete data for Omise API
-    console.log("📦 Complete Data for Omise API:");
-    console.log(JSON.stringify(bookingData, null, 2));
-    
-    console.log("=====================================");
+    // // Complete data for Omise API
+    // console.log("📦 Complete Data for Omise API:");
+    // console.log(JSON.stringify(bookingData, null, 2));
+
+    // console.log("=====================================");
 
     // เก็บข้อมูลใน state
     setConfirmedBookingData(bookingData);
@@ -81,7 +81,7 @@ export const ConfirmBookingProvider = ({ children }) => {
   const resetConfirmation = () => {
     setConfirmedBookingData(null);
     setIsConfirmed(false);
-    console.log("🔄 Booking confirmation reset");
+    // console.log("🔄 Booking confirmation reset");
   };
 
   const getConfirmedData = () => {
@@ -139,8 +139,8 @@ export const ConfirmBookingProvider = ({ children }) => {
       }
     };
 
-    console.log("🎯 Formatted data for Omise API:");
-    console.log(JSON.stringify(omiseData, null, 2));
+    // console.log("🎯 Formatted data for Omise API:");
+    // console.log(JSON.stringify(omiseData, null, 2));
 
     return omiseData;
   };

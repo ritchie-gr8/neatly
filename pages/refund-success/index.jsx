@@ -56,7 +56,7 @@ const index = () => {
 
   return (
     <DefaultLayout title="Refund Success">
-      <div className="bg-util-bg w-full h-screen md:px-96 md:pt-20">
+      <div className="bg-util-bg w-full h-screen sm:px-28 lg:px-96 md:pt-20">
         <div className="bg-green-800 md:rounded-t-sm py-10 px-4">
           <h1 className="text-white text-h3 text-center">
             Your Request has been Submitted

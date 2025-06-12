@@ -28,11 +28,34 @@ const publicRoutes = [
   "/api/booking-history/get-booked-detail"
 ];
 
-const protectedRoutes = ["/admin", "/api/admin"];
+const protectedRoutes = [
+  "/auth/update-profile", "/api/change-date", "/api/booking",
+  "/api/update-date", "/api/request-refund", "/api/payment",
+  "/booking-history", "/profile",
+  "/change-date", "/cancel-refund", "/cancel-success",
+  "/payment-success", "/payment-fail", "/payment",
+  "/refund-success",
+];
+
+const protectedAdminRoutes = [
+  "/admin", "/api/admin",
+];
 
 const isPublicPath = (path) => {
   return publicRoutes.some(
-    (publicPath) => path === publicPath || path.startsWith(publicPath)
+    (publicPath) => path === publicPath
+  );
+};
+
+const isProtectedPath = (path) => {
+  return protectedRoutes.some(
+    (protectedPath) => path.startsWith(protectedPath)
+  );
+};
+
+const isProtectedAdminPath = (path) => {
+  return protectedAdminRoutes.some(
+    (protectedPath) => path.startsWith(protectedPath)
   );
 };
 
@@ -41,14 +64,17 @@ export async function middleware(req) {
   const token = req.cookies.get("auth_token")?.value;
 
   if ((pathname === "/sign-in" || pathname === "/sign-up") && token) {
+    console.log("if 1", pathname);
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  if (isPublicPath(pathname)) {
+  if (!isProtectedPath(pathname)) {
+    console.log("if 2", pathname);
     return NextResponse.next();
   }
 
   if (!token) {
+    console.log("if 3", pathname);
     return NextResponse.redirect(new URL("/sign-in", req.url));
   }
 
@@ -60,16 +86,17 @@ export async function middleware(req) {
     const role = payload.role;
 
     if (
-      protectedRoutes.some((protectedPath) =>
-        pathname.startsWith(protectedPath)
-      ) &&
-      role.toLowerCase() !== "admin"
+      isProtectedAdminPath(pathname)
+      && role.toLowerCase() !== "admin"
     ) {
+      console.log("if 4", pathname);
       return NextResponse.redirect(new URL("/", req.url));
     }
 
+    console.log("if 6", pathname);
     return NextResponse.next();
   } catch (error) {
+    console.log("if 5", pathname);
     return NextResponse.redirect(new URL("/sign-in", req.url));
   }
 }

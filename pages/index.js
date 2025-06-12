@@ -91,7 +91,6 @@ export default function Home() {
       try {
         const response = await api.get("/hotel-info");
         const data = response.data;
-        console.log(data);
         setHotelInfo(data);
       } catch (error) {
         console.error("Error fetching hotel information:", error);
@@ -108,7 +107,7 @@ export default function Home() {
   }, [roomTypes]);
 
   return (
-    <DefaultLayout title="Home | Neatly" showFooter>
+    <DefaultLayout title="Home" showFooter>
         <div className="bg-util-bg overflow-x-hidden">
           {/* First Box --- Hero Section */}
           <section className="md:aspect-[2/1] aspect-[1/2] h-[764px] w-full relative">

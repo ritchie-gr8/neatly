@@ -6,6 +6,7 @@ import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { Skeleton } from "../ui/skeleton";
+import { CircleAlert } from "lucide-react";
 
 const RoomLists = ({ setIsBooking }) => {
   const router = useRouter();
@@ -166,7 +167,7 @@ const RoomLists = ({ setIsBooking }) => {
 
   if (loading) {
     return (
-      <div className="flex flex-col gap-4 p-0 md:p-10">
+      <div className="flex flex-col gap-4 p-0 md:p-10 h-[40vh] md:pt-20">
         <div className="flex flex-col md:flex-row gap-4 md:gap-12">
           <Skeleton className="h-64 w-full md:flex-1/3 bg-gray-400" />
           <div className="hidden md:flex flex-col justify-between gap-2 flex-2/3">
@@ -195,7 +196,11 @@ const RoomLists = ({ setIsBooking }) => {
   }
 
   if (error) {
-    return <div className="text-center py-10 text-red-500">{error}</div>;
+    return (
+      <div className="h-[50vh] flex items-center justify-center text-orange-600 font-semibold">
+        <CircleAlert className="w-16 h-16 mr-2" /> Please try again later.
+      </div>
+    );
   }
 
   if (availableRooms.length === 0 && !loading) {
@@ -215,7 +220,7 @@ const RoomLists = ({ setIsBooking }) => {
   }
 
   return (
-    <div>
+    <div className="pb-16 md:mx-24 md:mt-20 md:pb-56">
       {availableRooms.map((room, index) => {
         const roomType = room.roomType || {};
         const bedType = roomType.bedType || {};
@@ -244,85 +249,84 @@ const RoomLists = ({ setIsBooking }) => {
         return (
           <section
             key={room.id || index}
-            className="border-b-2 border-gray-300 pb-6 md:pb-8 lg:pb-0"
+            className="border-b-2 border-gray-300 pt-10 pb-6 md:pb-8 lg:pb-10"
           >
-            <div
-              className="pt-6 md:pt-8 lg:pt-10 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-40
-                                        flex flex-col md:flex-row md:items-stretch md:py-8 lg:py-20 gap-4 md:gap-6 lg:gap-8"
-            >
+            <div className="flex flex-col md:flex-row md:items-stretch gap-4 md:gap-12">
               <Image
                 src={imageUrl}
                 alt={`${roomName}-image`}
                 width={0}
                 height={0}
-                className="w-full object-cover md:w-1/3 h-64 md:h-72 lg:h-80 rounded-sm"
+                className="w-full object-cover md:w-[453px] md:min-w-[453px] h-64 md:h-[320px] md:min-h-[320px] md:rounded-sm"
                 priority
                 unoptimized
               />
 
-              <div className="py-4 md:px-4 md:py-0 md:w-1/3 lg:pl-8">
-                <h1 className="text-black text-2xl md:text-2xl lg:text-3xl font-semibold font-inter">
-                  {roomName}
-                </h1>
+              <div className="px-4 flex flex-col md:px-0 md:flex-row md:justify-between">
+                <div className="py-4 md:px-4 md:py-0 md:w-2/3 lg:pl-8">
+                  <h1 className="text-black text-2xl md:text-2xl lg:text-3xl font-semibold font-inter">
+                    {roomName}
+                  </h1>
 
-                <p className="text-gray-700 text-sm md:text-base mt-2 md:mt-4">
-                  {capacity} Guests <span className="text-gray-500"> | </span>
-                  {bedDescription}
-                  <span className="text-gray-500"> | </span>
-                  {roomSize} sqm
-                </p>
-
-                <p className="text-gray-700 text-sm md:text-base mt-2 md:mt-4 line-clamp-4 md:line-clamp-none">
-                  {description}
-                </p>
-              </div>
-
-              <div className="w-full md:w-1/3 lg:w-1/3 flex flex-col items-end justify-between">
-                <div className="text-right w-full">
-                  {promotionPrice && promotionPrice < pricePerNight ? (
-                    <>
-                      <p className="line-through text-sm md:text-base text-gray-700">
-                        THB {formatPrice(pricePerNight)}
-                      </p>
-                      <p className="text-xl sm:text-lg md:text-xl lg:text-2xl font-semibold text-[#E12D2D] mt-1">
-                        THB {formatPrice(promotionPrice)}
-                      </p>
-                    </>
-                  ) : (
-                    <p className="text-xl sm:text-lg md:text-xl lg:text-2xl font-semibold text-gray-900">
-                      THB {formatPrice(pricePerNight)}
-                    </p>
-                  )}
-                  <p className="mt-1 md:mt-2 text-base sm:text-sm md:text-base text-gray-700">
-                    Per Night
-                  </p>
-                  <p className="text-base sm:text-sm md:text-base text-gray-700">
-                    (Including Taxes & Fees)
+                  <p className="text-gray-700 text-sm md:text-base mt-2 md:mt-4">
+                    {capacity} Guests <span className="text-gray-500"> | </span>
+                    {bedDescription}
+                    <span className="text-gray-500"> | </span>
+                    {roomSize} sqm
                   </p>
 
-                  {checkIn && checkOut && (
-                    <p className="mt-2 text-sm text-gray-700">
-                      {`Total ${nights} night(s) : THB ${formatPrice(
-                        totalPrice
-                      )}`}
-                    </p>
-                  )}
+                  <p className="text-gray-700 text-sm md:text-base mt-2 md:mt-4 line-clamp-4 md:line-clamp-none">
+                    {description}
+                  </p>
                 </div>
 
-                <div className="flex flex-row mt-6 mb-2 md:mt-0 md:mb-0 md:w-[250px] w-full justify-between items-center md:space-x-4">
-                  <Link
-                    href={`/rooms/${room.roomType.id}`}
-                    className="text-orange-500 font-semibold whitespace-nowrap text-base sm:text-sm md:text-base"
-                  >
-                    Room Detail
-                  </Link>
+                <div className="w-full md:w-1/3 lg:w-1/3 flex flex-col items-end justify-between">
+                  <div className="text-right w-full">
+                    {promotionPrice && promotionPrice < pricePerNight ? (
+                      <>
+                        <p className="line-through text-sm md:text-base text-gray-700">
+                          THB {formatPrice(pricePerNight)}
+                        </p>
+                        <p className="text-xl sm:text-lg md:text-xl lg:text-2xl font-semibold text-[#E12D2D] mt-1">
+                          THB {formatPrice(promotionPrice)}
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-xl sm:text-lg md:text-xl lg:text-2xl font-semibold text-gray-900">
+                        THB {formatPrice(pricePerNight)}
+                      </p>
+                    )}
+                    <p className="mt-1 md:mt-2 text-base sm:text-sm md:text-base text-gray-700">
+                      Per Night
+                    </p>
+                    <p className="text-base sm:text-sm md:text-base text-gray-700">
+                      (Including Taxes & Fees)
+                    </p>
 
-                  <button
-                    onClick={() => handleBookNow(room)}
-                    className="bg-orange-600 text-white px-8 py-3 sm:px-4 sm:py-2 md:px-6 md:py-3 rounded-sm text-base sm:text-sm md:text-base cursor-pointer whitespace-nowrap hover:bg-orange-500 transition-all duration-300 min-w-[130px] sm:min-w-0"
-                  >
-                    Book Now
-                  </button>
+                    {checkIn && checkOut && (
+                      <p className="mt-2 text-sm text-gray-700">
+                        {`Total ${nights} night(s) : THB ${formatPrice(
+                          totalPrice
+                        )}`}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-row mt-6 mb-2 md:mt-0 md:mb-0 md:w-[250px] w-full justify-between items-center md:space-x-4">
+                    <Link
+                      href={`/rooms/${room.roomType.id}`}
+                      className="text-orange-500 font-semibold whitespace-nowrap text-base sm:text-sm md:text-base"
+                    >
+                      Room Detail
+                    </Link>
+
+                    <button
+                      onClick={() => handleBookNow(room)}
+                      className="bg-orange-600 text-white px-8 py-3 sm:px-4 sm:py-2 md:px-6 md:py-3 rounded-sm text-base sm:text-sm md:text-base cursor-pointer whitespace-nowrap hover:bg-orange-500 transition-all duration-300 min-w-[130px] sm:min-w-0"
+                    >
+                      Book Now
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

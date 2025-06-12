@@ -15,17 +15,15 @@ import {
 } from "@/lib/validations/booking-validation";
 import api from "@/lib/axios";
 import Loading from "@/components/global/loading";
+import Head from "next/head";
 const PaymentPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFailed, setIsFailed] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const {
-    getCompleteBookingData,
-    setValidationErrorsForSection,
-    bookingData,
-  } = useBooking();
+  const { getCompleteBookingData, setValidationErrorsForSection, bookingData } =
+    useBooking();
 
   const handleStepClick = (e, stepNumber) => {
     e.stopPropagation();
@@ -101,17 +99,15 @@ const PaymentPage = () => {
         return;
       }
 
-    
       if (
         !completeBookingData.bookingDetail.roomData?.id ||
         !completeBookingData.bookingDetail.roomData?.roomType?.id
       ) {
         alert("ไม่พบข้อมูลห้องพัก กรุณาเลือกห้องพักใหม่");
-        router.push("/rooms"); 
+        router.push("/rooms");
         return;
       }
 
-  
       const bookingPayload = {
         guest: {
           id: router.query.guestId,
@@ -164,7 +160,7 @@ const PaymentPage = () => {
         },
       };
 
-      console.log("Sending booking payload:", bookingPayload);
+      // console.log("Sending booking payload:", bookingPayload);
 
       const response = await fetch("/api/booking/create-booking", {
         method: "POST",
@@ -175,24 +171,22 @@ const PaymentPage = () => {
       });
 
       const result = await response.json();
-     
+
       if (result.success) {
-        
         if (result.data?.booking?.bookingNumber) {
           router.push(
             `/payment-success?bookingNumber=${result.data.booking.bookingNumber}`
           );
         } else {
           alert("การจองสำเร็จแล้ว แต่ไม่พบเลขที่การจอง กรุณาติดต่อเจ้าหน้าที่");
-          router.push("/"); 
+          router.push("/");
         }
       } else {
         setIsFailed(true);
       }
     } catch (error) {
-      console.error("Booking error:", error);
+      // console.error("Booking error:", error);
 
-      
       let errorMessage = "เกิดข้อผิดพลาดในการจองห้องพัก: ";
 
       if (error.message.includes("Foreign key constraint")) {
@@ -205,7 +199,6 @@ const PaymentPage = () => {
 
       alert(errorMessage);
 
- 
       if (
         error.message.includes("Foreign key constraint") ||
         error.message.includes("room") ||
@@ -268,50 +261,58 @@ const PaymentPage = () => {
         bookingId: bookingId,
         guestId: guestId,
       },
-    })
+    });
 
     router.push("/");
   };
 
   const FailedPage = () => {
     return (
-      <div className="bg-white md:bg-util-bg w-full min-h-screen md:px-80 md:pt-20 ">
-        <div className="bg-orange-100 text-center px-6 py-48 flex items-center justify-center flex-col">
-          <HiOutlineExclamationCircle className="text-orange-600 w-16 h-16 mb-4" />
-          <p className="text-h3 text-orange-600 font-noto-serif">
-            Payment failed
-          </p>
-          <p className="text-b2 text-orange-500 mt-3 md:mx-6">
-            There seems to be an issue with your card. Please check your card
-            details and try again later, or use a different payment method.
-          </p>
-        </div>
+      <>
+        <Head>
+          <title>Payment Failed | Neatly</title>
+        </Head>
+        <div className="bg-white md:bg-util-bg w-full min-h-screen md:px-80 md:pt-20 ">
+          <div className="bg-orange-100 text-center px-6 py-48 flex items-center justify-center flex-col">
+            <HiOutlineExclamationCircle className="text-orange-600 w-16 h-16 mb-4" />
+            <p className="text-h3 text-orange-600 font-noto-serif">
+              Payment failed
+            </p>
+            <p className="text-b2 text-orange-500 mt-3 md:mx-6">
+              There seems to be an issue with your card. Please check your card
+              details and try again later, or use a different payment method.
+            </p>
+          </div>
 
-        {/* Footer */}
-        <div className="flex flex-col px-6 pt-9 font-semibold cursor-pointer md:flex-row md:justify-center text-center">
-          <div
-            className="btn-primary px-8 py-4 items-center justify-center"
-            onClick={() => handleDeleteBooking()}
-          >
-            {loading ? (
-              <Loading size="xs" customClasses={{
-                text: "text-base !text-orange-200",
-                dot: "text-base",
-                gap: "gap-2",
-                py: "py-0",
-              }} />
-            ) : (
-              "Back to Home"
-            )}
-          </div>
-          <div
-            className="px-8 pt-6  items-center justify-center text-orange-500 hover:underline"
-            onClick={() => setIsFailed(false)}
-          >
-            Check Booking Detail
+          {/* Footer */}
+          <div className="flex flex-col px-6 pt-9 font-semibold cursor-pointer md:flex-row md:justify-center text-center">
+            <div
+              className="btn-primary px-8 py-4 items-center justify-center"
+              onClick={() => handleDeleteBooking()}
+            >
+              {loading ? (
+                <Loading
+                  size="xs"
+                  customClasses={{
+                    text: "text-base !text-orange-200",
+                    dot: "text-base",
+                    gap: "gap-2",
+                    py: "py-0",
+                  }}
+                />
+              ) : (
+                "Back to Home"
+              )}
+            </div>
+            <div
+              className="px-8 pt-6  items-center justify-center text-orange-500 hover:underline"
+              onClick={() => setIsFailed(false)}
+            >
+              Check Booking Detail
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   };
 

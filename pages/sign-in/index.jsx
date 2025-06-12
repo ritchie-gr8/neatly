@@ -42,6 +42,7 @@ const SignInPage = () => {
     try {
       setLoading(true);
       const res = await login(data.identifier, data.password);
+      console.log(res);
 
       if (!res?.success) {
         throw new Error(res?.error || "An error occurred during login");
@@ -64,7 +65,7 @@ const SignInPage = () => {
   };
 
   return (
-    <DefaultLayout title="Sign In | Neatly">
+    <DefaultLayout title="Sign In">
       <div className="h-screen flex flex-col sm:grid sm:grid-cols-2">
         <div className="h-[25%] sm:h-full bg-[url('/images/auth/signin-bg-mb.png')] sm:bg-[url('/images/auth/signin-bg.jpg')] bg-cover bg-center"></div>
         <div className="h-full bg-util-bg w-full px-4 sm:px-12 lg:px-32 pt-10 sm:pt-40 text-gray-900">

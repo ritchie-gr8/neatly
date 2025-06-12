@@ -17,9 +17,9 @@ const PaymentMethodForm = () => {
 
   const handlePaymentMethodChange = (e, method) => {
     e.stopPropagation();
-    console.log("Payment method selected:", method);
+    // console.log("Payment method selected:", method);
     setPaymentMethod(method);
-    
+
     updatePaymentMethod({
       type: method
     });

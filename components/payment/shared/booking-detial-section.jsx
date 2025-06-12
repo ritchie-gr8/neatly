@@ -25,21 +25,21 @@ const BookingDetailSection = () => {
   }, [countdown, isExpired, isDeleting]);
 
   const handleBookingExpired = async () => {
-    if (isDeleting) return; 
-    
+    if (isDeleting) return;
+
     setIsDeleting(true);
-    console.log("Booking expired! Deleting booking data...");
+    // console.log("Booking expired! Deleting booking data...");
 
     try {
       const { bookingId, guestId } = router.query;
-      
+
       if (!bookingId) {
-        console.error("No booking ID found");
+        // console.error("No booking ID found");
         router.push('/payment-fail');
         return;
       }
 
-      console.log(`Deleting booking ID: ${bookingId}, Guest ID: ${guestId}`);
+      // console.log(`Deleting booking ID: ${bookingId}, Guest ID: ${guestId}`);
 
       const response = await api.delete("/booking/delete-expired-booking", {
         data: {
@@ -49,8 +49,8 @@ const BookingDetailSection = () => {
       });
 
       if (response.data && response.data.success) {
-        console.log("Booking deleted successfully:", response.data.data);
-        
+        // console.log("Booking deleted successfully:", response.data.data);
+
         router.push({
           pathname: '/payment-fail',
           query: {
@@ -63,8 +63,8 @@ const BookingDetailSection = () => {
       }
 
     } catch (error) {
-      console.error("Error deleting expired booking:", error);
-      
+      // console.error("Error deleting expired booking:", error);
+
       router.push({
         pathname: '/payment-fail',
         query: {
@@ -82,7 +82,7 @@ const BookingDetailSection = () => {
     const date = new Date(dateString);
     const options = {
       weekday: "short",
-      day: "numeric", 
+      day: "numeric",
       month: "short",
       year: "numeric",
     };
@@ -229,13 +229,13 @@ const BookingDetailSection = () => {
 
   const { roomData, searchParams } = bookingData;
   const { checkIn, checkOut, adults, rooms } = searchParams;
-  
+
   const nights = calculateNights(checkIn, checkOut);
   const totalRooms = parseInt(rooms) || 1;
   const totalGuests = parseInt(adults) || 1;
-  
+
   const priceBreakdown = getPriceBreakdown();
-  
+
   const roomName = roomData.roomType?.name || roomData.name || "Room";
   const pricePerNight = roomData.roomType?.pricePerNight || roomData.pricePerNight || 0;
   const promotionPrice = roomData.roomType?.promotionPrice || roomData.promotionPrice || 0;
