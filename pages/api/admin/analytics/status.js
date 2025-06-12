@@ -1,5 +1,3 @@
-// wait for database change
-
 import { HTTP_STATUS } from "@/constants/http-status";
 import { db } from "@/lib/prisma";
 import { successResponse, errorResponse } from "@/lib/response-utils";
@@ -29,35 +27,43 @@ const GET = async (req, res) => {
     const [thisMonthBookings, lastMonthBookings] = await Promise.all([
       db.booking.findMany({
         where: {
-          check_in_date: {
+          checkInDate: {
             gte: startOfThisMonth,
+          },
+          bookingStatus: {
+            in: ["CONFIRMED", "CHECKED_IN", "CHECKED_OUT"],
           },
         },
         select: {
-          total_amount: true,
-          guest_id: true,
+          totalAmount: true,
+          guestId: true,
         },
       }),
+
       db.booking.findMany({
         where: {
-          check_in_date: {
+          checkInDate: {
             gte: startOfLastMonth,
             lt: endOfLastMonth,
           },
+          bookingStatus: {
+            in: ["CONFIRMED", "CHECKED_IN", "CHECKED_OUT"],
+          },
         },
         select: {
-          total_amount: true,
-          guest_id: true,
+          totalAmount: true,
+          guestId: true,
         },
       }),
     ]);
+    
 
     // Format booking data
     const formatData = (bookings) => {
-      const totalSales = bookings.reduce((sum, b) => sum + Number(b.total_amount), 0);
-      const uniqueGuests = new Set(bookings.map((b) => b.guest_id));
+      const totalSales = bookings.reduce((sum, b) => sum + Number(b.totalAmount), 0);
+      const uniqueGuests = new Set(bookings.map((b) => b.guestId));
       return {
-        booking: bookings.length,
+        booking: bookings.length, 
         sales: totalSales,
         users: uniqueGuests.size,
         visitors: Math.floor(bookings.length * 5.5), // Placeholder
@@ -72,7 +78,7 @@ const GET = async (req, res) => {
       data: { thisMonth, lastMonth },
     });
   } catch (error) {
-    console.error("Error fetching current status:", error);
+    console.error("Error fetching current status:", error.message);
     return errorResponse({
       res,
       message: "An error occurred while fetching current status",

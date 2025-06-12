@@ -78,13 +78,20 @@ const Navbar = () => {
             {navLink.map(({ href, label }) => (
               <Link
                 key={label}
-                href={`/#${href.replace("#", "")}`}
+                href={href}
                 className="hover:text-gray-600 transition-colors duration-300 ease-in-out"
                 onClick={(e) => {
-                  e.preventDefault();
-                  const targetSection = document.querySelector(href);
-                  if (targetSection) {
-                    targetSection.scrollIntoView({ behavior: "smooth" });
+                  // If we're not on the home page, navigate there first
+                  if (window.location.pathname !== '/') {
+                    e.preventDefault();
+                    router.push(`/${href}`);
+                  } else {
+                    // If we're already on home page, just scroll to section
+                    e.preventDefault();
+                    const targetSection = document.querySelector(href);
+                    if (targetSection) {
+                      targetSection.scrollIntoView({ behavior: "smooth" });
+                    }
                   }
                 }}
               >

@@ -31,10 +31,10 @@ const RoomAvailability = ({ data, month, onChangeMonth, isLoading }) => {
                 )}
               </SelectTrigger>
               <SelectContent>
+              <SelectItem value="today">Today</SelectItem>
                 <SelectItem value="this">This month</SelectItem>
                 <SelectItem value="last">Last month</SelectItem>
                 <SelectItem value="last2">Last 2 months</SelectItem>
-                <SelectItem value="today">Today</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -93,7 +93,7 @@ const RoomAvailability = ({ data, month, onChangeMonth, isLoading }) => {
                     />
                     <span>{entry.name}</span>
                     <span className="ml-auto text-sm">{entry.value}</span>
-                    <span className="pl-1">Rooms</span>
+                    <span className="pl-1"> {month === "today" ? "Rooms" : "Days"}</span>
                   </li>
                 ))}
               </ul>

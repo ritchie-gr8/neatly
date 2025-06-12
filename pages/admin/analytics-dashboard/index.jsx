@@ -1,27 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import AdminLayout from "@/layouts/admin.layout";
 import StatCard from "@/components/admin/analytics-dashboard/stat-card";
-import { api } from "@/lib/axios";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import api from "@/lib/axios";
 import dayjs from "dayjs";
 
 import RoomAvailability from "@/components/admin/analytics-dashboard/room-availability";
@@ -35,64 +15,38 @@ import { IoWalletOutline, IoCartOutline } from "react-icons/io5";
 import { PiCalendarCheck } from "react-icons/pi";
 import { HiOutlineGlobeAlt } from "react-icons/hi2";
 
-function useTodayAtMidnightUpdate() {
-  const [today, setToday] = useState(dayjs().format("YYYY-MM-DD"));
-
-  useEffect(() => {
-    // Calculate how many milliseconds until next midnight
-    const now = dayjs();
-    const nextMidnight = now.add(1, "day").startOf("day");
-    const msUntilMidnight = nextMidnight.diff(now);
-
-    const timer = setTimeout(() => {
-      setToday(dayjs().format("YYYY-MM-DD"));
-    }, msUntilMidnight);
-
-    return () => clearTimeout(timer);
-  }, [today]);
-
-  return today;
-}
-
 const AnalyticDashboard = () => {
   //FirstBox
   const [statLoading, setStatLoading] = useState(false);
   const [currentStatus, setCurrentStatus] = useState([]);
   //SecondBox
-  const [pieChartMonth, setPieChartMonth] = useState("this");
+  const [pieChartMonth, setPieChartMonth] = useState("today");
   const [pieChartData, setPieChartData] = useState([]);
   const [pieLoading, setPieLoading] = useState(false);
   const [barChartMonth, setBarChartMonth] = useState("this");
   const [barChartData, setBarChartData] = useState([]);
   const [barLoading, setBarLoading] = useState(false);
 
-  const today = useTodayAtMidnightUpdate();
-
-  const monthMap = useMemo(() => {
-    const date = dayjs(today);
-    return {
-      this: date.format("YYYY-MM"),
-      last: date.subtract(1, "month").format("YYYY-MM"),
-      last2: date.subtract(2, "month").format("YYYY-MM"),
-    };
-  }, [today]);
-
   const fetchCurrentStatus = async () => {
     try {
       setStatLoading(true);
-      // const { data } = await api.get("/admin/analytics/status");
-      // const { lastMonth, thisMonth } = data;
-      const lastMonth = { booking: 70, sales: 50000, users: 70, visitors: 400 };
-      const thisMonth = { booking: 76, sales: 58829, users: 66, visitors: 459 };
+      const { data } = await api.get("/admin/analytics/status");
+      const { lastMonth, thisMonth } = data;
 
       const calculateChange = (last, current) => {
-        const change = ((current - last) / last) * 100;
+        let change;
+        if (last === 0) {
+          change = current === 0 ? 0 : 100;
+        } else {
+          change = ((current - last) / last) * 100;
+        }
         return {
           value: current,
-          change: `${Math.abs(change).toFixed(1)}%`,
+          change: `${Math.abs(change).toFixed(0)}%`,
           isPositive: change >= 0,
         };
       };
+      
 
       const stats = [
         {
@@ -104,7 +58,7 @@ const AnalyticDashboard = () => {
           title: "Total sales",
           icon: <IoWalletOutline size="auto" />,
           ...calculateChange(lastMonth.sales, thisMonth.sales),
-          value: thisMonth.sales.toLocaleString(),
+          value: thisMonth?.sales.toLocaleString(),
         },
         {
           title: "Total booking users",
@@ -128,39 +82,15 @@ const AnalyticDashboard = () => {
   const fetchPieChartData = async () => {
     try {
       setPieLoading(true);
-        
-      // const response = await api.get(`/admin/analytics/pie-chart?month=${month}`);
-      // const data = response.data;
-
-      let data = [];
-
-      switch (pieChartMonth) {
-        case "this":
-          data = [
-            { name: "Occupied", value: 21, color: "#EC632A" },
-            { name: "Booked", value: 14, color: "#364E44" },
-            { name: "Available", value: 8, color: "#D3D4EC" },
-          ];
-          break;
-        case "last":
-          data = [
-            { name: "Occupied", value: 18, color: "#EC632A" },
-            { name: "Booked", value: 12, color: "#364E44" },
-            { name: "Available", value: 13, color: "#D3D4EC" },
-          ];
-          break;
-        case "last2":
-          data = [
-            { name: "Occupied", value: 15, color: "#EC632A" },
-            { name: "Booked", value: 10, color: "#364E44" },
-            { name: "Available", value: 18, color: "#D3D4EC" },
-          ];
-          break;
-      }
-
+  
+      const response = await api.get(`/admin/analytics/piechart?month=${pieChartMonth}`);
+      const data = response.data.data;
+      console.log("data",data)
+  
       setPieChartData(data);
     } catch (error) {
       console.error("Error fetching pie chart data:", error);
+      setPieChartData([]); // fallback in case of error
     } finally {
       setPieLoading(false);
     }
@@ -169,54 +99,10 @@ const AnalyticDashboard = () => {
   const fetchBarChartData = async () => {
     try {
       setBarLoading(true);
-      const month = monthMap[barChartMonth];
-      // const response = await api.get(`/admin/analytics/bar-chart?month=${month}`);
-      // const data = response.data;
-
-      let data = [];
-
-      switch (barChartMonth) {
-        case "this":
-          data = [
-            { name: "Mon", booking: 16 },
-            { name: "Tue", booking: 22 },
-            { name: "Wed", booking: 20 },
-            { name: "Thu", booking: 12 },
-            { name: "Fri", booking: 77 },
-            { name: "Sat", booking: 99 },
-            { name: "Sun", booking: 80 },
-          ];
-          break;
-        case "last":
-          data = [
-            { name: "Mon", booking: 10 },
-            { name: "Tue", booking: 14 },
-            { name: "Wed", booking: 12 },
-            { name: "Thu", booking: 18 },
-            { name: "Fri", booking: 33 },
-            { name: "Sat", booking: 65 },
-            { name: "Sun", booking: 55 },
-          ];
-          break;
-        case "last2":
-          data = [
-            { name: "Mon", booking: 8 },
-            { name: "Tue", booking: 12 },
-            { name: "Wed", booking: 7 },
-            { name: "Thu", booking: 14 },
-            { name: "Fri", booking: 28 },
-            { name: "Sat", booking: 50 },
-            { name: "Sun", booking: 42 },
-          ];
-          break;
-      }
-
-      const maxBooking = Math.max(...data.map((d) => d.booking));
-      const dataWithPercent = data.map((prev) => ({
-        ...prev,
-        percent: Math.round((prev.booking / maxBooking) * 100),
-      }));
-      setBarChartData(dataWithPercent);
+      const month = barChartMonth;
+      const response = await api.get(`/admin/analytics/barchart?month=${month}`);
+      const data = response.data.data;
+      setBarChartData(data);
     } catch (error) {
       console.error("Error fetching bar chart data:", error);
     } finally {
@@ -237,7 +123,7 @@ const AnalyticDashboard = () => {
   }, [pieChartMonth]);
 
   return (
-    <AdminLayout>
+    <AdminLayout title="Analytics Dashboard">
       {/* ------------------------ Header ------------------------ */}
       <div className="flex justify-between items-center mb-6 border-b border-brown-300 px-16 py-[19px] bg-white">
         <h5 className="text-h5 font-semibold text-gray-900">
@@ -249,9 +135,13 @@ const AnalyticDashboard = () => {
       {/* First Box */}
       <div className="px-16">
         <div className="grid grid-cols-4 gap-4 py-6 max-w-10xl">
-          {currentStatus.map((item, idx) => (
-            <StatCard key={idx} {...item} isLoading={statLoading} />
-          ))}
+          {statLoading
+            ? [...Array(4)].map((_, idx) => (
+                <StatCard key={idx} isLoading={true} />
+              ))
+            : currentStatus.map((item, idx) => (
+                <StatCard key={idx} {...item} isLoading={false} />
+              ))}
         </div>
       </div>
 

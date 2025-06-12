@@ -275,10 +275,10 @@ const RoomLists = ({ setIsBooking }) => {
                 <div className="text-right w-full">
                   {promotionPrice && promotionPrice < pricePerNight ? (
                     <>
-                      <p className="line-through text-sm md:text-base text-gray-500">
+                      <p className="line-through text-sm md:text-base text-gray-700">
                         THB {formatPrice(pricePerNight)}
                       </p>
-                      <p className="text-xl sm:text-lg md:text-xl lg:text-2xl font-semibold text-gray-900 mt-1">
+                      <p className="text-xl sm:text-lg md:text-xl lg:text-2xl font-semibold text-[#E12D2D] mt-1">
                         THB {formatPrice(promotionPrice)}
                       </p>
                     </>
@@ -303,7 +303,7 @@ const RoomLists = ({ setIsBooking }) => {
                   )}
                 </div>
 
-                <div className="flex flex-row mt-6 mb-2 md:mt-0 md:mb-0 w-full justify-between items-center md:space-x-4">
+                <div className="flex flex-row mt-6 mb-2 md:mt-0 md:mb-0 md:w-[250px] w-full justify-between items-center md:space-x-4">
                   <Link
                     href={`/rooms/${room.roomType.id}`}
                     className="text-orange-500 font-semibold whitespace-nowrap text-base sm:text-sm md:text-base"

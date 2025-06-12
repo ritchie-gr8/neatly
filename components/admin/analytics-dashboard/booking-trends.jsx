@@ -85,7 +85,7 @@ const BookingTrends = ({ month, onChangeMonth, data, isLoading }) => {
                   axisLine={false}
                   tickLine={false}
                 />
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }}/>
                 <Bar
                   dataKey="percent"
                   fill="#EC632A"

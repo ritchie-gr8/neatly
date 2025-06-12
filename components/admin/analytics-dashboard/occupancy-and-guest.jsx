@@ -22,309 +22,8 @@ import {
 import CustomDatePicker from "@/components/global/date-picker";
 import useInViewFetch from "@/hooks/useInViewFetch";
 import Loading from "@/components/global/loading";
-
-const data = [
-  {
-    month: "January",
-    booking: 52,
-    date: new Date("2024-01-01"),
-    guestRaw: [
-      { type: "New guests", count: 34 },
-      { type: "Returning guests", count: 18 },
-    ],
-    paymentRaw: [
-      { type: "Credit card", count: 40 },
-      { type: "Cash", count: 12 },
-    ],
-  },
-  {
-    month: "February",
-    booking: 43,
-    date: new Date("2024-02-01"),
-    guestRaw: [
-      { type: "New guests", count: 20 },
-      { type: "Returning guests", count: 23 },
-    ],
-    paymentRaw: [
-      { type: "Credit card", count: 28 },
-      { type: "Cash", count: 15 },
-    ],
-  },
-  {
-    month: "March",
-    booking: 61,
-    date: new Date("2024-03-01"),
-    guestRaw: [
-      { type: "New guests", count: 44 },
-      { type: "Returning guests", count: 17 },
-    ],
-    paymentRaw: [
-      { type: "Credit card", count: 35 },
-      { type: "Cash", count: 26 },
-    ],
-  },
-  {
-    month: "April",
-    booking: 74,
-    date: new Date("2024-04-01"),
-    guestRaw: [
-      { type: "New guests", count: 55 },
-      { type: "Returning guests", count: 19 },
-    ],
-    paymentRaw: [
-      { type: "Credit card", count: 47 },
-      { type: "Cash", count: 27 },
-    ],
-  },
-  {
-    month: "May",
-    booking: 24,
-    date: new Date("2024-05-01"),
-    guestRaw: [
-      { type: "New guests", count: 10 },
-      { type: "Returning guests", count: 14 },
-    ],
-    paymentRaw: [
-      { type: "Credit card", count: 16 },
-      { type: "Cash", count: 8 },
-    ],
-  },
-  {
-    month: "June",
-    booking: 80,
-    date: new Date("2024-06-01"),
-    guestRaw: [
-      { type: "New guests", count: 60 },
-      { type: "Returning guests", count: 20 },
-    ],
-    paymentRaw: [
-      { type: "Credit card", count: 51 },
-      { type: "Cash", count: 29 },
-    ],
-  },
-  {
-    month: "July",
-    booking: 85,
-    date: new Date("2024-07-01"),
-    guestRaw: [
-      { type: "New guests", count: 66 },
-      { type: "Returning guests", count: 19 },
-    ],
-    paymentRaw: [
-      { type: "Credit card", count: 61 },
-      { type: "Cash", count: 24 },
-    ],
-  },
-  {
-    month: "August",
-    booking: 90,
-    date: new Date("2024-08-01"),
-    guestRaw: [
-      { type: "New guests", count: 55 },
-      { type: "Returning guests", count: 35 },
-    ],
-    paymentRaw: [
-      { type: "Credit card", count: 72 },
-      { type: "Cash", count: 18 },
-    ],
-  },
-  {
-    month: "September",
-    booking: 83,
-    date: new Date("2024-09-01"),
-    guestRaw: [
-      { type: "New guests", count: 51 },
-      { type: "Returning guests", count: 32 },
-    ],
-    paymentRaw: [
-      { type: "Credit card", count: 48 },
-      { type: "Cash", count: 35 },
-    ],
-  },
-  {
-    month: "October",
-    booking: 110,
-    date: new Date("2024-10-01"),
-    guestRaw: [
-      { type: "New guests", count: 70 },
-      { type: "Returning guests", count: 40 },
-    ],
-    paymentRaw: [
-      { type: "Credit card", count: 90 },
-      { type: "Cash", count: 20 },
-    ],
-  },
-  {
-    month: "November",
-    booking: 75,
-    date: new Date("2024-11-01"),
-    guestRaw: [
-      { type: "New guests", count: 30 },
-      { type: "Returning guests", count: 45 },
-    ],
-    paymentRaw: [
-      { type: "Credit card", count: 42 },
-      { type: "Cash", count: 33 },
-    ],
-  },
-  {
-    month: "December",
-    booking: 95,
-    date: new Date("2024-12-01"),
-    guestRaw: [
-      { type: "New guests", count: 60 },
-      { type: "Returning guests", count: 35 },
-    ],
-    paymentRaw: [
-      { type: "Credit card", count: 70 },
-      { type: "Cash", count: 25 },
-    ],
-  },
-  {
-    month: "January",
-    booking: 65,
-    date: new Date("2025-01-01"),
-    guestRaw: [
-      { type: "New guests", count: 36 },
-      { type: "Returning guests", count: 29 },
-    ],
-    paymentRaw: [
-      { type: "Credit card", count: 54 },
-      { type: "Cash", count: 11 },
-    ],
-  },
-  {
-    month: "February",
-    booking: 30,
-    date: new Date("2025-02-01"),
-    guestRaw: [
-      { type: "New guests", count: 18 },
-      { type: "Returning guests", count: 12 },
-    ],
-    paymentRaw: [
-      { type: "Credit card", count: 20 },
-      { type: "Cash", count: 10 },
-    ],
-  },
-  {
-    month: "March",
-    booking: 88,
-    date: new Date("2025-03-01"),
-    guestRaw: [
-      { type: "New guests", count: 58 },
-      { type: "Returning guests", count: 30 },
-    ],
-    paymentRaw: [
-      { type: "Credit card", count: 66 },
-      { type: "Cash", count: 22 },
-    ],
-  },
-  {
-    month: "April",
-    booking: 105,
-    date: new Date("2025-04-01"),
-    guestRaw: [
-      { type: "New guests", count: 70 },
-      { type: "Returning guests", count: 35 },
-    ],
-    paymentRaw: [
-      { type: "Credit card", count: 85 },
-      { type: "Cash", count: 20 },
-    ],
-  },
-  {
-    month: "May",
-    booking: 47,
-    date: new Date("2025-05-01"),
-    guestRaw: [
-      { type: "New guests", count: 21 },
-      { type: "Returning guests", count: 26 },
-    ],
-    paymentRaw: [
-      { type: "Credit card", count: 35 },
-      { type: "Cash", count: 12 },
-    ],
-  },
-  {
-    month: "June",
-    booking: 8,
-    date: new Date("2025-06-01"),
-    guestRaw: [
-      { type: "New guests", count: 5 },
-      { type: "Returning guests", count: 3 },
-    ],
-    paymentRaw: [
-      { type: "Credit card", count: 6 },
-      { type: "Cash", count: 2 },
-    ],
-  },
-];
-
-const groupedData = [
-  {
-    date: "January",
-    "Superior Garden View": 85,
-    Deluxe: 40,
-    Superior: 20,
-    Supreme: 50,
-  },
-  {
-    date: "February",
-    "Superior Garden View": 35,
-    Deluxe: 45,
-    Superior: 25,
-    Supreme: 30,
-  },
-  {
-    date: "March",
-    "Superior Garden View": 20,
-    Deluxe: 45,
-    Superior: 50,
-    Supreme: 50,
-  },
-  {
-    date: "April",
-    "Superior Garden View": 100,
-    Deluxe: 70,
-    Superior: 75,
-    Supreme: 50,
-  },
-  {
-    date: "May",
-    "Superior Garden View": 75,
-    Deluxe: 85,
-    Superior: 80,
-    Supreme: 85,
-  },
-  {
-    date: "June",
-    "Superior Garden View": 30,
-    Deluxe: 60,
-    Superior: 55,
-    Supreme: 35,
-  },
-];
-
-const transformToPercent = (data) => {
-  const total = data.reduce((sum, item) => sum + item.count, 0);
-
-  const rawPercents = data.map((item) => (item.count / total) * 100);
-  const flooredPercents = rawPercents.map((p) => Math.floor(p));
-  const flooredSum = flooredPercents.reduce((sum, p) => sum + p, 0);
-  let diff = 100 - flooredSum;
-  const decimals = rawPercents.map((p, i) => p - flooredPercents[i]);
-
-  while (diff > 0) {
-    const maxIndex = decimals.indexOf(Math.max(...decimals));
-    flooredPercents[maxIndex] += 1;
-    decimals[maxIndex] = 0;
-    diff--;
-  }
-  return data.map((item, i) => ({
-    ...item,
-    percent: flooredPercents[i],
-  }));
-};
+import api from "@/lib/axios";
+import dayjs from "dayjs";
 
 const today = new Date();
 const currentYear = today.getFullYear();
@@ -335,15 +34,13 @@ const janThisYear = new Date(today.getFullYear(), 0, 1);
 const OccupancyAndGuest = () => {
   const [startDate, setStartDate] = useState(janThisYear);
   const [endDate, setEndDate] = useState(today);
-  const [filteredData, setFilteredData] = useState([]);
+  const [rawData, setRawData] = useState([]);
+  const [processedData, setProcessedData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [viewBy, setViewBy] = useState("overall");
-  const [guestVisit, setGuestVisit] = useState(
-    transformToPercent(data[0].guestRaw)
-  );
-  const [paymentMethod, setPaymentMethod] = useState(
-    transformToPercent(data[0].paymentRaw)
-  );
+  const [viewByApplied, setViewByApplied] = useState("overall");
+  const [guestVisit, setGuestVisit] = useState([]);
+  const [paymentMethod, setPaymentMethod] = useState([]);
 
   const handleStartDate = (date) => {
     setStartDate(date);
@@ -362,6 +59,7 @@ const OccupancyAndGuest = () => {
   };
 
   const handleSearch = () => {
+    setViewByApplied(viewBy);
     fetchData();
   };
 
@@ -372,53 +70,73 @@ const OccupancyAndGuest = () => {
   const fetchData = useCallback(async () => {
     try {
       setIsLoading(true);
+      const response = await api.get("/admin/analytics/occupancy-and-guest", {
+        params: { startDate, endDate, viewBy },
+      });
+      const { monthlyData, aggregatedGuest, aggregatedPayment } = response.data;
+      // console.log("monthlyData", monthlyData);
 
-      const filtered = data
-        .filter((item) => item.date >= startDate && item.date <= endDate)
-        .map((item) => ({
-          ...item,
-          label: `${item.date.toLocaleString("default", {
-            month: "short",
-          })}${item.date.getFullYear().toString().slice(-2)}`,
+      let flattened;
+
+      if (viewBy === "overall") {
+        // Use bookingRaw and bookingPercent directly
+        flattened = monthlyData.map((item) => ({
+          month: item.month,
+          booking: item.bookingRaw,
+          bookingPercent: item.bookingPercent,
         }));
-      const maxBooking = Math.max(...filtered.map((item) => item.booking), 1);
-      const normalizedData = filtered.map((item) => ({
-        ...item,
-        bookingPercentage: (item.booking / maxBooking) * 100,
-      }));
+      } else if (viewBy === "roomtypes") {
+        // For each month, flatten the roomTypeRaw and roomTypePercent into keys like DeluxeRaw, DeluxePercent
+        flattened = monthlyData.map((item) => {
+          const flatData = { month: item.month };
 
-      setFilteredData(normalizedData);
+          // Flatten roomTypeRaw: { Deluxe: 5 } => DeluxeRaw: 5
+          for (const [roomType, rawValue] of Object.entries(
+            item.roomTypeRaw || {}
+          )) {
+            flatData[`${roomType}Raw`] = rawValue;
+          }
 
-      const aggregateCounts = (arrays) => {
-        const map = new Map();
-        arrays.forEach((arr) => {
-          arr.forEach(({ type, count }) => {
-            map.set(type, (map.get(type) || 0) + count);
-          });
+          // Flatten roomTypePercent: { Deluxe: 100 } => DeluxePercent: 100
+          for (const [roomType, percentValue] of Object.entries(
+            item.roomTypePercent || {}
+          )) {
+            flatData[`${roomType}`] = percentValue;
+          }
+
+          return flatData;
         });
-        return Array.from(map.entries()).map(([type, count]) => ({
-          type,
-          count,
-        }));
-      };
+      } else {
+        // fallback to empty array if needed
+        flattened = [];
+      }
 
-      const aggregatedGuestRaw = aggregateCounts(
-        filtered.map((item) => item.guestRaw)
-      );
-      const aggregatedPaymentRaw = aggregateCounts(
-        filtered.map((item) => item.paymentRaw)
-      );
+      // console.log("flattened", flattened);
 
-      setGuestVisit(transformToPercent(aggregatedGuestRaw));
-      setPaymentMethod(transformToPercent(aggregatedPaymentRaw));
+      setProcessedData(flattened);
+      setRawData(monthlyData);
+      setGuestVisit(aggregatedGuest);
+      setPaymentMethod(aggregatedPayment);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [startDate, endDate]);
+  }, [startDate, endDate, viewBy]);
 
   const ref = useInViewFetch(fetchData);
+
+  const containerWidth = 60;
+  const categoriesCount = processedData.length;
+  const maxBarSize = 12;
+  const minBarSize = 6;
+
+  const calculatedBarSize = containerWidth / categoriesCount;
+
+  const dynamicBarSize = Math.max(
+    minBarSize,
+    Math.min(maxBarSize, calculatedBarSize)
+  );
 
   return (
     <div
@@ -491,7 +209,7 @@ const OccupancyAndGuest = () => {
       {/* ----------------------------- Upper Box -----------------------------*/}
       <div className="flex justify-between pb-6">
         <p className="font-semibold text-gray-700">Occupancy Rate</p>
-        {viewBy === "roomtypes" && (
+        {viewByApplied === "roomtypes" && (
           <div className="flex gap-6 text-gray-700">
             <div className="flex items-center font-semibold  gap-2">
               <span className="bg-orange-500 w-4 h-4 rounded-full"></span>
@@ -499,13 +217,24 @@ const OccupancyAndGuest = () => {
             </div>
             <div className="flex items-center font-semibold gap-2">
               <span className="bg-green-700 w-4 h-4 rounded-full"></span>
-              Deluxe</div>
+              Deluxe
+            </div>
             <div className="flex items-center font-semibold gap-2">
               <span className="bg-[#E5A5A5] w-4 h-4 rounded-full"></span>
-              Superior</div>
+              Superior
+            </div>
             <div className="flex items-center font-semibold gap-2">
               <span className="bg-[#F5DA81] w-4 h-4 rounded-full"></span>
-              Supreme</div>
+              Supreme
+            </div>
+            <div className="flex items-center font-semibold gap-2">
+              <span className="bg-[#60A5FA] w-4 h-4 rounded-full"></span>
+              Premier Sea View
+            </div>
+            <div className="flex items-center font-semibold gap-2">
+              <span className="bg-[#A78BFA] w-4 h-4 rounded-full"></span>
+              Suit
+            </div>
           </div>
         )}
       </div>
@@ -515,11 +244,11 @@ const OccupancyAndGuest = () => {
             <Loading />
           </div>
         )}
-        {viewBy === "overall" ? (
+        {viewByApplied === "overall" ? (
           // ----------------------------- Overall Chart -----------------------------
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart
-              data={filteredData}
+              data={processedData}
               margin={{ top: 10, right: 10, left: 20, bottom: 20 }}
             >
               <defs>
@@ -534,11 +263,11 @@ const OccupancyAndGuest = () => {
                 strokeDasharray="1 1"
               />
               <XAxis
-                dataKey="label"
+                dataKey="month"
                 axisLine={false}
                 tickLine={false}
                 tick={({ x, y, payload, index }) => {
-                  const total = filteredData.length;
+                  const total = processedData.length;
                   let textAnchor = "middle";
                   let xPosition = x;
 
@@ -579,8 +308,8 @@ const OccupancyAndGuest = () => {
                   if (active && payload && payload.length) {
                     return (
                       <div className="bg-white border border-gray-200 rounded shadow p-2 text-sm text-gray-800">
-                        <p>{label}</p>
-                        <p>Booking: {payload[0].payload.booking}</p>
+                        <p className="font-bold">{label}</p>
+                        <p>Occupancy: {payload[0].payload.booking}</p>
                       </div>
                     );
                   }
@@ -589,7 +318,7 @@ const OccupancyAndGuest = () => {
               />
               <Area
                 type="monotone"
-                dataKey="bookingPercentage"
+                dataKey="bookingPercent"
                 stroke="#EC632A"
                 strokeWidth={3}
                 fill="url(#colorRevenue)"
@@ -602,43 +331,113 @@ const OccupancyAndGuest = () => {
         ) : (
           //----------------------------- Roomtypes Chart -----------------------------
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={groupedData}>
+            <BarChart data={processedData}>
               <CartesianGrid
                 vertical={false}
                 horizontal={true}
                 strokeDasharray="1 1"
               />
-              <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ dy: 12 }}/>
+              <XAxis
+                dataKey="month"
+                axisLine={false}
+                tickLine={false}
+                tick={({ x, y, payload, index }) => {
+                  const total = processedData.length;
+                  let textAnchor = "middle";
+                  let xPosition = x;
+
+                  if (index === 0) {
+                    textAnchor = "start";
+                  } else if (index === total - 1) {
+                    textAnchor = "end";
+                    xPosition = x + 12;
+                  }
+
+                  const fontSize = total <= 4 ? 16 : total <= 6 ? 14 : 12;
+
+                  return (
+                    <text
+                      x={xPosition}
+                      y={y + 18}
+                      textAnchor={textAnchor}
+                      dominantBaseline="middle"
+                      fontSize={fontSize}
+                      fill="#6B7280"
+                    >
+                      {payload.value}
+                    </text>
+                  );
+                }}
+              />
               <YAxis
+                domain={[0, 100]}
                 tickFormatter={(value) => `${value}%`}
                 tick={{ dx: -55, textAnchor: "start" }}
                 axisLine={false}
                 tickLine={false}
               />
-              <Tooltip />
+              <Tooltip
+                cursor={{ fill: "rgba(0, 0, 0, 0.04)" }}
+                content={({ active, payload, label }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <div className="bg-white border border-gray-200 rounded shadow p-2 text-sm text-gray-800">
+                        <p className="font-bold">{label}</p>
+                        {payload.map((entry, index) => {
+                          const roomType = entry.name;
+                          const raw = entry.payload[`${roomType}Raw`] ?? 0;
+
+                          return (
+                            <div
+                              key={index}
+                              className="flex justify-between gap-2"
+                            >
+                              <span>{roomType}:</span>
+                              <span>{raw}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
 
               <Bar
                 dataKey="Superior Garden View"
                 fill="#F97316"
-                barSize={12}
+                barSize={dynamicBarSize}
                 radius={[8, 8, 8, 8]}
               />
               <Bar
                 dataKey="Deluxe"
                 fill="#465C50"
-                barSize={12}
+                barSize={dynamicBarSize}
                 radius={[8, 8, 8, 8]}
               />
               <Bar
                 dataKey="Superior"
                 fill="#E5A5A5"
-                barSize={12}
+                barSize={dynamicBarSize}
                 radius={[8, 8, 8, 8]}
               />
               <Bar
                 dataKey="Supreme"
                 fill="#F5DA81"
-                barSize={12}
+                barSize={dynamicBarSize}
+                radius={[8, 8, 8, 8]}
+              />
+              <Bar
+                dataKey="Premier Sea View"
+                fill="#60A5FA"
+                barSize={dynamicBarSize}
+                radius={[8, 8, 8, 8]}
+              />
+              <Bar
+                dataKey="Suit"
+                fill="#A78BFA"
+                barSize={dynamicBarSize}
                 radius={[8, 8, 8, 8]}
               />
             </BarChart>
@@ -696,7 +495,13 @@ const OccupancyAndGuest = () => {
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
-                  <div className="font-bold text-black translate-y-6 -translate-x-4">
+                  <div
+                    className={cn(
+                      "font-bold text-black translate-y-6 -translate-x-4",
+                      item.percent < 10 && "pr-2",
+                      item.percent === 0 && "pr-4"
+                    )}
+                  >
                     {item.percent}%
                   </div>
                 </div>
@@ -722,7 +527,7 @@ const OccupancyAndGuest = () => {
               ))
             : paymentMethod.map((item, index) => (
                 <div key={index} className="flex items-center gap-4">
-                  <div className="w-full">
+                  <div className="w-full ">
                     <ResponsiveContainer width="98%" height={24}>
                       <div className="text-black font-semibold">
                         {item.type}
@@ -750,7 +555,13 @@ const OccupancyAndGuest = () => {
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
-                  <div className="font-bold text-black translate-y-6 -translate-x-4">
+                  <div
+                    className={cn(
+                      "font-bold text-black translate-y-6 -translate-x-4",
+                      item.percent < 10 && "pr-2",
+                      item.percent === 0 && "pr-4"
+                    )}
+                  >
                     {item.percent}%
                   </div>
                 </div>
