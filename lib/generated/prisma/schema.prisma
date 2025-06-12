@@ -1,0 +1,410 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id                     Int       @id @default(autoincrement()) @map("user_id")
+  firstName              String    @map("first_name")
+  lastName               String    @map("last_name")
+  username               String    @unique @map("username")
+  email                  String?   @unique
+  passwordHash           String    @map("password_hash")
+  phone                  String?
+  profilePicture         String?   @map("profile_picture")
+  profilePicturePublicId String?   @map("profile_picture_public_id")
+  country                String
+  dateOfBirth            DateTime? @map("date_of_birth")
+  role                   Role      @default(USER)
+  createdAt              DateTime  @default(now()) @map("created_at")
+  updatedAt              DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  @@map("User")
+}
+
+model BedType {
+  id             Int      @id @default(autoincrement()) @map("bed_type_id")
+  bedDescription String?  @map("bed_description")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  roomTypes RoomType[]
+
+  @@map("BedType")
+}
+
+model RoomStatus {
+  id         Int      @id @default(autoincrement()) @map("room_status_id")
+  statusName String?  @map("status_name")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  rooms Room[]
+
+  @@map("RoomStatus")
+}
+
+model RoomType {
+  id             Int      @id @default(autoincrement()) @map("room_type_id")
+  bedTypeId      Int?     @map("bed_type_id")
+  name           String?
+  description    String?  @db.Text
+  capacity       Int?
+  roomSize       Int?     @map("room_size")
+  pricePerNight  Decimal? @map("price_per_night") @db.Decimal(10, 2)
+  promotionPrice Decimal? @map("promotion_price") @db.Decimal(10, 2)
+  isPromotion    Boolean? @default(false) @map("is_promotion")
+  imageUrl       String?  @map("image_url")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  bedType      BedType?      @relation(fields: [bedTypeId], references: [id])
+  rooms        Room[]
+  roomImages   RoomImage[]
+  roomAmniety  RoomAmniety[]
+  bookingRooms BookingRoom[]
+
+  @@map("RoomTypes")
+}
+
+model Room {
+  id           Int      @id @default(autoincrement()) @map("room_id")
+  roomNumber   String?  @map("room_number")
+  roomTypeId   Int?     @map("room_type_id")
+  roomStatusId Int?     @map("room_status_id")
+  notes        String?  @db.Text
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  roomType     RoomType?     @relation(fields: [roomTypeId], references: [id])
+  roomStatus   RoomStatus?   @relation(fields: [roomStatusId], references: [id])
+  bookingRooms BookingRoom[]
+
+  @@map("Rooms")
+}
+
+model RoomAmniety {
+  id         Int      @id @default(autoincrement())
+  roomTypeId Int?     @map("room_type_id")
+  name       String   @map("name")
+  order      Int      @default(0) @map("order")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  roomType RoomType? @relation(fields: [roomTypeId], references: [id])
+
+  @@map("RoomAmniety")
+}
+
+model Guest {
+  id          Int       @id @default(autoincrement()) @map("guest_id")
+  firstName   String?   @map("first_name")
+  lastName    String?   @map("last_name")
+  email       String?
+  phone       String?
+  country     String?
+  dateOfBirth DateTime? @map("date_of_birth") @db.Date
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  bookings Booking[]
+
+  @@map("Guests")
+}
+
+model HotelMaster {
+  id               Int      @id @default(autoincrement()) @map("hotel_id")
+  hotelName        String?  @map("hotel_name")
+  hotelDescription String?  @map("hotel_description") @db.Text
+  hotelUrl         String?  @map("hotel_url")
+  hotelUrlPublicId String?  @map("hotel_url_public_id")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("HotelMaster")
+}
+
+model RoomImage {
+  id            Int      @id @default(autoincrement()) @map("image_id")
+  roomTypeId    Int?     @map("room_type_id")
+  imageUrl      String?  @map("image_url")
+  imagePublicId String?  @map("image_public_id")
+  imageOrder    Int?     @map("image_order")
+  imageDefault  Boolean? @default(false) @map("image_default")
+
+  // Relations
+  roomType RoomType? @relation(fields: [roomTypeId], references: [id])
+
+  @@map("RoomImages")
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CHECKED_IN
+  CHECKED_OUT
+  CANCELLED
+  NO_SHOW
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  CASH
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  REFUNDED
+  CANCELLED
+  FAILED
+}
+
+model Booking {
+  id                 Int           @id @default(autoincrement()) @map("booking_id")
+  bookingNumber      String        @unique @map("booking_number")
+  guestId            Int           @map("guest_id")
+  checkInDate        DateTime      @map("check_in_date") @db.Date
+  checkOutDate       DateTime      @map("check_out_date") @db.Date
+  adults             Int           @default(1)
+  additionalRequests String?       @map("additional_requests") @db.Text
+  totalAmount        Decimal       @map("total_amount") @db.Decimal(10, 2)
+  bookingStatus      BookingStatus @default(PENDING) @map("booking_status")
+  createdAt          DateTime      @default(now()) @map("created_at")
+  updatedAt          DateTime      @default(now()) @updatedAt @map("updated_at")
+  userId             Int?          @map("user_id")
+
+  // Relations
+  guest         Guest          @relation(fields: [guestId], references: [id])
+  bookingRooms  BookingRoom[]
+  payments      Payment[]
+  bookingAddons BookingAddon[]
+
+  @@map("Bookings")
+}
+
+model BookingRoom {
+  id            Int      @id @default(autoincrement()) @map("booking_room_id")
+  bookingId     Int      @map("booking_id")
+  roomId        Int      @map("room_id")
+  roomTypeId    Int      @map("room_type_id")
+  pricePerNight Decimal  @map("price_per_night") @db.Decimal(10, 2)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  booking  Booking  @relation(fields: [bookingId], references: [id])
+  room     Room     @relation(fields: [roomId], references: [id])
+  roomType RoomType @relation(fields: [roomTypeId], references: [id])
+
+  @@map("BookingRooms")
+}
+
+model Payment {
+  id            Int           @id @default(autoincrement()) @map("payment_id")
+  bookingId     Int           @map("booking_id")
+  amount        Decimal       @map("amount") @db.Decimal(10, 2)
+  paymentMethod PaymentMethod @map("payment_method")
+  paymentStatus PaymentStatus @default(PENDING) @map("payment_status")
+  transactionId String?       @map("transaction_id")
+  omiseChargeId String?       @map("omise_charge_id")
+  paymentDate   DateTime?     @map("payment_date")
+  notes         String?       @db.Text
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  booking Booking @relation(fields: [bookingId], references: [id])
+
+  @@map("Payments")
+}
+
+model BookingAddon {
+  id        Int      @id @default(autoincrement()) @map("booking_addon_id")
+  bookingId Int      @map("booking_id")
+  addonName String   @map("addon_name")
+  quantity  Int      @default(1)
+  price     Decimal  @map("price") @db.Decimal(10, 2)
+  notes     String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  booking Booking @relation(fields: [bookingId], references: [id])
+
+  @@map("BookingAddons")
+}
+
+// ChatbotConfig: Stores global configuration settings for the chatbot
+model ChatbotConfig {
+  id               Int      @id @default(autoincrement()) @map("chatbot_config_id")
+  greetingMessage  String   @map("greeting_message") @db.Text
+  autoReplyMessage String   @map("auto_reply_message") @db.Text
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("ChatbotConfig")
+}
+
+// Enum for different types of chatbot responses
+enum ReplyFormat {
+  MESSAGE // Simple text message response
+  ROOMTYPES // Shows room type cards with a button
+  OPTIONS // Shows options with detailed responses
+}
+
+// ChatbotResponse: Main table for all configurable bot responses
+model ChatbotResponse {
+  id          Int         @id @default(autoincrement()) @map("chatbot_response_id")
+  topic       String // The trigger topic or intent for this response
+  replyFormat ReplyFormat @map("reply_format")
+  order       Int         @default(0) @map("order") // Field for drag-and-drop ordering
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @default(now()) @updatedAt @map("updated_at")
+
+  // Relations - one-to-one with specific response types
+  messageResponse  MessageResponse?
+  roomTypeResponse RoomTypeResponse?
+  optionsResponse  OptionsResponse?
+
+  @@map("ChatbotResponses")
+}
+
+// MessageResponse: Simple text-only responses
+model MessageResponse {
+  id              Int             @id @default(autoincrement()) @map("message_response_id")
+  message         String          @db.Text // The text message to display
+  chatbotResponse ChatbotResponse @relation(fields: [responseId], references: [id], onDelete: Cascade)
+  responseId      Int             @unique @map("response_id")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @default(now()) @updatedAt @map("updated_at")
+
+  @@map("MessageResponses")
+}
+
+// RoomTypeResponse: For displaying room type cards
+model RoomTypeResponse {
+  id              Int                  @id @default(autoincrement()) @map("room_type_response_id")
+  replyTitle      String               @default("") @map("reply_title") // Title displayed above the room type info
+  buttonName      String               @map("button_name") // The label for the button
+  chatbotResponse ChatbotResponse      @relation(fields: [responseId], references: [id], onDelete: Cascade)
+  responseId      Int                  @unique @map("response_id")
+  roomTypes       RoomTypeOnResponse[] // Many-to-many with room types
+  createdAt       DateTime             @default(now()) @map("created_at")
+  updatedAt       DateTime             @default(now()) @updatedAt @map("updated_at")
+
+  @@map("RoomTypeResponses")
+}
+
+// Junction table for many-to-many relation between room types and responses
+model RoomTypeOnResponse {
+  id                 Int              @id @default(autoincrement()) @map("room_type_on_response_id")
+  roomTypeId         Int              @map("room_type_id")
+  roomTypeResponseId Int              @map("room_type_response_id")
+  roomTypeResponse   RoomTypeResponse @relation(fields: [roomTypeResponseId], references: [id], onDelete: Cascade)
+
+  @@map("RoomTypeOnResponses")
+}
+
+// OptionsResponse: For showing multiple options with detailed responses
+model OptionsResponse {
+  id              Int             @id @default(autoincrement()) @map("options_response_id")
+  replyTitle      String          @map("reply_title") // Title displayed above the options
+  chatbotResponse ChatbotResponse @relation(fields: [responseId], references: [id], onDelete: Cascade)
+  responseId      Int             @unique @map("response_id")
+  options         Option[] // One-to-many relation with options
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @default(now()) @updatedAt @map("updated_at")
+
+  @@map("OptionsResponses")
+}
+
+// Option: Individual options within an options response
+model Option {
+  id                Int             @id @default(autoincrement()) @map("option_id")
+  optionText        String          @map("option_text") // The option button text
+  detailsText       String          @map("details_text") @db.Text // The response details
+  optionsResponse   OptionsResponse @relation(fields: [optionsResponseId], references: [id], onDelete: Cascade)
+  optionsResponseId Int             @map("options_response_id")
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @default(now()) @updatedAt @map("updated_at")
+
+  @@map("Options")
+}
+
+// Enum for message sender types
+enum MessageSender {
+  USER // Message from the website visitor
+  BOT // Automated response from the chatbot
+  ADMIN // Message from an admin/customer service
+}
+
+// ChatSession: Tracks ongoing conversations
+model ChatSession {
+  id            Int      @id @default(autoincrement()) @map("chat_session_id")
+  sessionId     String   @unique @map("session_id") // Browser session ID for non-logged users
+  userId        Int?     @map("user_id") // Only for logged-in users
+  title         String? // Auto-generated title based on first few messages
+  isActive      Boolean  @default(true) @map("is_active")
+  needsHandoff  Boolean  @default(false) @map("needs_handoff") // Flag for admin intervention
+  handoffReason String?  @map("handoff_reason") @db.Text // Reason for handoff
+  adminJoined   Boolean  @default(false) @map("admin_joined") // Whether admin has joined
+  adminId       Int?     @map("admin_id") // ID of the admin who joined
+  startedAt     DateTime @default(now()) @map("started_at")
+  lastMessageAt DateTime @default(now()) @map("last_message_at") // For sorting by recency
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  messages ChatMessage[]
+
+  @@index([userId, lastMessageAt(sort: Desc)]) // Index for efficient user history queries
+  @@map("ChatSessions")
+}
+
+// ChatMessage: Individual messages in a conversation
+model ChatMessage {
+  id          Int           @id @default(autoincrement()) @map("chat_message_id")
+  content     String        @db.Text // Message content
+  sender      MessageSender // User, Bot, or Admin
+  timestamp   DateTime      @default(now())
+  chatSession ChatSession   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId   Int           @map("session_id")
+  adminId     Int?          @map("admin_id") // ID of admin who sent the message (if sender is ADMIN)
+
+  @@index([sessionId, timestamp(sort: Desc)]) // Index for efficient pagination
+  @@map("ChatMessages")
+}
+
+// AdminChatNotification: Notifies admins of pending chat handoffs
+model AdminChatNotification {
+  id              Int      @id @default(autoincrement()) @map("admin_notification_id")
+  sessionId       Int      @map("session_id") // Reference to the chat session
+  isRead          Boolean  @default(false) @map("is_read")
+  assignedToAdmin Int?     @map("assigned_to_admin") // Admin user ID if assigned
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@index([isRead, createdAt(sort: Desc)]) // Index for efficient querying of unread notifications
+  @@map("AdminChatNotifications")
+}
