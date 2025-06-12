@@ -101,19 +101,17 @@ const PaymentPage = () => {
         return;
       }
 
-      // ตรวจสอบว่ามี roomId และ roomTypeId
+    
       if (
         !completeBookingData.bookingDetail.roomData?.id ||
         !completeBookingData.bookingDetail.roomData?.roomType?.id
       ) {
         alert("ไม่พบข้อมูลห้องพัก กรุณาเลือกห้องพักใหม่");
-        router.push("/rooms"); // ส่งกลับไปที่หน้าเลือกห้อง
+        router.push("/rooms"); 
         return;
       }
 
-      // การตรวจสอบห้องพักถูกจัดการที่ API get-room-available แล้ว
-      // ข้ามขั้นตอนการตรวจสอบซ้ำ
-
+  
       const bookingPayload = {
         guest: {
           id: router.query.guestId,
@@ -177,16 +175,16 @@ const PaymentPage = () => {
       });
 
       const result = await response.json();
-      // ตรวจสอบสถานะการตอบกลับจาก API
+     
       if (result.success) {
-        // ตรวจสอบก่อนว่ามี bookingNumber ก่อนที่จะ redirect
+        
         if (result.data?.booking?.bookingNumber) {
           router.push(
             `/payment-success?bookingNumber=${result.data.booking.bookingNumber}`
           );
         } else {
           alert("การจองสำเร็จแล้ว แต่ไม่พบเลขที่การจอง กรุณาติดต่อเจ้าหน้าที่");
-          router.push("/"); // ส่งกลับไปที่หน้าแรก
+          router.push("/"); 
         }
       } else {
         setIsFailed(true);
@@ -194,7 +192,7 @@ const PaymentPage = () => {
     } catch (error) {
       console.error("Booking error:", error);
 
-      // แสดงข้อความแจ้งเตือนที่เฉพาะเจาะจงมากขึ้น
+      
       let errorMessage = "เกิดข้อผิดพลาดในการจองห้องพัก: ";
 
       if (error.message.includes("Foreign key constraint")) {
@@ -207,7 +205,7 @@ const PaymentPage = () => {
 
       alert(errorMessage);
 
-      // ถ้าเป็นปัญหาเกี่ยวกับห้องพัก ให้กลับไปที่หน้าเลือกห้อง
+ 
       if (
         error.message.includes("Foreign key constraint") ||
         error.message.includes("room") ||

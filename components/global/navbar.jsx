@@ -120,7 +120,7 @@ const Navbar = () => {
                       <User className="w-4 h-4 text-gray-600" /> Profile
                     </Link>
                     <Link
-                      href="/"
+                      href="/booking-history"
                       className="flex items-center gap-2 p-2 rounded hover:bg-gray-200 transition"
                     >
                       <BriefcaseBusiness className="w-4 h-4 text-gray-600" />{" "}
@@ -162,7 +162,7 @@ const Navbar = () => {
             <SheetTrigger asChild>
               <Menu className="w-6 h-6 text-green-600" />
             </SheetTrigger>
-            <SheetContent side="right" className="w-full top-12 md:top-16 ">
+            <SheetContent side="right" className="w-full top-12 md:top-16">
               {user && (
                 <div className="flex items-center gap-3">
                   <Avatar className="w-10 h-10">
@@ -195,7 +195,7 @@ const Navbar = () => {
 
                       <SheetClose asChild>
                         <Link
-                          href="/"
+                          href="/booking-history"
                           className="flex items-center gap-2 hover:text-gray-600 transition"
                         >
                           <BriefcaseBusiness className="w-4 h-4 text-gray-500" />{" "}

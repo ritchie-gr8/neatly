@@ -106,24 +106,24 @@ if (payment.paymentMethod === 'CREDIT_CARD' && payment.omiseChargeId && !payment
     // Step 3: Update database in transaction - delete related data and update statuses
     const result = await db.$transaction(async (tx) => {
       // 3.1: Delete BookingAddons (similar to create-booking process)
-      if (bookingData.bookingAddons.length > 0) {
-        await tx.bookingAddon.deleteMany({
-          where: {
-            bookingId: parseInt(bookingId)
-          }
-        });
-        console.log(`Deleted ${bookingData.bookingAddons.length} booking addons`);
-      }
+      // if (bookingData.bookingAddons.length > 0) {
+      //   await tx.bookingAddon.deleteMany({
+      //     where: {
+      //       bookingId: parseInt(bookingId)
+      //     }
+      //   });
+      //   console.log(`Deleted ${bookingData.bookingAddons.length} booking addons`);
+      // }
 
       // 3.2: Delete BookingRooms (similar to create-booking process)
-      if (bookingData.bookingRooms.length > 0) {
-        await tx.bookingRoom.deleteMany({
-          where: {
-            bookingId: parseInt(bookingId)
-          }
-        });
-        console.log(`Deleted ${bookingData.bookingRooms.length} booking rooms`);
-      }
+      // if (bookingData.bookingRooms.length > 0) {
+      //   await tx.bookingRoom.deleteMany({
+      //     where: {
+      //       bookingId: parseInt(bookingId)
+      //     }
+      //   });
+      //   console.log(`Deleted ${bookingData.bookingRooms.length} booking rooms`);
+      // }
 
       // 3.3: Update Payment record to REFUNDED status (keep the record for audit)
       const updatedPayment = await tx.payment.update({
