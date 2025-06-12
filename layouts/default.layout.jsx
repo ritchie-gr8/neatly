@@ -8,7 +8,7 @@ const DefaultLayout = ({ title, children, showFooter = false }) => {
   return (
     <>
       <Head>
-        <title>{title}</title>
+        <title>{title+' | Neatly'}</title>
       </Head>
       <main className="min-h-screen flex flex-col relative">
         <Navbar />

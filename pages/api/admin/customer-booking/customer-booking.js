@@ -10,7 +10,8 @@ export default async function handler(req, res) {
         dateFrom, 
         dateTo, 
         page = 1, 
-        limit = 10 
+        limit = 10,
+        paymentStatus
       } = req.query
 
       // Build where clause for filtering
@@ -41,6 +42,15 @@ export default async function handler(req, res) {
         where.checkInDate = {}
         if (dateFrom) where.checkInDate.gte = new Date(dateFrom)
         if (dateTo) where.checkInDate.lte = new Date(dateTo)
+      }
+      
+      // Filter by payment status 
+      if (paymentStatus) {
+        where.payments = {
+          some: {
+            paymentStatus: paymentStatus
+          }
+        }
       }
 
       // Calculate pagination

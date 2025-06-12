@@ -133,11 +133,13 @@ const StatusDropdown = ({
                     <button
                       key={status.id}
                       onClick={() => handleStatusChange(status)}
-                      className={`block w-full text-left px-4 py-2 text-sm font-medium cursor-pointer hover:brightness-90 ${
-                        getStatusClass(status.statusName)
-                      } ${status.statusName === currentStatus ? "border-l-8 border-green-500" : ""}`}
+                      className={`block w-full text-left px-4 py-2 text-sm font-medium cursor-pointer border-l-8 hover:bg-gray-50 ${
+                        status.statusName === currentStatus ? " border-green-500" : "border-white"
+                      }`}
                     >
-                      {status.statusName}
+                      <span className={`px-3 py-1 rounded-md whitespace-nowrap ${getStatusClass(status.statusName)}`}>
+                        {status.statusName}
+                      </span>
                     </button>
                   ))
                 )}
@@ -583,7 +585,7 @@ const RoomManagement = () => {
   }, [deleteDialogOpen]);
 
   return (
-    <AdminLayout>
+    <AdminLayout title='Room Management'>
       {mode === "view" ? (
         <>
           <div className="flex justify-between items-center mb-6 border-b border-brown-300 px-16 py-4 bg-white">

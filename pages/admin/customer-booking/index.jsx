@@ -4,9 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import AdminLayout from "@/layouts/admin.layout";
 import CustomPagination from "@/components/ui/custom-pagination";
 import { useDebouce } from "@/hooks/useDebounce";
+import { toast } from "sonner";
 import { RiH4 } from 'react-icons/ri';
 
 const CustomerBookingPage = () => {
@@ -19,8 +27,20 @@ const CustomerBookingPage = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
   const [isInitialLoad, setIsInitialLoad] = useState(true)
+  
+  // New states for booking status update
+  const [bookingStatus, setBookingStatus] = useState('')
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false)
+  
   const debouncedSearchTerm = useDebouce(searchTerm, 500)
   const itemsPerPage = 10
+
+  // Booking status options
+  const statusOptions = [
+    { value: 'CHECKED_IN', label: 'Checked In' },
+    { value: 'CHECKED_OUT', label: 'Checked Out' },
+    { value: 'NO_SHOW', label: 'No Show' }
+  ]
 
   // Fetch bookings from API
   const fetchBookings = async (params = {}) => {
@@ -32,6 +52,7 @@ const CustomerBookingPage = () => {
         page: currentPage,
         limit: itemsPerPage,
         search: debouncedSearchTerm.trim(),
+        paymentStatus: 'PAID',
         ...params
       }).toString()
       
@@ -64,12 +85,52 @@ const CustomerBookingPage = () => {
       
       if (data.success) {
         setSelectedBooking(data.data)
+        // Reset status dropdown when selecting a new booking
+        setBookingStatus('')
       } else {
         setError(data.message || 'Failed to fetch booking details')
       }
     } catch (err) {
       setError('Failed to fetch booking details')
       console.error('Error fetching booking details:', err)
+    }
+  }
+
+  // Update booking status
+  const updateBookingStatus = async () => {
+    if (!bookingStatus || !selectedBooking) {
+      toast.error('Please select a status')
+      return
+    }
+
+    try {
+      setIsUpdatingStatus(true)
+      
+      const response = await fetch(`/api/admin/customer-booking/booking-status/${selectedBooking.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          bookingStatus: bookingStatus
+        })
+      })
+      
+      const data = await response.json()
+      
+      if (data.success) {
+        toast.success('Booking status updated successfully')
+        // Optionally refresh the booking details
+        await fetchBookingDetails(selectedBooking.id)
+        setBookingStatus('') // Reset dropdown
+      } else {
+        toast.error(data.message || 'Failed to update booking status')
+      }
+    } catch (err) {
+      toast.error('Failed to update booking status')
+      console.error('Error updating booking status:', err)
+    } finally {
+      setIsUpdatingStatus(false)
     }
   }
 
@@ -142,25 +203,60 @@ const CustomerBookingPage = () => {
     const addonPrice = selectedBooking.addons?.reduce((sum, addon) => sum + Number(addon.price), 0) || 0
 
     return (
-      <AdminLayout>
+      <AdminLayout title='Customer Booking'>
         <div className="flex justify-between items-center py-6 mb-6 border-b border-brown-300 px-16 bg-white">
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              className="text-gray-900 hover:text-gray-600 cursor-pointer"
-              onClick={() => setSelectedBooking(null)}
-              aria-label="Go back"
-            >
-              <ArrowLeft size={20} />
-            </Button>
-            <h4 className="text-h5 font-semibold text-gray-900">
-              {selectedBooking.guest.firstName} {selectedBooking.guest.lastName}
-            </h4>
-            <h4 className="text-h5 text-gray-900">
-              {roomDetails.roomType?.name}
-            </h4>
-          </div>
-        </div>
+  {/* ซ้าย: ปุ่ม Back + ข้อมูล */}
+  <div className="flex items-center gap-2">
+    <Button
+      variant="ghost"
+      className="text-gray-900 hover:text-gray-600 cursor-pointer"
+      onClick={() => setSelectedBooking(null)}
+      aria-label="Go back"
+    >
+      <ArrowLeft size={20} />
+    </Button>
+    <h4 className="text-h5 font-semibold text-gray-900">
+      {selectedBooking.guest.firstName} {selectedBooking.guest.lastName}
+    </h4>
+    <h4 className="text-h5 text-gray-900">
+      {roomDetails.roomType?.name}
+    </h4>
+  </div>
+
+  {/* ขวา: Booking Status */}
+  <div className="flex items-center gap-2">
+    <Select
+  value={bookingStatus}
+  onValueChange={setBookingStatus}
+  disabled={isUpdatingStatus}
+>
+  <SelectTrigger className="w-[160px] bg-white">
+    <SelectValue placeholder="Select status" />
+  </SelectTrigger>
+  <SelectContent>
+    {statusOptions.map((option) => (
+      <SelectItem key={option.value} value={option.value}>
+        {option.label}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+    <Button
+      onClick={updateBookingStatus}
+      disabled={isUpdatingStatus || !bookingStatus}
+      className="btn-primary font-open-sans text-sm font-semibold text-util-white"
+    >
+      {isUpdatingStatus ? (
+        <>
+          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+          Updating...
+        </>
+      ) : (
+        'Update'
+      )}
+    </Button>
+  </div>
+</div>
 
         <Card className="mx-16 px-20 rounded-none">
           <CardContent className="p-0 ">
@@ -245,10 +341,11 @@ const CustomerBookingPage = () => {
                   </div>
                 </div>
               </div>
-
-              {/* Additional Requests */}
+            </div>
+            {/* Additional Requests */}        
+            <div className="bg-gray-50 rounded-lg p-4 mt-10">
               {selectedBooking.additionalRequests && (
-                <div className="mt-6">
+                <div className="mt-6">  
                   <h3 className="text-sm font-medium text-gray-700 mb-2">Additional Request</h3>
                   <div className="bg-gray-100 rounded-lg p-3">
                     <p className="text-gray-700 text-sm">{selectedBooking.additionalRequests}</p>
@@ -258,12 +355,15 @@ const CustomerBookingPage = () => {
             </div>
           </CardContent>
         </Card>
+
+
+
       </AdminLayout>
     )
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout title='Customer Booking'>
       {/* Header */}
       <div className="flex justify-between items-center mb-6 border-b border-brown-300 px-16 py-4 bg-white">
         <h5 className="text-h5 font-semibold text-gray-900">
