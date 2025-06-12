@@ -30,7 +30,7 @@ const CancelSuccess = () => {
 
   if (!roomType) {
     return (
-      <DefaultLayout>
+      <DefaultLayout title="Cancellation Success">
         <div className="bg-util-bg w-full h-screen">
           <div className="flex justify-center items-center h-64">
             <div className="text-center">
@@ -44,7 +44,7 @@ const CancelSuccess = () => {
   }
 
   return (
-    <DefaultLayout>
+    <DefaultLayout title="Cancellation Success">
       <div className="bg-util-bg w-full h-screen md:px-96 md:pt-20">
         <div className="bg-green-800 md:rounded-t-sm py-10 px-4">
           <h1 className="text-white text-h3 text-center">
