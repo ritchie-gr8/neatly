@@ -74,21 +74,29 @@ const OccupancyAndGuest = () => {
         params: { startDate, endDate, viewBy },
       });
       const { monthlyData, aggregatedGuest, aggregatedPayment } = response.data;
-      console.log("monthlyData", monthlyData);
-
+   
+      const isLongRange = monthlyData.length >= 12;
       let flattened;
 
       if (viewBy === "overall") {
         // Use bookingRaw and bookingPercent directly
-        flattened = monthlyData.map((item) => ({
-          month: item.month,
+        flattened = monthlyData.map((item) => {
+          const month = isLongRange
+          ? item.month.slice(0, 3) // "January" → "Jan"
+          : item.month;
+    
+        return {
+          month,
           booking: item.bookingRaw,
           bookingPercent: item.bookingPercent,
-        }));
+        };
+        });
       } else if (viewBy === "roomtypes") {
         // For each month, flatten the roomTypeRaw and roomTypePercent into keys like DeluxeRaw, DeluxePercent
         flattened = monthlyData.map((item) => {
-          const flatData = { month: item.month };
+          const flatData = { month: isLongRange
+            ? item.month.slice(0, 3) // "January" → "Jan"
+            : item.month };
 
           // Flatten roomTypeRaw: { Deluxe: 5 } => DeluxeRaw: 5
           for (const [roomType, rawValue] of Object.entries(
@@ -111,7 +119,6 @@ const OccupancyAndGuest = () => {
         flattened = [];
       }
 
-      // console.log("flattened", flattened);
 
       setProcessedData(flattened);
       setRawData(monthlyData);

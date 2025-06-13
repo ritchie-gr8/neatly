@@ -57,11 +57,10 @@ const RevenueTrend = () => {
         },
       });
 
+      const isLongRange = response.data.result.length >= 12;
       const filteredData = response.data.result.map((item) => {
-        // parse '2025-06' as a date
         const date = dayjs(item.month, 'YYYY-MM');
-        // format as 'MMMMYY' e.g. 'June25'
-        const label = date.format('MMMMYY');
+        const label = date.format(isLongRange ? 'MMMYY' : 'MMMM');
         return {
           ...item,
           label,
