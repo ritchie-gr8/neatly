@@ -229,9 +229,7 @@ const index = () => {
                     alt={booking.name}
                     width={400}
                     height={300}
-                    className={`w-full md:w-96 h-60 md:h-60 object-cover rounded-sm flex-shrink-0 ${
-                      booking.booking_status === "CANCELLED" ? "grayscale" : ""
-                    }`}
+                    className={`w-full md:w-96 h-60 md:h-60 object-cover rounded-sm flex-shrink-0`}
                   />
 
                   <div className="px-4 md:pl-12 pt-4 pb-6 md:w-full md:px-0">

@@ -1,5 +1,5 @@
 import React from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import {
   Select,
   SelectContent,
@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Loading from "@/components/global/loading";
+import { cn } from "@/lib/utils";
 
 const RoomAvailability = ({ data, month, onChangeMonth, isLoading }) => {
   return (
@@ -31,7 +32,7 @@ const RoomAvailability = ({ data, month, onChangeMonth, isLoading }) => {
                 )}
               </SelectTrigger>
               <SelectContent>
-              <SelectItem value="today">Today</SelectItem>
+                <SelectItem value="today">Today</SelectItem>
                 <SelectItem value="this">This month</SelectItem>
                 <SelectItem value="last">Last month</SelectItem>
                 <SelectItem value="last2">Last 2 months</SelectItem>
@@ -59,6 +60,16 @@ const RoomAvailability = ({ data, month, onChangeMonth, isLoading }) => {
             <>
               <ResponsiveContainer width={240} height={240}>
                 <PieChart>
+                  <Tooltip
+                    formatter={(value, name, props) => {
+                      const percent = props.payload?.percent;
+                      const suffix = month === "today" ? "Rooms" : "Days";
+                      return month === "today"
+                        ? [`${value} ${suffix}`, name]
+                        : [`${value} Days (${percent}%)`, name];
+                    }}
+                    contentStyle={{ borderRadius: "8px", fontSize: "14px" }}
+                  />
                   <Pie
                     data={data}
                     dataKey="value"
@@ -92,8 +103,13 @@ const RoomAvailability = ({ data, month, onChangeMonth, isLoading }) => {
                       style={{ backgroundColor: entry.color }}
                     />
                     <span>{entry.name}</span>
-                    <span className="ml-auto text-sm">{entry.value}</span>
-                    <span className="pl-1"> {month === "today" ? "Rooms" : "Days"}</span>
+                    <span className="ml-auto text-sm">
+                      {entry.value}{" "}
+                      {month === "today" ? "" : `(${entry.percent}%)`}{" "}
+                    </span>
+                    <span className={cn(month === "today" ? "" : "hidden", "pl-1")}>
+                      Rooms
+                    </span>
                   </li>
                 ))}
               </ul>

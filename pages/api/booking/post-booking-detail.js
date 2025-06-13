@@ -98,7 +98,7 @@ export default async function handler(req, res) {
           adults: parseInt(booking.adults),
           additionalRequests: booking.additionalRequests || null,
           totalAmount: parseFloat(booking.totalAmount),
-          bookingStatus: 'CONFIRMED'
+          bookingStatus: 'PENDING'
         }
       });
 

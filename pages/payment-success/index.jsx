@@ -3,12 +3,14 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import api from "@/lib/axios";
+import { ChevronDown } from "lucide-react";
 
 const index = () => {
   const router = useRouter();
   const [bookingData, setBookingData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isOpenDropdown, setIsOpenDropdown] = useState(false);
 
   useEffect(() => {
     const fetchBookingData = async () => {
@@ -17,21 +19,25 @@ const index = () => {
         const { bookingNumber } = router.query;
 
         if (!bookingNumber) {
-          throw new Error('Booking number is required');
+          throw new Error("Booking number is required");
         }
 
-        const response = await api.get('/booking/get-success-booking-data', {
-          params: { bookingNumber }
+        const response = await api.get("/booking/get-success-booking-data", {
+          params: { bookingNumber },
         });
 
         if (response.data.success) {
           setBookingData(response.data.data);
         } else {
-          throw new Error(response.data.message || 'Failed to fetch booking data');
+          throw new Error(
+            response.data.message || "Failed to fetch booking data"
+          );
         }
       } catch (err) {
-        console.error('Error fetching booking data:', err);
-        setError(err.message || 'An error occurred while fetching booking data');
+        console.error("Error fetching booking data:", err);
+        setError(
+          err.message || "An error occurred while fetching booking data"
+        );
       } finally {
         setLoading(false);
       }
@@ -43,7 +49,7 @@ const index = () => {
   }, [router.isReady, router.query.bookingNumber]);
 
   const formatDate = (dateString) => {
-    if (!dateString) return '';
+    if (!dateString) return "";
     const date = new Date(dateString);
     const options = {
       weekday: "short",
@@ -62,13 +68,13 @@ const index = () => {
   };
 
   const getPaymentMethodDisplay = (method, paymentData) => {
-    if (method === 'CREDIT_CARD' && paymentData?.transactionId) {
+    if (method === "CREDIT_CARD" && paymentData?.transactionId) {
       const lastFour = paymentData.transactionId.slice(-4);
       return `Credit Card - *${lastFour}`;
-    } else if (method === 'CREDIT_CARD') {
-      return 'Credit Card';
-    } else if (method === 'CASH') {
-      return 'Cash Payment';
+    } else if (method === "CREDIT_CARD") {
+      return "Credit Card";
+    } else if (method === "CASH") {
+      return "Cash Payment";
     }
     return method;
   };
@@ -79,7 +85,9 @@ const index = () => {
         <div className="bg-white md:bg-util-bg w-full min-h-screen sm:px-28 lg:px-96 md:pt-20 md:pb-36">
           <div className="flex items-center justify-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-            <span className="ml-4 text-gray-600">Loading booking details...</span>
+            <span className="ml-4 text-gray-600">
+              Loading booking details...
+            </span>
           </div>
         </div>
       </DefaultLayout>
@@ -107,8 +115,12 @@ const index = () => {
       <DefaultLayout title="Payment Success">
         <div className="bg-white md:bg-util-bg w-full min-h-screen sm:px-28 lg:px-96 md:pt-20 md:pb-36">
           <div className="text-center py-20">
-            <h2 className="text-xl font-semibold text-gray-600 mb-4">Booking Not Found</h2>
-            <p className="text-gray-600 mb-8">The booking information could not be found.</p>
+            <h2 className="text-xl font-semibold text-gray-600 mb-4">
+              Booking Not Found
+            </h2>
+            <p className="text-gray-600 mb-8">
+              The booking information could not be found.
+            </p>
             <Link href="/" className="btn-primary px-8 py-4 rounded">
               Back to Home
             </Link>
@@ -118,7 +130,10 @@ const index = () => {
     );
   }
 
-  const { bookingInfo, guest, room, payment, addons, calculations } = bookingData;
+  const { bookingInfo, guest, room, payment, addons, calculations } =
+    bookingData;
+  const paidAddons = addons.filter((addon) => addon.price > 0);
+  const freeAddons = addons.filter((addon) => addon.price == 0);
 
   return (
     <DefaultLayout title="Payment Success">
@@ -134,7 +149,9 @@ const index = () => {
             your date of reservation
           </p>
           <div className="mt-4 text-green-200">
-            <p className="font-semibold">Booking Number: {bookingInfo.bookingNumber}</p>
+            <p className="font-semibold">
+              Booking Number: {bookingInfo.bookingNumber}
+            </p>
           </div>
         </div>
 
@@ -143,10 +160,12 @@ const index = () => {
           <div className="bg-green-600 rounded-sm p-4 text-white md:flex md:justify-between md:items-center">
             <div>
               <p className="font-semibold">
-                {formatDate(bookingInfo.checkInDate)} - {formatDate(bookingInfo.checkOutDate)}
+                {formatDate(bookingInfo.checkInDate)} -{" "}
+                {formatDate(bookingInfo.checkOutDate)}
               </p>
               <p className="text-b1 mt-2">
-                {bookingInfo.adults} Guest{bookingInfo.adults > 1 ? 's' : ''} • {calculations.nights} Night{calculations.nights > 1 ? 's' : ''}
+                {bookingInfo.adults} Guest{bookingInfo.adults > 1 ? "s" : ""} •{" "}
+                {calculations.nights} Night{calculations.nights > 1 ? "s" : ""}
               </p>
             </div>
 
@@ -189,16 +208,18 @@ const index = () => {
             )}
 
             {/* Special Requests / Addons */}
-            {addons && addons.length > 0 && addons.map((addon, index) => (
-              <div key={index} className="flex flex-row justify-between py-3">
-                <p className="text-b1 text-green-300 font-light">
-                  {addon.name} {addon.quantity > 1 && `(x${addon.quantity})`}
-                </p>
-                <p className="font-semibold text-white">
-                  THB {formatCurrency(addon.price * addon.quantity)}
-                </p>
-              </div>
-            ))}
+            {paidAddons &&
+              paidAddons.length > 0 &&
+              paidAddons.map((addon, index) => (
+                <div key={index} className="flex flex-row justify-between py-3">
+                  <p className="text-b1 text-green-300 font-light">
+                    {addon.name} {addon.quantity > 1 && `(x${addon.quantity})`}
+                  </p>
+                  <p className="font-semibold text-white">
+                    THB {formatCurrency(addon.price * addon.quantity)}
+                  </p>
+                </div>
+              ))}
 
             {/* Total */}
             <div className="flex flex-row justify-between pt-6 border-t-2 border-green-600">
@@ -207,6 +228,42 @@ const index = () => {
                 THB {formatCurrency(bookingInfo.totalAmount)}
               </p>
             </div>
+
+            <div
+              className={`mt-4 p-4 flex justify-between items-center text-util-white
+              bg-green-600 rounded-sm cursor-pointer ${isOpenDropdown ? "rounded-bl-none rounded-br-none" : ""}`}
+              onClick={() => {
+                setIsOpenDropdown(!isOpenDropdown);
+              }}
+            >
+              <p className="font-open-sans font-semibold">
+                Standard Requests
+              </p>
+              <ChevronDown
+                size={24}
+                className={`font-semibold transition-transform ${
+                  isOpenDropdown ? "rotate-180" : ""
+                } `}
+              />
+            </div>
+            {isOpenDropdown && freeAddons.length > 0 && (
+              <div className={`bg-green-600 text-util-white p-4 ${isOpenDropdown ? "rounded-tl-none rounded-tr-none rounded-sm" : ""}`}>
+                {freeAddons && freeAddons.length > 0 && (
+                  <>
+                    {freeAddons.map((addon, index) => (
+                      <div
+                        key={index}
+                        className="flex justify-between items-center"
+                      >
+                        <span className="text-b1 font-inter">
+                          {addon.name}
+                        </span>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </div>
 

@@ -1,5 +1,62 @@
 import { db } from "@/lib/prisma";
-import { number } from "zod";
+
+//Server-side price calculation function
+async function calculateBookingTotal(bookingId, specialRequests = []) {
+  try {
+    const booking = await db.booking.findUnique({
+      where: { id: bookingId },
+      include: {
+        bookingRooms: {
+          include: {
+            roomType: true,
+          },
+        },
+      },
+    });
+
+    if (!booking) {
+      throw new Error("Booking not found");
+    }
+
+    let totalAmount = 0;
+
+    // Calculate room costs
+    for (const bookingRoom of booking.bookingRooms) {
+      const roomType = bookingRoom.roomType;
+      // Use promotion price if available
+      const dailyRate =
+        roomType.isPromotion && roomType.promotionPrice
+          ? Number(roomType.promotionPrice)
+          : Number(roomType.pricePerNight);
+      const checkIn = new Date(booking.checkInDate);
+      const checkOut = new Date(booking.checkOutDate);
+      const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+
+      // Room total = daily rate × nights
+      const roomTotal = dailyRate * nights;
+      totalAmount += roomTotal;
+
+      console.log(
+        `Room calculation: ${dailyRate} × ${nights} nights = ${roomTotal}`
+      );
+    }
+
+    // Calculate special requests/addons cost
+    if (specialRequests && specialRequests.length > 0) {
+      const addonTotal = specialRequests.reduce((sum, request) => {
+        return sum + Number(request.price || 0);
+      }, 0);
+      totalAmount += addonTotal;
+      console.log(`Addon total: ${addonTotal}`);
+    }
+
+    console.log(`Final calculated total: ${totalAmount}`);
+    return totalAmount;
+  } catch (error) {
+    console.error("Price calculation error:", error);
+    throw error;
+  }
+}
 
 const omise = require("omise")({
   publicKey: process.env.OMISE_PUBLIC_KEY,
@@ -12,8 +69,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    console.log(req.body);
-    // Using context way - expect data from getOmisePayload()
     const {
       guest: customer,
       booking,
@@ -21,7 +76,6 @@ export default async function handler(req, res) {
       specialRequests,
       payment,
     } = req.body;
-
     // Validate required fields
     if (!customer || !payment || !booking) {
       return res.status(400).json({
@@ -29,13 +83,28 @@ export default async function handler(req, res) {
         error: "Missing required fields",
       });
     }
+    //Calculate the REAL total amount on server-side
+    const calculatedTotal = await calculateBookingTotal(
+      booking.id,
+      specialRequests
+    );
+    // SECURITY CHECK: Compare with frontend amount (optional warning)
+    const frontendTotal = Number(payment.totalAmount);
+    if (Math.abs(calculatedTotal - frontendTotal) > 0.01) {
+      // Allow for small rounding differences
+      return res.status(400).json({
+        success: false,
+        error: "Payment processing failed. Please try again.",
+        code: "PAYMENT_ERROR",
+      });
+    }
 
-    // Step 1: Create a token from card information
+    // Use the calculated total instead of frontend total
+    const secureAmount = calculatedTotal;
+
+    // Charge section for Omise
     let charge;
-
     if (payment.method === "credit") {
-      // Step 1: Create a token from card information
-      console.log("Creating token...");
       const token = await omise.tokens.create({
         card: {
           name: payment.card.name,
@@ -45,13 +114,8 @@ export default async function handler(req, res) {
           security_code: payment.card.security_code,
         },
       });
-
-      console.log("Token created:", token.id);
-
-      // Step 2: Create a charge using the token
-      console.log("Creating charge...");
       charge = await omise.charges.create({
-        amount: payment.totalAmount * 100, // Already in satang from context
+        amount: secureAmount * 100,
         currency: "thb",
         card: token.id,
         description: `Hotel Booking - Room ${bookingRoom.roomId}`,
@@ -63,28 +127,23 @@ export default async function handler(req, res) {
           check_out: booking.checkOutDate,
           room_type: `Room ${bookingRoom.roomId}`,
           guests: booking.adults.toString(),
+          calculated_amount: secureAmount.toString(),
+          frontend_amount: frontendTotal.toString(),
         },
       });
     } else {
-      // For cash payment, no Omise processing needed
-      console.log(
-        "Cash payment selected - booking will be confirmed, payment pending"
-      );
+      // For cash payment
       charge = {
         status: "pending", // Changed from 'successful' to 'pending'
-        amount: payment.totalAmount,
+        amount: secureAmount, // Use calculated amount
         currency: "thb",
       };
     }
-    console.log("Charge created:", charge.id, "Status:", charge.status);
 
     // Check if charge was successful OR if it's a pending cash payment
     if (charge.status === "successful" || charge.status === "pending") {
-      console.log("Processing booking - Payment status:", charge.status);
-
-      // Step 3: Save booking data to database using context data
+      //Save booking data to database
       const result = await db.$transaction(async (tx) => {
-        // 3.1: Create or find Guest
         let guest = await tx.guest.findFirst({
           where: {
             id: parseInt(customer?.id || -1, 10),
@@ -121,18 +180,18 @@ export default async function handler(req, res) {
             },
           });
         }
-        // 3.2: Update Booking
+        //Update Booking
         const newBooking = await tx.booking.update({
           where: { id: booking.id },
           data: {
             updatedAt: new Date(),
-            totalAmount: payment.totalAmount,
+            totalAmount: secureAmount,
             bookingStatus: "CONFIRMED",
             additionalRequests: booking.additionalRequests || null,
           },
         });
 
-        // 3.4: Update Payment record
+        //Update Payment record
         let paymentFromDb = await tx.payment.findFirst({
           where: {
             bookingId: newBooking.id,
@@ -142,32 +201,28 @@ export default async function handler(req, res) {
         const paymentRecord = await tx.payment.update({
           where: { id: paymentFromDb.id },
           data: {
-            amount: payment.totalAmount,
+            amount: secureAmount,
             paymentMethod: payment.method === "credit" ? "CREDIT_CARD" : "CASH",
-            paymentStatus: payment.method === "credit" ? "PAID" : "PENDING", // CHANGED: Cash = PENDING
-            omiseChargeId: payment.method === "credit" ? charge.id : null, // CHANGED: Cash = null
-            paymentDate: payment.method === "credit" ? new Date() : null, // CHANGED: Cash = null (not paid yet)
+            paymentStatus: payment.method === "credit" ? "PAID" : "PENDING",
+            omiseChargeId: payment.method === "credit" ? charge.id : null,
+            paymentDate: payment.method === "credit" ? new Date() : null,
             notes:
               payment.method === "credit"
                 ? `Omise charge: ${charge.id}, Card holder: ${payment.card.name}`
-                : "Cash payment - to be collected at hotel", // CHANGED: Different note for cash
+                : "Cash payment - to be collected at hotel",
           },
         });
-        // 3.5: Create BookingAddons for special requests
+        //Create BookingAddons for special requests
         if (specialRequests && specialRequests.length > 0) {
-          // was booking.specialRequests
-          const addonPromises = specialRequests.map(
-            (
-              request // was booking.specialRequests
-            ) =>
-              tx.bookingAddon.create({
-                data: {
-                  bookingId: newBooking.id,
-                  addonName: request.displayName,
-                  quantity: 1,
-                  price: request.price,
-                },
-              })
+          const addonPromises = specialRequests.map((request) =>
+            tx.bookingAddon.create({
+              data: {
+                bookingId: newBooking.id,
+                addonName: request.displayName,
+                quantity: 1,
+                price: request.price,
+              },
+            })
           );
           await Promise.all(addonPromises);
         }
@@ -191,7 +246,7 @@ export default async function handler(req, res) {
         data: {
           chargeId: payment.method === "credit" ? charge.id : null,
           bookingId: result.booking.id,
-          amount: charge.amount / 100,
+          amount: secureAmount,
           currency: charge.currency,
           status: charge.status,
           message:
@@ -203,7 +258,7 @@ export default async function handler(req, res) {
             id: result.booking.id,
             checkIn: result.booking.checkIn,
             checkOut: result.booking.checkOut,
-            totalAmount: result.booking.totalAmount,
+            totalAmount: secureAmount,
             guest: {
               name: `${result.guest.firstName} ${result.guest.lastName}`,
               email: result.guest.email,
@@ -236,7 +291,7 @@ export default async function handler(req, res) {
         code: error.code,
       });
     } else {
-      // General error (including database errors)
+      // General error
       return res.status(500).json({
         success: false,
         error: "Internal server error",

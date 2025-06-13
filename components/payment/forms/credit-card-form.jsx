@@ -115,12 +115,12 @@ const CreditCardForm = () => {
           </div>
 
           <div className="flex flex-col w-1/2">
-            <label className="mb-1">CVC/CVV</label>
+            <label className="mb-1">CVC</label>
             <input
               id="cvc"
               value={creditCardData.cvc}
               onChange={handleCreditCardChange}
-              maxLength={4}
+              maxLength={3}
               placeholder="888"
               className={cn(
                 "py-3 pl-3 pr-4 border rounded-sm w-full text-black mb-1",

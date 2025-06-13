@@ -25,37 +25,42 @@ const publicRoutes = [
   "/api/chat",
   "/api/chatbot",
   "/api/hotel-info",
-  "/api/booking-history/get-booked-detail"
+  "/api/booking-history/get-booked-detail",
 ];
 
 const protectedRoutes = [
-  "/auth/update-profile", "/api/change-date", "/api/booking",
-  "/api/update-date", "/api/request-refund", "/api/payment",
-  "/booking-history", "/profile",
-  "/change-date", "/cancel-refund", "/cancel-success",
-  "/payment-success", "/payment-fail", "/payment",
+  "/auth/update-profile",
+  "/api/change-date",
+  "/api/booking",
+  "/api/update-date",
+  "/api/request-refund",
+  "/api/payment",
+  "/booking-history",
+  "/profile",
+  "/change-date",
+  "/cancel-refund",
+  "/cancel-success",
+  "/payment-success",
+  "/payment-fail",
+  "/payment",
   "/refund-success",
 ];
 
-const protectedAdminRoutes = [
-  "/admin", "/api/admin",
-];
+const protectedAdminRoutes = ["/admin", "/api/admin"];
 
 const isPublicPath = (path) => {
-  return publicRoutes.some(
-    (publicPath) => path === publicPath
-  );
+  return publicRoutes.some((publicPath) => path === publicPath);
 };
 
 const isProtectedPath = (path) => {
-  return protectedRoutes.some(
-    (protectedPath) => path.startsWith(protectedPath)
+  return protectedRoutes.some((protectedPath) =>
+    path.startsWith(protectedPath)
   );
 };
 
 const isProtectedAdminPath = (path) => {
-  return protectedAdminRoutes.some(
-    (protectedPath) => path.startsWith(protectedPath)
+  return protectedAdminRoutes.some((protectedPath) =>
+    path.startsWith(protectedPath)
   );
 };
 
@@ -64,17 +69,17 @@ export async function middleware(req) {
   const token = req.cookies.get("auth_token")?.value;
 
   if ((pathname === "/sign-in" || pathname === "/sign-up") && token) {
-    console.log("if 1", pathname);
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  if (!isProtectedPath(pathname)) {
-    console.log("if 2", pathname);
+  const isPublic = !isProtectedPath(pathname);
+  const isAdmin = isProtectedAdminPath(pathname);
+  if (isPublic && !isAdmin) {
     return NextResponse.next();
   }
 
   if (!token) {
-    console.log("if 3", pathname);
+    console.log("no token");
     return NextResponse.redirect(new URL("/sign-in", req.url));
   }
 
@@ -85,18 +90,12 @@ export async function middleware(req) {
     req.user = payload;
     const role = payload.role;
 
-    if (
-      isProtectedAdminPath(pathname)
-      && role.toLowerCase() !== "admin"
-    ) {
-      console.log("if 4", pathname);
+    if (isAdmin && role.toLowerCase() !== "admin") {
       return NextResponse.redirect(new URL("/", req.url));
     }
 
-    console.log("if 6", pathname);
     return NextResponse.next();
   } catch (error) {
-    console.log("if 5", pathname);
     return NextResponse.redirect(new URL("/sign-in", req.url));
   }
 }

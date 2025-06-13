@@ -22,8 +22,14 @@ const PaymentPage = () => {
   const [isFailed, setIsFailed] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { getCompleteBookingData, setValidationErrorsForSection, bookingData } =
-    useBooking();
+  const {
+    getCompleteBookingData,
+    calculateNights,
+    setValidationErrorsForSection,
+    bookingData,
+    startCountdown,
+    stopCountdown,
+  } = useBooking();
 
   const handleStepClick = (e, stepNumber) => {
     e.stopPropagation();
@@ -72,6 +78,7 @@ const PaymentPage = () => {
 
     try {
       setIsSubmitting(true);
+      stopCountdown();
 
       const completeBookingData = getCompleteBookingData();
       const validation = validateCompleteBooking(completeBookingData);
@@ -99,18 +106,17 @@ const PaymentPage = () => {
         return;
       }
 
-      if (
-        !completeBookingData.bookingDetail.roomData?.id ||
-        !completeBookingData.bookingDetail.roomData?.roomType?.id
-      ) {
-        alert("ไม่พบข้อมูลห้องพัก กรุณาเลือกห้องพักใหม่");
-        router.push("/rooms");
-        return;
-      }
+      const pricePerNight = bookingData?.isPromotion
+        ? Number(bookingData?.promotionPrice)
+        : Number(bookingData?.pricePerNight);
+      const specialRequests =
+        completeBookingData.priceBreakdown.selectedSpecialRequests.concat(
+          completeBookingData.priceBreakdown.selectedStandardRequests
+        );
 
       const bookingPayload = {
         guest: {
-          id: router.query.guestId,
+          id: bookingData?.guestId,
           firstName: completeBookingData.basicInfo.firstName,
           lastName: completeBookingData.basicInfo.lastName,
           email: completeBookingData.basicInfo.email,
@@ -119,21 +125,27 @@ const PaymentPage = () => {
           dateOfBirth: completeBookingData.basicInfo.dateOfBirth,
         },
         booking: {
-          id: parseInt(router.query.bookingId || -1),
-          checkInDate: completeBookingData.bookingDetail.searchParams.checkIn,
-          checkOutDate: completeBookingData.bookingDetail.searchParams.checkOut,
-          adults: completeBookingData.bookingDetail.totalGuests,
+          id: bookingData?.bookingId,
+          checkInDate: bookingData?.checkIn,
+          checkOutDate: bookingData?.checkOut,
+          adults: bookingData?.adults,
           additionalRequests:
             completeBookingData.specialRequests.additionalRequest,
           totalAmount: completeBookingData.priceBreakdown.totalPrice,
+          roomPriceAmount:
+            calculateNights(bookingData?.checkIn, bookingData?.checkOut) *
+            pricePerNight,
+          specialRequestsAmount: specialRequests.reduce(
+            (total, req) => total + req?.price,
+            0
+          ),
         },
         bookingRoom: {
-          roomId: completeBookingData.bookingDetail.roomData.id,
-          roomTypeId: completeBookingData.bookingDetail.roomData.roomType.id,
-          pricePerNight: completeBookingData.priceBreakdown.pricePerNight,
+          roomId: bookingData?.roomId,
+          roomTypeId: bookingData?.roomTypeId,
+          pricePerNight: pricePerNight,
         },
-        specialRequests:
-          completeBookingData.priceBreakdown.selectedSpecialRequests,
+        specialRequests: specialRequests,
         payment: {
           method: completeBookingData.paymentMethod.type,
           totalAmount: completeBookingData.priceBreakdown.totalPrice,
@@ -160,8 +172,6 @@ const PaymentPage = () => {
         },
       };
 
-      // console.log("Sending booking payload:", bookingPayload);
-
       const response = await fetch("/api/booking/create-booking", {
         method: "POST",
         headers: {
@@ -178,7 +188,6 @@ const PaymentPage = () => {
             `/payment-success?bookingNumber=${result.data.booking.bookingNumber}`
           );
         } else {
-          alert("การจองสำเร็จแล้ว แต่ไม่พบเลขที่การจอง กรุณาติดต่อเจ้าหน้าที่");
           router.push("/");
         }
       } else {
@@ -197,7 +206,7 @@ const PaymentPage = () => {
         errorMessage += error.message || "กรุณาลองใหม่อีกครั้ง";
       }
 
-      alert(errorMessage);
+      console.log(errorMessage);
 
       if (
         error.message.includes("Foreign key constraint") ||
@@ -255,11 +264,10 @@ const PaymentPage = () => {
 
   const handleDeleteBooking = () => {
     setLoading(true);
-    const { bookingId, guestId } = router.query;
     api.delete("/booking/delete-expired-booking", {
       data: {
-        bookingId: bookingId,
-        guestId: guestId,
+        bookingId: bookingData?.bookingId,
+        guestId: bookingData?.guestId,
       },
     });
 
@@ -272,7 +280,7 @@ const PaymentPage = () => {
         <Head>
           <title>Payment Failed | Neatly</title>
         </Head>
-        <div className="bg-white md:bg-util-bg w-full min-h-screen md:px-80 md:pt-20 ">
+        <div className="bg-white md:bg-util-bg w-full min-h-screen sm:px-28 lg:px-96 md:pt-20 ">
           <div className="bg-orange-100 text-center px-6 py-48 flex items-center justify-center flex-col">
             <HiOutlineExclamationCircle className="text-orange-600 w-16 h-16 mb-4" />
             <p className="text-h3 text-orange-600 font-noto-serif">
@@ -285,9 +293,9 @@ const PaymentPage = () => {
           </div>
 
           {/* Footer */}
-          <div className="flex flex-col px-6 pt-9 font-semibold cursor-pointer md:flex-row md:justify-center text-center">
+          <div className="flex flex-col px-6 pt-9 font-semibold cursor-pointer md:flex-row md:justify-center items-center text-center">
             <div
-              className="btn-primary px-8 py-4 items-center justify-center"
+              className="btn-primary px-8 py-4 items-center justify-center w-full md:w-auto"
               onClick={() => handleDeleteBooking()}
             >
               {loading ? (
@@ -305,8 +313,11 @@ const PaymentPage = () => {
               )}
             </div>
             <div
-              className="px-8 pt-6  items-center justify-center text-orange-500 hover:underline"
-              onClick={() => setIsFailed(false)}
+              className="px-8 py-4 items-center justify-center text-orange-500 hover:underline w-full md:w-auto"
+              onClick={() => {
+                setIsFailed(false);
+                startCountdown();
+              }}
             >
               Check Booking Detail
             </div>
@@ -378,7 +389,7 @@ const PaymentPage = () => {
             </header>
 
             <div className="md:gap-6 md:flex md:flex-row md:justify-between md:mx-40 md:mb-40">
-              <div className="md:flex md:flex-col md:w-1/2">
+              <div className="md:flex md:flex-col md:w-1/2 lg:w-2/3">
                 {renderForm()}
 
                 <div className="hidden md:block md:mt-10">
@@ -418,7 +429,7 @@ const PaymentPage = () => {
                 </div>
               </div>
 
-              <div className="md:w-1/2">
+              <div className="md:w-1/2 lg:w-1/3">
                 <BookingDetialSection />
               </div>
             </div>
@@ -464,7 +475,10 @@ const PaymentPage = () => {
       {isFailed && (
         <FailedPage
           handleRetryPayment={() => handleCompleteBooking()}
-          handleBackToPaymentDetails={() => setIsFailed(false)}
+          handleBackToPaymentDetails={() => {
+            setIsFailed(false);
+            startCountdown();
+          }}
         />
       )}
     </div>

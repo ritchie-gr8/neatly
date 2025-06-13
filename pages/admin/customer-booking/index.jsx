@@ -52,8 +52,8 @@ const CustomerBookingPage = () => {
         page: currentPage,
         limit: itemsPerPage,
         search: debouncedSearchTerm.trim(),
-        paymentStatus: 'PAID',
-        ...params
+        excludeStatus: 'PENDING',
+        ...params 
       }).toString()
       
       const response = await fetch(`/api/admin/customer-booking/customer-booking?${queryParams}`)
@@ -230,8 +230,13 @@ const CustomerBookingPage = () => {
   onValueChange={setBookingStatus}
   disabled={isUpdatingStatus}
 >
-  <SelectTrigger className="w-[160px] bg-white">
-    <SelectValue placeholder="Select status" />
+  <SelectTrigger className={`w-[160px] bg-white ${
+      bookingStatus ? 'text-gray-900' :'text-gray-500'
+    }`}>
+     <SelectValue 
+        placeholder="Select status" 
+        className="font-semibold"
+      />
   </SelectTrigger>
   <SelectContent>
     {statusOptions.map((option) => (
@@ -258,98 +263,105 @@ const CustomerBookingPage = () => {
   </div>
 </div>
 
-        <Card className="mx-16 px-20 rounded-none">
+        <Card className="mx-16 px-20 rounded">
           <CardContent className="p-0 ">
             <div className="grid grid-cols-1 gap-8 ">
-              <div className="space-y-6 pr-20 py-6">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">Customer name</h3>
-                  <p className="text-gray-900">{selectedBooking.guest.firstName} {selectedBooking.guest.lastName}</p>
+              <div className="space-y-6 pr-20 py-6 pb-8">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-600 mb-2">Customer name</h3>
+                    <p className="text-black">{selectedBooking.guest.firstName} {selectedBooking.guest.lastName}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-600 mb-2">Booking status</h3>
+                    <p className="text-black ">{selectedBooking.bookingStatus[0]+selectedBooking.bookingStatus.substring(1).toLowerCase()}</p>
+                  </div>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">Guest(s)</h3>
-                  <p className="text-gray-900">{selectedBooking.adults}</p>
+                  <h3 className="text-lg font-bold text-gray-600 mb-2">Guest(s)</h3>
+                  <p className="text-black">{selectedBooking.adults}</p>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">Room type</h3>
-                  <p className="text-gray-900">{roomDetails.roomType?.name} Room</p>
+                  <h3 className="text-lg font-bold text-gray-600 mb-2">Room type</h3>
+                  <p className="text-black">{roomDetails.roomType?.name} Room</p>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">Amount</h3>
-                  <p className="text-gray-900">{selectedBooking.roomDetails?.length || 1} room{selectedBooking.roomDetails?.length > 1 ? 's' : ''}</p>
+                  <h3 className="text-lg font-bold text-gray-600 mb-2">Amount</h3>
+                  <p className="text-black">{selectedBooking.roomDetails?.length || 1} room{selectedBooking.roomDetails?.length > 1 ? 's' : ''}</p>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">Bed type</h3>
-                  <p className="text-gray-900">{roomDetails.roomType?.bedType?.bedDescription}</p>
+                  <h3 className="text-lg font-bold text-gray-600 mb-2">Bed type</h3>
+                  <p className="text-black">{roomDetails.roomType?.bedType?.bedDescription}</p>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">Check-in</h3>
-                  <p className="text-gray-900">{formatDate(selectedBooking.checkInDate)}</p>
+                  <h3 className="text-lg font-bold text-gray-600 mb-2">Check-in</h3>
+                  <p className="text-black">{formatDate(selectedBooking.checkInDate)}</p>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">Check-out</h3>
-                  <p className="text-gray-900">{formatDate(selectedBooking.checkOutDate)}</p>
+                  <h3 className="text-lg font-bold text-gray-600 mb-2">Check-out</h3>
+                  <p className="text-black">{formatDate(selectedBooking.checkOutDate)}</p>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">Stay (total)</h3>
-                  <p className="text-gray-900">{stayDuration} night{stayDuration > 1 ? 's' : ''}</p>
+                  <h3 className="text-lg font-bold text-gray-600 mb-2">Stay (total)</h3>
+                  <p className="text-black">{stayDuration} night{stayDuration > 1 ? 's' : ''}</p>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">Booking date</h3>
-                  <p className="text-gray-900">{formatDate(selectedBooking.createdAt)}</p>
+                  <h3 className="text-lg font-bold text-gray-600 mb-2 ">Booking date</h3>
+                  <p className="text-black">{formatDate(selectedBooking.createdAt)}</p>
                 </div>
                 </div>
               </div>
             {/* Payment Info */}
-            <div className="bg-gray-50 rounded-lg p-4">
-              {selectedBooking.payments?.[0] && (
-                <div className="flex items-center justify-end space-x-2 text-sm text-gray-500 mb-4">
-                  <span>Payment success via</span>
-                  <CreditCard className="w-4 h-4" />
-                  <span>{selectedBooking.payments[0].paymentMethod.replace('_', ' ')} - {selectedBooking.payments[0].transactionId}</span>
-                </div>
-              )}
+            <div className="bg-gray-100 rounded p-4 ">
+            {selectedBooking.payments?.[0] && (
+              <div className="flex items-center justify-end space-x-2 text-sm text-gray-600 mb-4">
+                <span>Payment success via</span>
+                <span className="font-bold">
+                  {selectedBooking.payments[0].paymentMethod === 'CASH' ? 'Cash' : 'Credit'}
+                </span>
+              </div>
+            )}
 
               {/* Price Breakdown */}
               <div className="bg-gray-50 rounded-lg p-4">
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">{roomDetails.roomType?.name} Room</span>
+                    <span className="text-black">{roomDetails.roomType?.name} Room</span>
                     <span className="text-gray-900">{Number(roomPrice || 0).toFixed(2)}</span>
                   </div>
                   
                   {selectedBooking.addons?.map((addon, index) => (
                     <div key={addon.id || index} className="flex justify-between items-center">
-                      <span className="text-gray-700">{addon.addonName}</span>
+                      <span className="text-black">{addon.addonName}</span>
                       <span className="text-gray-900">{Number(addon.price).toFixed(2)}</span>
                     </div>
                   ))}
                   
                   <div className="border-t border-gray-300 pt-3">
                     <div className="flex justify-between items-center font-semibold">
-                      <span className="text-gray-900">Total</span>
-                      <span className="text-gray-900">{formatCurrency(selectedBooking.totalAmount)}</span>
+                      <span className="text-black">Total</span>
+                      <span className="text-black">{formatCurrency(selectedBooking.totalAmount)}</span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             {/* Additional Requests */}        
-            <div className="bg-gray-50 rounded-lg p-4 mt-10">
+            <div className="bg-gray-300 rounded p-4 mt-10">
               {selectedBooking.additionalRequests && (
-                <div className="mt-6">  
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">Additional Request</h3>
-                  <div className="bg-gray-100 rounded-lg p-3">
-                    <p className="text-gray-700 text-sm">{selectedBooking.additionalRequests}</p>
-                  </div>
+                <div className="my-2">  
+                  <h3 className="my-2 font-bold text-gray-700 ">Additional Request</h3>
+                  <div className="my-2 bg-gray-300  ">
+                    <p className="text-gray-700">{selectedBooking.additionalRequests}</p>
+                  </div>  
                 </div>
               )}
             </div>

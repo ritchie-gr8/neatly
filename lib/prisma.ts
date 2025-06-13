@@ -18,9 +18,7 @@ if (process.env.NODE_ENV === "production") {
 } else {
   if (!globalThis.prismaClientInstance) {
     console.log("Development: Creating new PrismaClient instance.");
-    globalThis.prismaClientInstance = new PrismaClient({
-      log: ['query', 'info', 'warn', 'error'],
-    });
+    globalThis.prismaClientInstance = new PrismaClient();
   }
   prisma = globalThis.prismaClientInstance;
 }
