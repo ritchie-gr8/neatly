@@ -42,7 +42,6 @@ const SignInPage = () => {
     try {
       setLoading(true);
       const res = await login(data.identifier, data.password);
-      console.log(res);
 
       if (!res?.success) {
         throw new Error(res?.error || "An error occurred during login");

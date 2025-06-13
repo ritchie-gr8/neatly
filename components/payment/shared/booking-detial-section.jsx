@@ -35,7 +35,7 @@ const BookingDetailSection = () => {
 
       if (!bookingId) {
         // console.error("No booking ID found");
-        router.push('/payment-fail');
+        router.push("/payment-fail");
         return;
       }
 
@@ -44,33 +44,36 @@ const BookingDetailSection = () => {
       const response = await api.delete("/booking/delete-expired-booking", {
         data: {
           bookingId: bookingId,
-          guestId: guestId
-        }
+          guestId: guestId,
+        },
       });
 
       if (response.data && response.data.success) {
         // console.log("Booking deleted successfully:", response.data.data);
 
         router.push({
-          pathname: '/payment-fail',
+          pathname: "/payment-fail",
           query: {
-            reason: 'timeout',
-            message: 'Your booking session has expired. Please try booking again.'
-          }
+            reason: "timeout",
+            message:
+              "Your booking session has expired. Please try booking again.",
+          },
         });
       } else {
-        throw new Error(response.data?.message || "Failed to delete expired booking");
+        throw new Error(
+          response.data?.message || "Failed to delete expired booking"
+        );
       }
-
     } catch (error) {
       // console.error("Error deleting expired booking:", error);
 
       router.push({
-        pathname: '/payment-fail',
+        pathname: "/payment-fail",
         query: {
-          reason: 'timeout',
-          message: 'Your booking session has expired. Please try booking again.'
-        }
+          reason: "timeout",
+          message:
+            "Your booking session has expired. Please try booking again.",
+        },
       });
     } finally {
       setIsDeleting(false);
@@ -78,7 +81,7 @@ const BookingDetailSection = () => {
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return '';
+    if (!dateString) return "";
     const date = new Date(dateString);
     const options = {
       weekday: "short",
@@ -90,7 +93,7 @@ const BookingDetailSection = () => {
   };
 
   const formatDateRange = (checkIn, checkOut) => {
-    if (!checkIn || !checkOut) return '';
+    if (!checkIn || !checkOut) return "";
     const checkInFormatted = formatDate(checkIn);
     const checkOutFormatted = formatDate(checkOut);
     return `${checkInFormatted} - ${checkOutFormatted}`;
@@ -185,7 +188,7 @@ const BookingDetailSection = () => {
     );
   }
 
-  if (!bookingData.searchParams || !bookingData.roomData) {
+  if (!bookingData.roomData) {
     return (
       <div>
         <div className="bg-green-800 md:rounded-t-sm p-4 md:py-4 md:px-6 flex items-center justify-between">
@@ -227,8 +230,7 @@ const BookingDetailSection = () => {
     );
   }
 
-  const { roomData, searchParams } = bookingData;
-  const { checkIn, checkOut, adults, rooms } = searchParams;
+  const { roomData, checkIn, checkOut, adults, rooms } = bookingData;
 
   const nights = calculateNights(checkIn, checkOut);
   const totalRooms = parseInt(rooms) || 1;
@@ -237,28 +239,46 @@ const BookingDetailSection = () => {
   const priceBreakdown = getPriceBreakdown();
 
   const roomName = roomData.roomType?.name || roomData.name || "Room";
-  const pricePerNight = roomData.roomType?.pricePerNight || roomData.pricePerNight || 0;
-  const promotionPrice = roomData.roomType?.promotionPrice || roomData.promotionPrice || 0;
+  const pricePerNight =
+    roomData.roomType?.pricePerNight || roomData.pricePerNight || 0;
+  const promotionPrice =
+    roomData.roomType?.promotionPrice || roomData.promotionPrice || 0;
 
   return (
     <div>
       <div>
-        <div className={`${countdown <= 0 ? 'bg-red-800' : 'bg-green-800'} md:rounded-t-sm p-4 md:py-4 md:px-6 flex items-center justify-between`}>
+        <div
+          className={`${
+            countdown <= 0 ? "bg-red-800" : "bg-green-800"
+          } md:rounded-t-sm p-4 md:py-4 md:px-6 flex items-center justify-between`}
+        >
           <div className="flex items-center">
-            <BriefcaseBusiness className={`w-6 h-6 ${countdown <= 0 ? 'text-red-500' : 'text-green-500'} mr-3`} />
+            <BriefcaseBusiness
+              className={`w-6 h-6 ${
+                countdown <= 0 ? "text-red-500" : "text-green-500"
+              } mr-3`}
+            />
             <h2 className="text-h5 font-inter font-semibold text-white">
-              {countdown <= 0 ? 'Booking Expired' : 'Booking Detail'}
+              {countdown <= 0 ? "Booking Expired" : "Booking Detail"}
             </h2>
           </div>
-          <div className={`font-inter font-semibold rounded-sm bg-orange-200 px-2 py-1 ${getCountdownColor()}`}>
+          <div
+            className={`font-inter font-semibold rounded-sm bg-orange-200 px-2 py-1 ${getCountdownColor()}`}
+          >
             {getCountdownText()}
           </div>
         </div>
 
-        <div className={`${countdown <= 0 ? 'bg-red-600' : 'bg-green-600'} md:rounded-b-sm py-6 px-4 md:p-6`}>
+        <div
+          className={`${
+            countdown <= 0 ? "bg-red-600" : "bg-green-600"
+          } md:rounded-b-sm py-6 px-4 md:p-6`}
+        >
           {countdown <= 0 ? (
             <div className="text-white text-center">
-              <p className="text-lg font-semibold mb-2">Booking Session Expired</p>
+              <p className="text-lg font-semibold mb-2">
+                Booking Session Expired
+              </p>
               <p>Please try booking again.</p>
             </div>
           ) : (
@@ -266,7 +286,7 @@ const BookingDetailSection = () => {
               <div className="flex gap-6">
                 <div className="w-1/2">
                   <div className="font-semibold text-white mb-1">Check-in</div>
-                  <div className="text-b1 text-white">After 2:00 PM</div>
+                  <div className="text-b1 text-white font-light">After 2:00 PM</div>
                 </div>
                 <div className="w-1/2">
                   <div className="font-semibold text-white mb-1">Check-out</div>
@@ -281,10 +301,11 @@ const BookingDetailSection = () => {
                   {formatDateRange(checkIn, checkOut)}
                 </div>
                 <div className="text-b1 text-white font-light">
-                  {totalGuests} Guest{totalGuests > 1 ? 's' : ''} • {totalRooms} Room{totalRooms > 1 ? 's' : ''}
+                  {totalGuests} Guest{totalGuests > 1 ? "s" : ""} • {totalRooms}{" "}
+                  Room{totalRooms > 1 ? "s" : ""}
                 </div>
                 <div className="text-b1 text-white font-light">
-                  {nights} Night{nights > 1 ? 's' : ''}
+                  {nights} Night{nights > 1 ? "s" : ""}
                 </div>
               </div>
 
@@ -295,9 +316,6 @@ const BookingDetailSection = () => {
                 <div className="font-semibold text-white">
                   {promotionPrice && promotionPrice < pricePerNight ? (
                     <>
-                      <span className="line-through text-sm text-green-300 mr-2">
-                        THB {formatCurrency(pricePerNight)}
-                      </span>
                       THB {formatCurrency(promotionPrice)}
                     </>
                   ) : (
@@ -306,21 +324,33 @@ const BookingDetailSection = () => {
                 </div>
               </div>
 
-              {priceBreakdown.selectedSpecialRequests && priceBreakdown.selectedSpecialRequests.length > 0 && (
-                <div className="border-t border-green-300 pt-4 mb-4">
-                  <div className="text-b2 text-green-300 font-light mb-2">Special Requests</div>
-                  {priceBreakdown.selectedSpecialRequests.map((request, index) => (
-                    <div key={index} className="flex justify-between items-center mb-2">
-                      <div className="text-b2 text-green-300 font-light">
-                        {request.displayName}
-                      </div>
-                      <div className="text-white font-medium">
-                        +THB {formatCurrency(request.price)}
-                      </div>
+              {priceBreakdown.selectedSpecialRequests &&
+                priceBreakdown.selectedSpecialRequests.length > 0 && (
+                  <div className="border-t border-green-300 pt-4 mb-4">
+                    <div className="text-b2 text-green-300 font-light mb-2">
+                      Special Requests
                     </div>
-                  ))}
-                </div>
-              )}
+                    {priceBreakdown.selectedSpecialRequests.map(
+                      (request, index) => {
+                        if (request.notes !== "STANDARD") {
+                          return (
+                            <div
+                              key={index}
+                              className="flex justify-between items-center mb-2"
+                            >
+                              <div className="text-b2 text-green-300 font-light">
+                                {request.displayName}
+                              </div>
+                              <div className="text-white font-medium">
+                                +THB {formatCurrency(request.price)}
+                              </div>
+                            </div>
+                          );
+                        }
+                      }
+                    )}
+                  </div>
+                )}
 
               <div className="flex justify-between items-center border-t border-green-300 pt-6">
                 <div className="text-b1 font-light text-green-300">Total</div>

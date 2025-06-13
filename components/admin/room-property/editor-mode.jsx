@@ -240,12 +240,12 @@ const EditorMode = ({ setMode, selectedRoomTypeId, setLastAction }) => {
             ...data,
           }
         );
-        console.log("Room type updated:", updateResponse.data);
+        // console.log("Room type updated:", updateResponse.data);
       } else {
         const createResponse = await api.post("/admin/room-type/create", {
           ...data,
         });
-        console.log("Room type created:", createResponse.data);
+        // console.log("Room type created:", createResponse.data);
 
         roomTypeId = createResponse.data.id;
       }
@@ -266,7 +266,7 @@ const EditorMode = ({ setMode, selectedRoomTypeId, setLastAction }) => {
             }
           );
 
-          console.log("Main image uploaded:", mainImageResponse.data);
+          // console.log("Main image uploaded:", mainImageResponse.data);
         } catch (mainImageError) {
           console.error("Error uploading main image:", mainImageError);
         }

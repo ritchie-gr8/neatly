@@ -142,19 +142,19 @@ const RoomLists = ({ setIsBooking }) => {
         router.push({
           pathname: "/payment",
           query: {
-            guestId: response.data.data.guest.id,
-            bookingId: bookingId,
+            // guestId: response.data.data.guest.id,
+            // bookingId: bookingId,
             bookingNumber: bookingNumber,
-            roomTypeId: room.roomType.id,
-            pricePerNight: room.roomType.isPromotion
-              ? room.roomType.promotionPrice
-              : room.roomType.pricePerNight,
-            roomId: room.id,
-            checkIn: checkIn,
-            checkOut: checkOut,
-            adults: parseInt(guests),
-            rooms: parseInt(rooms),
-            totalAmount: totalAmount,
+            // roomTypeId: room.roomType.id,
+            // pricePerNight: room.roomType.isPromotion
+            //   ? room.roomType.promotionPrice
+            //   : room.roomType.pricePerNight,
+            // roomId: room.id,
+            // checkIn: checkIn,
+            // checkOut: checkOut,
+            // adults: parseInt(guests),
+            // rooms: parseInt(rooms),
+            // totalAmount: totalAmount,
           },
         });
       } else {
@@ -167,7 +167,7 @@ const RoomLists = ({ setIsBooking }) => {
 
   if (loading) {
     return (
-      <div className="flex flex-col gap-4 p-0 md:p-10 h-[40vh] md:pt-20">
+      <div className="flex flex-col gap-4 p-0 md:p-40 h-[40vh] md:pt-20">
         <div className="flex flex-col md:flex-row gap-4 md:gap-12">
           <Skeleton className="h-64 w-full md:flex-1/3 bg-gray-400" />
           <div className="hidden md:flex flex-col justify-between gap-2 flex-2/3">

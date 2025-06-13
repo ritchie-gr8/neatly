@@ -25,37 +25,42 @@ const publicRoutes = [
   "/api/chat",
   "/api/chatbot",
   "/api/hotel-info",
-  "/api/booking-history/get-booked-detail"
+  "/api/booking-history/get-booked-detail",
 ];
 
 const protectedRoutes = [
-  "/auth/update-profile", "/api/change-date", "/api/booking",
-  "/api/update-date", "/api/request-refund", "/api/payment",
-  "/booking-history", "/profile",
-  "/change-date", "/cancel-refund", "/cancel-success",
-  "/payment-success", "/payment-fail", "/payment",
+  "/auth/update-profile",
+  "/api/change-date",
+  "/api/booking",
+  "/api/update-date",
+  "/api/request-refund",
+  "/api/payment",
+  "/booking-history",
+  "/profile",
+  "/change-date",
+  "/cancel-refund",
+  "/cancel-success",
+  "/payment-success",
+  "/payment-fail",
+  "/payment",
   "/refund-success",
 ];
 
-const protectedAdminRoutes = [
-  "/admin", "/api/admin",
-];
+const protectedAdminRoutes = ["/admin", "/api/admin"];
 
 const isPublicPath = (path) => {
-  return publicRoutes.some(
-    (publicPath) => path === publicPath
-  );
+  return publicRoutes.some((publicPath) => path === publicPath);
 };
 
 const isProtectedPath = (path) => {
-  return protectedRoutes.some(
-    (protectedPath) => path.startsWith(protectedPath)
+  return protectedRoutes.some((protectedPath) =>
+    path.startsWith(protectedPath)
   );
 };
 
 const isProtectedAdminPath = (path) => {
-  return protectedAdminRoutes.some(
-    (protectedPath) => path.startsWith(protectedPath)
+  return protectedAdminRoutes.some((protectedPath) =>
+    path.startsWith(protectedPath)
   );
 };
 
@@ -67,11 +72,14 @@ export async function middleware(req) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  if (!isProtectedPath(pathname)) {
+  const isPublic = !isProtectedPath(pathname);
+  const isAdmin = isProtectedAdminPath(pathname);
+  if (isPublic && !isAdmin) {
     return NextResponse.next();
   }
 
   if (!token) {
+    console.log("no token");
     return NextResponse.redirect(new URL("/sign-in", req.url));
   }
 
@@ -82,10 +90,7 @@ export async function middleware(req) {
     req.user = payload;
     const role = payload.role;
 
-    if (
-      isProtectedAdminPath(pathname)
-      && role.toLowerCase() !== "admin"
-    ) {
+    if (isAdmin && role.toLowerCase() !== "admin") {
       return NextResponse.redirect(new URL("/", req.url));
     }
 

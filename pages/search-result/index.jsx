@@ -9,7 +9,7 @@ const index = () => {
   return (
     <DefaultLayout title="Search Result" showFooter={true}>
       <LoadingOverlay isLoading={isBooking} message="Booking..." />
-      <div className="bg-gray-200">
+      <div className="bg-util-bg">
         <SearchRoom/>
         <RoomLists isBooking={isBooking} setIsBooking={setIsBooking} />
       </div>
