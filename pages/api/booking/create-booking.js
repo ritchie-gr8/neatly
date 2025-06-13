@@ -23,8 +23,11 @@ async function calculateBookingTotal(bookingId, specialRequests = []) {
     // Calculate room costs
     for (const bookingRoom of booking.bookingRooms) {
       const roomType = bookingRoom.roomType;
-      const dailyRate = Number(roomType.pricePerNight || 0);
-
+      // Use promotion price if available
+      const dailyRate =
+        roomType.isPromotion && roomType.promotionPrice
+          ? Number(roomType.promotionPrice)
+          : Number(roomType.pricePerNight);
       const checkIn = new Date(booking.checkInDate);
       const checkOut = new Date(booking.checkOutDate);
       const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
@@ -73,7 +76,6 @@ export default async function handler(req, res) {
       specialRequests,
       payment,
     } = req.body;
-
     // Validate required fields
     if (!customer || !payment || !booking) {
       return res.status(400).json({
@@ -81,13 +83,11 @@ export default async function handler(req, res) {
         error: "Missing required fields",
       });
     }
-
     //Calculate the REAL total amount on server-side
     const calculatedTotal = await calculateBookingTotal(
       booking.id,
       specialRequests
     );
-
     // SECURITY CHECK: Compare with frontend amount (optional warning)
     const frontendTotal = Number(payment.totalAmount);
     if (Math.abs(calculatedTotal - frontendTotal) > 0.01) {
@@ -185,7 +185,7 @@ export default async function handler(req, res) {
           where: { id: booking.id },
           data: {
             updatedAt: new Date(),
-            totalAmount: secureAmount, 
+            totalAmount: secureAmount,
             bookingStatus: "CONFIRMED",
             additionalRequests: booking.additionalRequests || null,
           },
