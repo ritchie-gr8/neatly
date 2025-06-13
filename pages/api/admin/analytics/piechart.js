@@ -129,9 +129,22 @@ const GET = async (req, res) => {
     const totalRoomDays = totalRooms * daysInMonth;
     const availableDays = totalRoomDays - occupiedDays;
 
+    const occupiedPercent = Math.round((occupiedDays / totalRoomDays) * 1000) / 10; // 1 decimal
+    const availablePercent = Math.round((availableDays / totalRoomDays) * 1000) / 10;
+    
     const data = [
-      { name: "Occupied", value: occupiedDays, color: "#EC632A" },
-      { name: "Available", value: availableDays, color: "#D3D4EC" },
+      {
+        name: "Occupied",
+        value: occupiedDays,
+        percent: occupiedPercent,
+        color: "#EC632A",
+      },
+      {
+        name: "Available",
+        value: availableDays,
+        percent: availablePercent,
+        color: "#D3D4EC",
+      },
     ];
 
     return successResponse({ res, data: { data } });

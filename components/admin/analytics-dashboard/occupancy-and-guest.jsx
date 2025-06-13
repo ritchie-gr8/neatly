@@ -175,7 +175,7 @@ const OccupancyAndGuest = () => {
               </SelectContent>
             </Select>
           </div>
-          <p>From</p>
+          {/* <p>From</p> */}
           <div className="translate-y-3 flex-1 w-45 text-black">
             <CustomDatePicker
               value={startDate}

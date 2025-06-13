@@ -36,7 +36,7 @@ const GET = async (req, res) => {
         },
         select: {
           totalAmount: true,
-          guestId: true,
+          userId: true,
         },
       }),
 
@@ -52,7 +52,7 @@ const GET = async (req, res) => {
         },
         select: {
           totalAmount: true,
-          guestId: true,
+          userId: true,
         },
       }),
     ]);
@@ -61,7 +61,7 @@ const GET = async (req, res) => {
     // Format booking data
     const formatData = (bookings) => {
       const totalSales = bookings.reduce((sum, b) => sum + Number(b.totalAmount), 0);
-      const uniqueGuests = new Set(bookings.map((b) => b.guestId));
+      const uniqueGuests = new Set(bookings.map((b) => b.userId));
       return {
         booking: bookings.length, 
         sales: totalSales,
