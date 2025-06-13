@@ -102,31 +102,28 @@ async function main() {
         bookingCount++;
 
         // Create BookingRooms
-        const numRooms = faker.number.int({ min: 1, max: 3 });
-        for (let j = 0; j < numRooms; j++) {
-          const roomTypeName = faker.helpers.arrayElement(ROOM_TYPES);
-          const roomType = roomTypes[roomTypeName];
-          if (!roomType) {
-            console.warn(`RoomType "${roomTypeName}" not found. Skipping room.`);
-            continue;
-          }
-          const roomsForType = roomsByType[roomType.id];
-          if (!roomsForType || roomsForType.length === 0) {
-            console.warn(`No rooms found for roomType "${roomTypeName}". Skipping room.`);
-            continue;
-          }
-          const room = faker.helpers.arrayElement(roomsForType);
-
-          await prismaTx.bookingRoom.create({
-            data: {
-              bookingId: booking.id,
-              roomTypeId: roomType.id,
-              roomId: room.id,
-              pricePerNight: faker.number.float({ min: 1000, max: 5000, precision: 0.01 }),
-            },
-          });
-          bookingRoomCount++;
+        const roomTypeName = faker.helpers.arrayElement(ROOM_TYPES);
+        const roomType = roomTypes[roomTypeName];
+        if (!roomType) {
+          console.warn(`RoomType "${roomTypeName}" not found. Skipping room.`);
+          return;
         }
+        const roomsForType = roomsByType[roomType.id];
+        if (!roomsForType || roomsForType.length === 0) {
+          console.warn(`No rooms found for roomType "${roomTypeName}". Skipping room.`);
+          return;
+        }
+        const room = faker.helpers.arrayElement(roomsForType);
+        
+        await prismaTx.bookingRoom.create({
+          data: {
+            bookingId: booking.id,
+            roomTypeId: roomType.id,
+            roomId: room.id,
+            pricePerNight: faker.number.float({ min: 1000, max: 5000, precision: 0.01 }),
+          },
+        });
+        bookingRoomCount++;
 
         // Create Payments
         const numPayments = faker.number.int({ min: 1, max: 2 });

@@ -21,13 +21,13 @@ const GET = async (req, res) => {
     const now = dayjs();
     const startOfThisMonth = now.startOf("month").toDate();
     const startOfLastMonth = now.subtract(1, "month").startOf("month").toDate();
-    const endOfLastMonth = now.startOf("month").toDate();
+    const endOfLastMonth = dayjs().subtract(1, "month").endOf("month").toDate(); 
 
     // Fetch bookings using check_in_date for both months
     const [thisMonthBookings, lastMonthBookings] = await Promise.all([
       db.booking.findMany({
         where: {
-          checkInDate: {
+          createdAt: {
             gte: startOfThisMonth,
           },
           bookingStatus: {
@@ -42,7 +42,7 @@ const GET = async (req, res) => {
 
       db.booking.findMany({
         where: {
-          checkInDate: {
+          createdAt: {
             gte: startOfLastMonth,
             lt: endOfLastMonth,
           },
@@ -56,7 +56,7 @@ const GET = async (req, res) => {
         },
       }),
     ]);
-    
+
 
     // Format booking data
     const formatData = (bookings) => {

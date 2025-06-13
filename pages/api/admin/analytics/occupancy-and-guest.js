@@ -72,7 +72,7 @@ const GET = async (req, res) => {
           lte: end,
         },
         bookingStatus: {
-          in: ["CONFIRMED", "CHECKED_IN"],
+          in: ["CONFIRMED", "CHECKED_IN", "CHECKED_OUT"],
         },
       },
       include: {
@@ -90,8 +90,8 @@ const GET = async (req, res) => {
     const formatMonth = (date) => dayjs(date).format("MMMM");
 
     for (const booking of bookings) {
-      const month = formatMonth(booking.checkInDate);
-      const date = dayjs(booking.checkInDate).startOf("month").toDate();
+      const month = formatMonth(booking.createdAt);
+      const date = dayjs(booking.createdAt).startOf("month").toDate();
       const userId = booking.userId;
 
       if (!monthsMap.has(month)) {
