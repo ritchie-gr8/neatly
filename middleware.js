@@ -64,17 +64,14 @@ export async function middleware(req) {
   const token = req.cookies.get("auth_token")?.value;
 
   if ((pathname === "/sign-in" || pathname === "/sign-up") && token) {
-    console.log("if 1", pathname);
     return NextResponse.redirect(new URL("/", req.url));
   }
 
   if (!isProtectedPath(pathname)) {
-    console.log("if 2", pathname);
     return NextResponse.next();
   }
 
   if (!token) {
-    console.log("if 3", pathname);
     return NextResponse.redirect(new URL("/sign-in", req.url));
   }
 
@@ -89,14 +86,11 @@ export async function middleware(req) {
       isProtectedAdminPath(pathname)
       && role.toLowerCase() !== "admin"
     ) {
-      console.log("if 4", pathname);
       return NextResponse.redirect(new URL("/", req.url));
     }
 
-    console.log("if 6", pathname);
     return NextResponse.next();
   } catch (error) {
-    console.log("if 5", pathname);
     return NextResponse.redirect(new URL("/sign-in", req.url));
   }
 }
