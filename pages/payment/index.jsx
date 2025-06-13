@@ -314,7 +314,10 @@ const PaymentPage = () => {
             </div>
             <div
               className="px-8 py-4 items-center justify-center text-orange-500 hover:underline w-full md:w-auto"
-              onClick={() => setIsFailed(false)}
+              onClick={() => {
+                setIsFailed(false);
+                startCountdown();
+              }}
             >
               Check Booking Detail
             </div>
