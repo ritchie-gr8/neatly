@@ -240,7 +240,7 @@ const OccupancyAndGuest = () => {
             </div>
             <div className="flex items-center font-semibold gap-2">
               <span className="bg-[#A78BFA] w-4 h-4 rounded-full"></span>
-              Suit
+              Suite
             </div>
           </div>
         )}
