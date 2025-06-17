@@ -442,7 +442,7 @@ const OccupancyAndGuest = () => {
                 radius={[8, 8, 8, 8]}
               />
               <Bar
-                dataKey="Suit"
+                dataKey="Suite"
                 fill="#A78BFA"
                 barSize={dynamicBarSize}
                 radius={[8, 8, 8, 8]}
