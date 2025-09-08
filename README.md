@@ -2,7 +2,11 @@
 
 A modern, full-featured hotel management system built with Next.js, designed to streamline hotel operations with intelligent chatbot support and real-time communication capabilities.
 
+### Landing Page
 ![Demo](https://res.cloudinary.com/dhyyl3snm/image/upload/v1749737296/Screenshot_2025-06-12_210721_sn5kef.png)
+
+### Analytics Dashboard
+![Demo](https://res.cloudinary.com/dn2gszsoj/image/upload/v1757312516/dashboard_s0kypc.png)
 
 ## 🌟 Features
 
